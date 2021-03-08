@@ -5,7 +5,7 @@
 namespace BackEnd
 {
   /// <summary>
-  /// Model of a game.
+  /// Model of a game-instance. Contains all the state for one running instance of the game.
   /// </summary>
   internal class GameInstance
   {
