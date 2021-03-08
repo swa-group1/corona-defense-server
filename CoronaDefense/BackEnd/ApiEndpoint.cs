@@ -7,12 +7,12 @@ namespace BackEnd
   using System;
 
   /// <summary>
-  /// Handles requests from clients.
+  /// Receives requests from clients.
   /// </summary>
-  internal class ApiEndpoint
+  internal partial class ApiEndpoint
   {
     /// <summary>
-    /// Attach an observer to the BackEnd endpoint.
+    /// Attach an observer to the back-end endpoint.
     /// </summary>
     /// <param name="observer"> The observer to add.</param>
     public void AttachObserver(Observer observer)
@@ -25,17 +25,6 @@ namespace BackEnd
     /// </summary>
     public void NotifyObservers()
     {
-    }
-
-    /// <summary>
-    /// Observers of the ApiEndpoint.
-    /// </summary>
-    internal abstract class Observer
-    {
-      /// <summary>
-      /// What to do when notified by the ApiEndpoint.
-      /// </summary>
-      public abstract void GetNotified();
     }
   }
 }
