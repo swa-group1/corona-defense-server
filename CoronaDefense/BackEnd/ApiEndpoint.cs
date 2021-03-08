@@ -15,7 +15,7 @@ namespace BackEnd
     /// Attach an observer to the back-end endpoint.
     /// </summary>
     /// <param name="observer"> The observer to add.</param>
-    public void AttachObserver(Observer observer)
+    internal void AttachObserver(Observer observer)
     {
       throw new NotImplementedException("Not implemented");
     }
@@ -23,7 +23,7 @@ namespace BackEnd
     /// <summary>
     /// Notify all attached observers.
     /// </summary>
-    public void NotifyObservers()
+    internal void NotifyObservers()
     {
     }
   }

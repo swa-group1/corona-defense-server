@@ -14,7 +14,7 @@ namespace BackEnd
       /// <summary>
       /// What to do when notified by the <see cref="ApiEndpoint"/>.
       /// </summary>
-      public abstract void GetNotified();
+      internal abstract void GetNotified();
     }
   }
 }

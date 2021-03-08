@@ -10,7 +10,7 @@ namespace BackEnd
   internal class Router : ApiEndpoint.Observer
   {
     /// <inheritdoc/>
-    public override void GetNotified()
+    internal override void GetNotified()
     {
       throw new System.NotImplementedException();
     }
