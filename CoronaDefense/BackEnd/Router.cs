@@ -4,11 +4,8 @@
 
 namespace BackEnd
 {
-  using System;
-  using System.Collections.Generic;
-
   /// <summary>
-  /// Class with objects that route messages from <see cref="ApiEndpoint"/> to <see cref="ModelInstance"/>s.
+  /// Class with objects that route messages from <see cref="ApiEndpoint"/> to <see cref="ModelInstance"/>.
   /// </summary>
   internal class Router : ApiEndpoint.IObserver
   {
@@ -21,17 +18,7 @@ namespace BackEnd
       apiEndpoint.AttachObserver(this);
     }
 
-        private static Dictionary<string, Delegate> routeMap = new Dictionary<string, Delegate>()
-    {
-      { "/placeTower/", new Action(PlaceTower) },
-    };
-
-        private static void PlaceTower()
-    {
-      throw new System.NotImplementedException();
-    }
-
-    /// <inheritdoc/>
+        /// <inheritdoc/>
         void ApiEndpoint.IObserver.GetNotified()
     {
       throw new System.NotImplementedException();
