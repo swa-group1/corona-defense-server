@@ -5,7 +5,7 @@
 namespace BackEnd
 {
   /// <summary>
-  /// Class with objects that route messages from <see cref="ApiEndpoint"/> to <see cref="GameInstance"/>s.
+  /// Class with objects that route messages from <see cref="ApiEndpoint"/> to <see cref="ModelInstance"/>s.
   /// </summary>
   internal class Router : ApiEndpoint.IObserver
   {
