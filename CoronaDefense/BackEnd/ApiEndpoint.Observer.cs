@@ -9,12 +9,12 @@ namespace BackEnd
     /// <summary>
     /// Observer of the <see cref="ApiEndpoint"/>.
     /// </summary>
-    internal abstract class Observer
+    internal interface IObserver
     {
       /// <summary>
       /// What to do when notified by the <see cref="ApiEndpoint"/>.
       /// </summary>
-      internal abstract void GetNotified();
+      internal void GetNotified();
     }
   }
 }

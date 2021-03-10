@@ -7,10 +7,10 @@ namespace BackEnd
   /// <summary>
   /// Class with objects that route messages from <see cref="ApiEndpoint"/> to <see cref="GameInstance"/>s.
   /// </summary>
-  internal class Router : ApiEndpoint.Observer
+  internal class Router : ApiEndpoint.IObserver
   {
     /// <inheritdoc/>
-    internal override void GetNotified()
+    void ApiEndpoint.IObserver.GetNotified()
     {
       throw new System.NotImplementedException();
     }
