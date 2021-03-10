@@ -11,12 +11,12 @@ namespace BackEnd
   /// </summary>
   internal class StorageAPI
   {
-    public bool SaveGame(GameInstance gameInstance)
+    public bool SaveGame(ModelInstance modelInstance)
     {
       throw new NotImplementedException("Not implemented");
     }
 
-    public GameInstance LoadGame(string userId)
+    public ModelInstance LoadGame(string userId)
     {
       throw new NotImplementedException("Not implemented");
     }
