@@ -41,7 +41,7 @@ namespace BackEnd.ECS
       archetypeKey = "";
       foreach (Type componentType in componentTypes)
       {
-        archetypeKey += componentType.GetHashCode();
+        archetypeKey += componentType.GetHashCode().ToString();
       }
       archetypes[archetypeKey] = new Archetype(componentTypes);
     }
