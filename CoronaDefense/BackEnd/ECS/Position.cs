@@ -4,7 +4,7 @@
 
 namespace BackEnd.ECS
 {
-  public readonly struct Position : IComponent
+  internal readonly struct Position : IComponent
   {
     public readonly int x;
     public readonly int y;
@@ -13,6 +13,10 @@ namespace BackEnd.ECS
     {
       this.x = x;
       this.y = y;
+    }
+
+    public move(int x, int y) {
+      return new Position(this.x + x, this.y + y);
     }
   }
 }
