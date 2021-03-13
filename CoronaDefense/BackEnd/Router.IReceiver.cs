@@ -7,16 +7,15 @@ namespace BackEnd
   internal partial class Router
   {
     /// <summary>
-    /// Receiver to receive messages routed via a <see cref="Router"/>.
+    /// Receiver to receive <see cref="APIEndpoint.ILocalMessage"/>s routed via a <see cref="Router"/>.
     /// </summary>
     internal interface IReceiver
     {
       /// <summary>
-      /// Notify this <see cref="IReceiver"/>.
+      /// Notify this <see cref="IReceiver"/> about a incoming <see cref="APIEndpoint.ILocalMessage"/> addressed to it.
       /// </summary>
-      internal void Notify()
-      {
-      }
+      /// <param name="message">Message to react to.</param>
+      public void OnMessage(APIEndpoint.ILocalMessage message);
     }
   }
 }

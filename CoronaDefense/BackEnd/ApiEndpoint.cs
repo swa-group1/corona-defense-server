@@ -1,4 +1,4 @@
-// <copyright file="ApiEndpoint.cs" company="NTNU: SWA group 1 (2021)">
+// <copyright file="APIEndpoint.cs" company="NTNU: SWA group 1 (2021)">
 // Copyright (c) NTNU: SWA group 1 (2021). All rights reserved.
 // </copyright>
 
@@ -7,24 +7,17 @@ namespace BackEnd
   using System;
 
   /// <summary>
-  /// Receives requests from clients.
+  /// Receives requests from clients through a REST-api.
   /// </summary>
-  internal partial class ApiEndpoint
+  internal partial class APIEndpoint
   {
     /// <summary>
-    /// Attach an observer to the back-end endpoint.
+    /// Attach an <see cref="IObserver"/> to this <see cref="APIEndpoint"/>.
     /// </summary>
     /// <param name="observer"> The observer to add.</param>
-    internal void AttachObserver(IObserver observer)
+    public void AttachObserver(IObserver observer)
     {
       throw new NotImplementedException("Not implemented");
-    }
-
-    /// <summary>
-    /// Notify all attached observers.
-    /// </summary>
-    internal void NotifyObservers()
-    {
     }
   }
 }
