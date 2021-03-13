@@ -23,6 +23,17 @@ namespace BackEnd.ECS
     {
       this.CreateArchetype();
     }
+    
+    /// Add component to supplied <paramref name="entity"/>. This includes switching its archetype, moving the entity and reordering chunks.
+    /// </summary>
+    /// <param name="entity">Integer ID of entity to add component to.</param>
+    /// <param name="component">Component to add.</param>
+    /// <typeparam name="T">Struct type of component to add.</typeparam>
+    internal void AddComponent<T>(int entity, T component)
+      where T : struct
+    {
+      throw new NotImplementedException();
+    }
 
     /// <summary>
     /// Create an entity in this <see cref="ECS"/> without any component.
@@ -52,6 +63,23 @@ namespace BackEnd.ECS
     /// <param name="entity">Integer ID of entity to add component to.</param>
     /// <param name="component">Component to add.</param>
     public void AddComponent(int entity, IComponent component)
+    {
+      throw new NotImplementedException();
+    }
+    
+    /// Delete an entity from this <see cref="ECS"/>.
+    /// </summary>
+    /// <param name="entity">Integer ID of entity to delete.</param>
+    internal void DeleteEntity(int entity)
+    {
+      throw new NotImplementedException();
+    }
+
+    /// <summary>
+    /// Remove entity from archetype chunks in this <see cref="ECS"/>.
+    /// </summary>
+    /// <param name="entity">Integer ID of entity to remove.</param>
+    private void RemoveEntityFromArchetype(int entity)
     {
       throw new NotImplementedException();
     }
