@@ -2,7 +2,7 @@
 // Copyright (c) NTNU: SWA group 1 (2021). All rights reserved.
 // </copyright>
 
-namespace BackEnd.ECS
+namespace ECS
 {
   using System;
   using System.Collections.Generic;
@@ -13,17 +13,24 @@ namespace BackEnd.ECS
   internal class ECS
   {
     /// <summary>
-    ///
+    /// Max size of chunks for <see cref="Archetype"/>s in this <see cref="ECS"/>.
     /// </summary>
-    public const int CHUNKSIZE = 16;
-    
-    private Dictionary<string, Archetype> archetypes = new Dictionary<string, Archetype>();
-    
+    private readonly int chunkSize = 16;
+
+    /// <summary>
+    /// Map from <see cref="TypeSet"/>s to <see cref="Archetype"/>s.
+    /// </summary>
+    private Dictionary<TypeSet, Archetype> archetypes = new Dictionary<TypeSet, Archetype>();
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ECS"/> class.
+    /// </summary>
     public ECS()
     {
       this.CreateArchetype();
     }
-    
+
+    /// <summary>
     /// Add component to supplied <paramref name="entity"/>. This includes switching its archetype, moving the entity and reordering chunks.
     /// </summary>
     /// <param name="entity">Integer ID of entity to add component to.</param>
@@ -47,22 +54,29 @@ namespace BackEnd.ECS
     /// <summary>
     /// Create an archetype and add it to the Archetype dictionary, using the concatenation of the archetype's component hash codes as its key.
     /// </summary>
+    /// <param name="componentTypes"></param>
     public void CreateArchetype(params Type[] componentTypes)
     {
-      archetypeKey = "";
-      foreach (Type componentType in componentTypes)
-      {
-        archetypeKey += componentType.GetHashCode().ToString();
-      }
-      archetypes[archetypeKey] = new Archetype(componentTypes);
+      TypeSet typeSet = new TypeSet(componentTypes);
+      this.CreateArchetype(typeSet);
+    }
+
+    /// <summary>
+    /// Create an <see cref="Archetype"/> for this <see cref="ECS"/>.
+    /// </summary>
+    /// <param name="typeSet"><see cref="TypeSet"/> of <see cref="Archetype"/> to create.</param>
+    public void CreateArchetype(TypeSet typeSet)
+    {
+      Archetype archetype = new Archetype(this.chunkSize, typeSet);
+      this.archetypes[typeSet] = archetype;
     }
 
     /// <summary>
     /// Add component to supplied <paramref name="entity"/>. This includes switching its archetype, moving the entity and reordering chunks.
     /// </summary>
     /// <param name="entity">Integer ID of entity to add component to.</param>
-    /// <param name="component">Component to add.</param>
-    public void AddComponent(int entity, IComponent component)
+    /// <param name="components">Components to add.</param>
+    public void AddComponent(int entity, params object[] components)
     {
       throw new NotImplementedException();
     }

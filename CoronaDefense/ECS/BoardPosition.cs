@@ -2,7 +2,7 @@
 // Copyright (c) NTNU: SWA group 1 (2021). All rights reserved.
 // </copyright>
 
-namespace BackEnd.ECS
+namespace ECS
 {
   /// <summary>
   /// Data <see langword="struct"/> that represents a position on the board.
