@@ -30,14 +30,14 @@ namespace BackEnd
     }
 
     /// <summary>
-    /// Receivers of this <see cref="Router"/>.
+    /// Map from <see cref="long"/> addresses to the receivers of this <see cref="Router"/>.
     /// </summary>
     private readonly Dictionary<long, IReceiver> receivers = new Dictionary<long, IReceiver>();
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Router"/> class.
     /// </summary>
-    /// <param name="api"> The Api Endpoint to connect to. </param>
+    /// <param name="api">The Api Endpoint to connect to.</param>
     public Router(APIEndpoint api)
     {
       api.AttachObserver(this);
