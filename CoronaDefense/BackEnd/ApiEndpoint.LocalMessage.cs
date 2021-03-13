@@ -8,7 +8,7 @@ namespace BackEnd
   {
     internal interface ILocalMessage
     {
-      readonly GameAdress GameAdress;
+      readonly ModelAddress ModelAddress;
     }
   }
 }
