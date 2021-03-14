@@ -34,7 +34,7 @@ namespace ECS
         return false;
       }
 
-      if (!(obj is TypeSet other))
+      if (obj is not TypeSet other)
       {
         return false;
       }

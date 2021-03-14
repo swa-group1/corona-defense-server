@@ -4,13 +4,21 @@
 
 namespace BackEnd
 {
+  using BackEnd.APIEndpoint;
+
   /// <summary>
-  /// A class describing a back-end orchestrator that handles global client-requests not connected to <see cref="ModelInstance"/>s. This includes creating new <see cref="ModelInstance"/>s.
+  /// A class describing a back-end orchestrator that handles global client-requests not connected to a specific <see cref="ModelInstance"/>s. This includes creating new <see cref="ModelInstance"/>s.
   /// </summary>
-  internal class Orchestrator : ApiEndpoint.IObserver
+  internal class Orchestrator : IObserver
   {
-    /// <inheritdoc />
-    void ApiEndpoint.IObserver.GetNotified()
+    /// <inheritdoc/>
+    public void OnGlobalMessage(IGlobalMessage message)
+    {
+      throw new System.NotImplementedException();
+    }
+
+    /// <inheritdoc/>
+    public void OnLocalMessage(ILocalMessage message)
     {
       throw new System.NotImplementedException();
     }
