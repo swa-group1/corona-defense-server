@@ -4,11 +4,12 @@
 
 namespace BackEnd
 {
+  using BackEnd.APIEndpoint;
   using System;
   using System.Collections.Generic;
 
   /// <summary>
-  /// Router that route <see cref="APIEndpoint.ILocalMessage"/>s from <see cref="APIEndpoint"/> to <see cref="Router.IReceiver"/>s.
+  /// Router that route <see cref="ILocalMessage"/>s from an <see cref="APIEndpoint"/> to <see cref="Router.IReceiver"/>s.
   /// </summary>
   internal partial class Router : APIEndpoint.IObserver
   {
@@ -38,7 +39,7 @@ namespace BackEnd
     /// Initializes a new instance of the <see cref="Router"/> class.
     /// </summary>
     /// <param name="api">The Api Endpoint to connect to.</param>
-    public Router(APIEndpoint api)
+    public Router(APIEndpoint.APIEndpoint api)
     {
       api.AttachObserver(this);
     }
