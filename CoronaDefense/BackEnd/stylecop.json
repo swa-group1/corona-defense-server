@@ -21,7 +21,7 @@
         "constant",
       ],
       "systemUsingDirectivesFirst": false,
-      "usingDirectivesPlacement": "insideNamespace",
+      "usingDirectivesPlacement": "outsideNamespace",
     },
   },
 },
