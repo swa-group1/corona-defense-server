@@ -70,7 +70,15 @@ namespace BackEnd
     /// <returns>Generated <see cref="long"/> used as address for supplied <see cref="IReceiver"/>.</returns>
     public long Register(IReceiver receiver)
     {
-      long address = GetRandomAddress();
+      // Find address
+      long address;
+      do
+      {
+        address = GetRandomAddress();
+      }
+      while (this.receivers.ContainsKey(address));
+
+      // Register receiver
       this.receivers[address] = receiver;
       return address;
     }
