@@ -11,7 +11,7 @@ namespace BackEnd
   /// <summary>
   /// Router that route <see cref="ILocalMessage"/>s from an <see cref="APIEndpoint"/> to <see cref="Router.IReceiver"/>s.
   /// </summary>
-  internal partial class Router : APIEndpoint.IObserver
+  internal partial class Router : IObserver
   {
     /// <summary>
     /// Internal backing generator used for address generation.
@@ -39,18 +39,18 @@ namespace BackEnd
     /// Initializes a new instance of the <see cref="Router"/> class.
     /// </summary>
     /// <param name="api">The Api Endpoint to connect to.</param>
-    public Router(APIEndpoint.APIEndpoint api)
+    public Router(IAPIEndpoint api)
     {
       api.AttachObserver(this);
     }
 
     /// <inheritdoc/>
-    public void OnGlobalMessage(APIEndpoint.IGlobalMessage message)
+    public void OnGlobalMessage(IGlobalMessage message)
     {
     }
 
     /// <inheritdoc/>
-    public void OnLocalMessage(APIEndpoint.ILocalMessage message)
+    public void OnLocalMessage(ILocalMessage message)
     {
       long address = message.Address;
 

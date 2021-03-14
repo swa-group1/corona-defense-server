@@ -17,7 +17,7 @@ namespace BackEnd
       /// Notify this <see cref="IReceiver"/> about a incoming <see cref="ILocalMessage"/> addressed to it.
       /// </summary>
       /// <param name="message">Message to react to.</param>
-      public void OnMessage(APIEndpoint.ILocalMessage message);
+      public void OnMessage(ILocalMessage message);
     }
   }
 }

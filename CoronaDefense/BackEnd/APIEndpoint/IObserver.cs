@@ -5,7 +5,7 @@
 namespace BackEnd.APIEndpoint
 {
   /// <summary>
-  /// Observer of the <see cref="APIEndpoint"/>.
+  /// Observer of an <see cref="IAPIEndpoint"/>.
   /// </summary>
   public interface IObserver
   {
