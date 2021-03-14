@@ -1,7 +1,7 @@
-﻿namespace BackEnd
-{
-  using System;
+﻿using System;
 
+namespace BackEnd
+{
   internal static class Program
   {
     private static void Main(string[] args)

@@ -2,12 +2,12 @@
 // Copyright (c) NTNU: SWA group 1 (2021). All rights reserved.
 // </copyright>
 
+using BackEnd.APIEndpoint;
+using System;
+using System.Collections.Generic;
+
 namespace BackEnd
 {
-  using BackEnd.APIEndpoint;
-  using System;
-  using System.Collections.Generic;
-
   /// <summary>
   /// Router that route <see cref="ILocalMessage"/>s from an <see cref="APIEndpoint"/> to <see cref="Router.IReceiver"/>s.
   /// </summary>
@@ -17,18 +17,6 @@ namespace BackEnd
     /// Internal backing generator used for address generation.
     /// </summary>
     private static readonly Random Random = new Random();
-
-    /// <summary>
-    /// Create a new random <see cref="long"/> acting as an address.
-    /// </summary>
-    /// <returns>The generated <see cref="long"/>.</returns>
-    private static long GetRandomAddress()
-    {
-      byte[] buffer = new byte[8];
-      Random.NextBytes(buffer);
-      long address = BitConverter.ToInt64(buffer, 0);
-      return address;
-    }
 
     /// <summary>
     /// Map from <see cref="long"/> addresses to the receivers of this <see cref="Router"/>.
@@ -61,6 +49,18 @@ namespace BackEnd
       }
 
       receiver.OnMessage(message);
+    }
+
+    /// <summary>
+    /// Create a new random <see cref="long"/> acting as an address.
+    /// </summary>
+    /// <returns>The generated <see cref="long"/>.</returns>
+    private static long GetRandomAddress()
+    {
+      byte[] buffer = new byte[8];
+      Random.NextBytes(buffer);
+      long address = BitConverter.ToInt64(buffer, 0);
+      return address;
     }
 
     /// <summary>

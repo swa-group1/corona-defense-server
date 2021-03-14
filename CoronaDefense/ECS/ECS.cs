@@ -2,25 +2,25 @@
 // Copyright (c) NTNU: SWA group 1 (2021). All rights reserved.
 // </copyright>
 
+using System;
+using System.Collections.Generic;
+
 namespace ECS
 {
-  using System;
-  using System.Collections.Generic;
-
   /// <summary>
   /// Main object to interact with an ECS system.
   /// </summary>
   internal class ECS
   {
     /// <summary>
+    /// Map from <see cref="TypeSet"/>s to <see cref="Archetype"/>s.
+    /// </summary>
+    private readonly Dictionary<TypeSet, Archetype> archetypes = new Dictionary<TypeSet, Archetype>();
+
+    /// <summary>
     /// Max size of chunks for <see cref="Archetype"/>s in this <see cref="ECS"/>.
     /// </summary>
     private readonly int chunkSize = 16;
-
-    /// <summary>
-    /// Map from <see cref="TypeSet"/>s to <see cref="Archetype"/>s.
-    /// </summary>
-    private Dictionary<TypeSet, Archetype> archetypes = new Dictionary<TypeSet, Archetype>();
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ECS"/> class.
@@ -80,7 +80,8 @@ namespace ECS
     {
       throw new NotImplementedException();
     }
-    
+
+    /// <summary>
     /// Delete an entity from this <see cref="ECS"/>.
     /// </summary>
     /// <param name="entity">Integer ID of entity to delete.</param>

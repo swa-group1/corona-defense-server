@@ -2,10 +2,10 @@
 // Copyright (c) NTNU: SWA group 1 (2021). All rights reserved.
 // </copyright>
 
+using BackEnd.APIEndpoint;
+
 namespace BackEnd
 {
-  using BackEnd.APIEndpoint;
-
   internal partial class Router
   {
     /// <summary>

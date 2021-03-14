@@ -3,7 +3,6 @@
 // </copyright>
 
 using BackEnd.APIEndpoint;
-using System;
 using System.Collections.Generic;
 using Xunit;
 

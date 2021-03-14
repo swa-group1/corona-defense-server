@@ -2,11 +2,11 @@
 // Copyright (c) NTNU: SWA group 1 (2021). All rights reserved.
 // </copyright>
 
+using BackEnd.ModelEvents;
+using System;
+
 namespace BackEnd
 {
-  using BackEnd.ModelEvents;
-  using System;
-
   /// <summary>
   /// Broadcaster for a <see cref="ModelInstance"/>. Functionality to send game events to all connected clients.
   /// </summary>

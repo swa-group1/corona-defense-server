@@ -2,10 +2,10 @@
 // Copyright (c) NTNU: SWA group 1 (2021). All rights reserved.
 // </copyright>
 
+using System;
+
 namespace BackEnd
 {
-  using System;
-
   /// <summary>
   /// Interacts with Google Firebase.
   /// </summary>

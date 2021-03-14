@@ -2,11 +2,11 @@
 // Copyright (c) NTNU: SWA group 1 (2021). All rights reserved.
 // </copyright>
 
+using System;
+using System.Collections.Generic;
+
 namespace ECS
 {
-  using System;
-  using System.Collections.Generic;
-
   /// <summary>
   /// Class whose instances store a set of entities with the same component types attached.
   /// </summary>

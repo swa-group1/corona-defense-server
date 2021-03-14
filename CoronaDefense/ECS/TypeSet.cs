@@ -2,13 +2,13 @@
 // Copyright (c) NTNU: SWA group 1 (2021). All rights reserved.
 // </copyright>
 
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+
 namespace ECS
 {
-  using System;
-  using System.Collections;
-  using System.Collections.Generic;
-  using System.Linq;
-
   /// <summary>
   /// Set of types
   /// </summary>
@@ -23,6 +23,18 @@ namespace ECS
     public TypeSet(params Type[] types)
     {
       this.types = new HashSet<Type>(types);
+    }
+
+    /// <inheritdoc/>
+    public IEnumerator<Type> GetEnumerator()
+    {
+      return ((IEnumerable<Type>)this.types).GetEnumerator();
+    }
+
+    /// <inheritdoc/>
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+      return this.types.GetEnumerator();
     }
 
     /// <inheritdoc/>
@@ -43,18 +55,6 @@ namespace ECS
     }
 
     /// <inheritdoc/>
-    public IEnumerator<Type> GetEnumerator()
-    {
-      return ((IEnumerable<Type>)this.types).GetEnumerator();
-    }
-
-    /// <inheritdoc/>
-    IEnumerator IEnumerable.GetEnumerator()
-    {
-      return this.types.GetEnumerator();
-    }
-
-    /// <inheritdoc/>
     public override int GetHashCode()
     {
       return this.types.Aggregate(
@@ -66,7 +66,7 @@ namespace ECS
     /// <inheritdoc/>
     public override string ToString()
     {
-      return $"{nameof(TypeSet)} {{ {string.Join<Type>(", ", this.types)} }}";
+      return $"{nameof(TypeSet)} {{ {string.Join(", ", this.types)} }}";
     }
   }
 }
