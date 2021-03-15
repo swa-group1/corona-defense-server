@@ -1,11 +1,14 @@
-// <copyright file="IComponent.cs" company="NTNU: SWA group 1 (2021)">
+// <copyright file="HP.cs" company="NTNU: SWA group 1 (2021)">
 // Copyright (c) NTNU: SWA group 1 (2021). All rights reserved.
 // </copyright>
 
+using ECS;
+
 namespace BackEnd.Components
 {
-  using ECS.IComponent;
-
+  /// <summary>
+  /// Component for integer health
+  /// </summary>
   internal readonly struct HP : IComponent
   {
     /// <summary>
@@ -16,7 +19,7 @@ namespace BackEnd.Components
     /// <summary>
     /// Initializes a new instance of the <see cref="HP"/> struct.
     /// </summary>
-    /// <param name="hp">Initial int value of HP. </param>
+    /// <param name="hp">Initial int value of HP.</param>
     public HP(int hp)
     {
       this.Hp = hp;
@@ -25,8 +28,8 @@ namespace BackEnd.Components
     /// <summary>
     /// Get a new HP based on a change in the current HP.
     /// </summary>
-    /// <param name="hp">Change HP by this value. Use negative to decrease. </param>
-    /// <returns> New HP with updated value. </returns>
+    /// <param name="hp">Change HP by this value. Use negative to decrease.</param>
+    /// <returns> New HP with updated value.</returns>
     public HP ChangeBy(int hp)
     {
       return new HP(this.Hp + hp);

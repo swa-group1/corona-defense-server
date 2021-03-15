@@ -2,10 +2,10 @@
 // Copyright (c) NTNU: SWA group 1 (2021). All rights reserved.
 // </copyright>
 
+using ECS;
+
 namespace BackEnd.Components
 {
-  using ECS.IComponent;
-
   /// <summary>
   /// Data <see langword="struct"/> that represents a position on the board.
   /// </summary>

@@ -12,4 +12,8 @@
       </PackageReference>
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\ECS\ECS.csproj" />
+    </ItemGroup>
+
 </Project>
