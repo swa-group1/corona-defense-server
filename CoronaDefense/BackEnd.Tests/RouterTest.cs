@@ -2,7 +2,7 @@
 // Copyright (c) NTNU: SWA group 1 (2021). All rights reserved.
 // </copyright>
 
-using BackEnd.APIEndpoint;
+using API.APIEndpoint;
 using System.Collections.Generic;
 using Xunit;
 

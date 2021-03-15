@@ -4,12 +4,12 @@
 
 using System;
 
-namespace BackEnd.APIEndpoint
+namespace API.APIEndpoint
 {
   /// <summary>
   /// Receives requests from clients through a REST-api and exposes such events to attached <see cref="IObserver{T}"/>s.
   /// </summary>
-  internal class APIEndpoint : IAPIEndpoint
+  public class APIEndpoint : IAPIEndpoint
   {
     /// <summary>
     /// <para>Attach an <see cref="IObserver"/> to this <see cref="APIEndpoint"/>.</para>

@@ -2,12 +2,12 @@
 // Copyright (c) NTNU: SWA group 1 (2021). All rights reserved.
 // </copyright>
 
-namespace BackEnd.APIEndpoint
+namespace API.APIEndpoint
 {
   /// <summary>
   /// Object that <see cref="IObserver"/>s can attach to. The main implementation of this interface, <see cref="APIEndpoint"/> also receives request from the internet and sends them to <see cref="IObserver"/>s.
   /// </summary>
-  internal interface IAPIEndpoint
+  public interface IAPIEndpoint
   {
     /// <summary>
     /// Attach an <see cref="IObserver"/> to this <see cref="IAPIEndpoint"/>.

@@ -2,7 +2,7 @@
 // Copyright (c) NTNU: SWA group 1 (2021). All rights reserved.
 // </copyright>
 
-namespace BackEnd.APIEndpoint
+namespace API.APIEndpoint
 {
   /// <summary>
   /// A message intended for a non-global aspects of the game, such as <see cref="ModelInstance"/>. The name <see cref="ILocalMessage"/> is in contrast to <see cref="IGlobalMessage"/>, which concerns global aspects of the game, such as a request to create a new lobby.
