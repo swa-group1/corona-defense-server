@@ -10,15 +10,18 @@ using System.Linq;
 namespace ECS
 {
   /// <summary>
-  /// Set of types
+  /// Set of types. Two <see cref="TypeSet"/>s created independently, but with the same <see cref="Type"/>s are equal.
   /// </summary>
   internal class TypeSet : IEnumerable<Type>
   {
     private readonly HashSet<Type> types;
 
-    // TODO: Write documentation.
+    /// <summary>
+    /// Initializes a new instance of the <see cref="TypeSet"/> class from supplied <paramref name="components"/>.
+    /// </summary>
+    /// <param name="components">An array of <see cref="IComponent"/>s to retrieve types from.</param>
     public TypeSet(params IComponent[] components)
-      : this(components.Select<Component, Type>(delegate(IComponent component) { return component.GetType(); }))
+      : this(components.Select(delegate(IComponent component) { return component.GetType(); }).ToArray())
     {
     }
 
