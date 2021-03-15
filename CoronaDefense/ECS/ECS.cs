@@ -10,7 +10,7 @@ namespace ECS
   /// <summary>
   /// Main object to interact with an ECS system.
   /// </summary>
-  internal class ECS
+  public class ECS
   {
     /// <summary>
     /// Map from <see cref="TypeSet"/>s to <see cref="Archetype"/>s.
@@ -23,62 +23,62 @@ namespace ECS
     private readonly int chunkSize = 16;
 
     /// <summary>
+    /// The ID of the next entity created by this <see cref="ECS"/>
+    /// </summary>
+    private int nextEntityID = 0;
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="ECS"/> class.
     /// </summary>
     public ECS()
     {
-      this.CreateArchetype();
+      // Creates an Archetype with no component types.
+      this.GetArchetype(new TypeSet());
+    }
+
+    /// <summary>
+    /// Takes an entity and its components, finds the <see cref="TypeSet"/> from those components, and adds the entity to the archetype corresponding to that <see cref="TypeSet"/>.
+    /// </summary>
+    public void AddEntityToArchetype(int entity, params IComponent[] components)
+    {
+      TypeSet typeSet = new TypeSet(components);
+      GetArchetype(typeSet).addEntity(entity, components);
     }
 
     /// <summary>
     /// Add component to supplied <paramref name="entity"/>. This includes switching its archetype, moving the entity and reordering chunks.
     /// </summary>
+    /// <remarks>
+    /// This method is quite slow.
+    /// </remarks>
     /// <param name="entity">Integer ID of entity to add component to.</param>
-    /// <param name="component">Component to add.</param>
-    /// <typeparam name="T">Struct type of component to add.</typeparam>
-    internal void AddComponent<T>(int entity, T component)
-      where T : struct
+    /// <param name="components">Components to add.</param>
+    public void AddComponents(int entity, params IComponent[] components)
     {
-      throw new NotImplementedException();
+      // Find archetype and components of old entity
+      Archetype oldArchetype;
+      IComponent[] oldComponents;
+      foreach (Archetype archetype in this.archetypes.Values) {
+        if (archetype.TryGetEntity(entity, out oldComponents)) {
+          oldArchetype = archetype;
+          break
+        }
+      }
+      
+      // Remove from old archetype
+      oldArchetype.RemoveEntity(entity);
+
+      // Add to new archetype with method call.
+      Archetypes newArchetype = GetArchetype(new Typeset(components))
     }
 
     /// <summary>
     /// Create an entity in this <see cref="ECS"/> without any component.
     /// </summary>
     /// <returns><see cref="int"/> identifier for created entity.</returns>
-    public int CreateEntity()
+    public int CreateEntity(params IComponent[] components)
     {
-      throw new NotImplementedException();
-    }
-
-    /// <summary>
-    /// Create an archetype and add it to the Archetype dictionary, using the concatenation of the archetype's component hash codes as its key.
-    /// </summary>
-    /// <param name="componentTypes"></param>
-    public void CreateArchetype(params Type[] componentTypes)
-    {
-      TypeSet typeSet = new TypeSet(componentTypes);
-      this.CreateArchetype(typeSet);
-    }
-
-    /// <summary>
-    /// Create an <see cref="Archetype"/> for this <see cref="ECS"/>.
-    /// </summary>
-    /// <param name="typeSet"><see cref="TypeSet"/> of <see cref="Archetype"/> to create.</param>
-    public void CreateArchetype(TypeSet typeSet)
-    {
-      Archetype archetype = new Archetype(this.chunkSize, typeSet);
-      this.archetypes[typeSet] = archetype;
-    }
-
-    /// <summary>
-    /// Add component to supplied <paramref name="entity"/>. This includes switching its archetype, moving the entity and reordering chunks.
-    /// </summary>
-    /// <param name="entity">Integer ID of entity to add component to.</param>
-    /// <param name="components">Components to add.</param>
-    public void AddComponent(int entity, params object[] components)
-    {
-      throw new NotImplementedException();
+      this.AddEntityToArchetype(nextEntityID++, components);
     }
 
     /// <summary>
@@ -88,6 +88,29 @@ namespace ECS
     internal void DeleteEntity(int entity)
     {
       throw new NotImplementedException();
+    }
+
+    /// <summary>
+    /// Takes a <see cref="TypeSet"/> and checks if an <see cref="Archetype"/> already exists for it, if not, it creates a new one.
+    /// </summary>
+    public Archetype GetArchetype(TypeSet typeSet)
+    {
+      Archetype archetype;
+      if (!this.archetypes.TryGetValue(typeSet, out archetype))
+      {
+        archetype = this.CreateArchetype(typeSet);
+      }
+      return archetype;
+    }
+
+    /// <summary>
+    /// Takes a <see cref="TypeSet"/> and creates a new <see cref="Archetype"/> from it, adding it to the archetypes map
+    /// </summary>
+    public Archetype CreateArchetype(TypeSet typeSet)
+    {
+      Archetype archetype = new Archetype(this.chunkSize, typeSet);
+      this.archetypes[typeSet] = archetype;
+      return archetype;
     }
 
     /// <summary>

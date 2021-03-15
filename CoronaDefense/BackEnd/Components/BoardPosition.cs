@@ -2,12 +2,14 @@
 // Copyright (c) NTNU: SWA group 1 (2021). All rights reserved.
 // </copyright>
 
-namespace ECS
+namespace BackEnd.Components
 {
+  using ECS.IComponent;
+
   /// <summary>
   /// Data <see langword="struct"/> that represents a position on the board.
   /// </summary>
-  internal readonly struct BoardPosition
+  internal readonly struct BoardPosition : IComponent
   {
     /// <summary>
     /// X-coordinate of this <see cref="BoardPosition"/>.

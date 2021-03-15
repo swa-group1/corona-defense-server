@@ -16,6 +16,12 @@ namespace ECS
   {
     private readonly HashSet<Type> types;
 
+    // TODO: Write documentation.
+    public TypeSet(params IComponent[] components)
+      : this(components.Select<Component, Type>(delegate(IComponent component) { return component.GetType(); }))
+    {
+    }
+
     /// <summary>
     /// Initializes a new instance of the <see cref="TypeSet"/> class.
     /// </summary>

@@ -59,9 +59,35 @@ namespace ECS
     /// </remarks>
     /// <param name="entity">Entity to add.</param>
     /// <param name="components">Exhaustive list of components attached to the <paramref name="entity"/>.</param>
-    public void AddEntity(int entity, params object[] components)
+    public void AddEntity(int entity, params IComponent[] components)
     {
       throw new NotImplementedException();
+    }
+
+    private void MoveEntity(int )
+
+    // TODO: Documentation.
+    public void RemoveEntity(int entity)
+    {
+      
+    }
+
+    // TODO: Documentation.
+    /// <remarks>
+    /// This method is quite slow.
+    /// </remarks>
+    public bool TryGetEntity(int entity, out IComponent[] components)
+    {
+      if (!this.identifierIndex.TryGetValue(entity, out int index))
+      {
+        components = null;
+        return false;
+      }
+
+      components = new IComponent[this.chunks.Count];
+      int chunkNumber = index / this.chunkSize;
+      int entityNumber = index % this.chunkSize;
+      foreach ()
     }
   }
 }

@@ -2,9 +2,11 @@
 // Copyright (c) NTNU: SWA group 1 (2021). All rights reserved.
 // </copyright>
 
-namespace ECS
+namespace BackEnd.Components
 {
-  internal readonly struct HP
+  using ECS.IComponent;
+
+  internal readonly struct HP : IComponent
   {
     /// <summary>
     /// Int value of current HP.
