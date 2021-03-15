@@ -25,7 +25,7 @@ namespace ECS
     /// <summary>
     /// Set of components types in this <see cref="Archetype"/>.
     /// </summary>
-    private readonly TypeSet componentTypes;
+    public TypeSet ComponentTypes { get; }
 
     /// <summary>
     /// Map from entity IDs to indices in chunks.
@@ -44,8 +44,9 @@ namespace ECS
     /// <param name="componentTypes">List of component types in arbitrary order.</param>
     public Archetype(int chunkSize, TypeSet componentTypes)
     {
-      this.componentTypes = componentTypes;
-      foreach (Type componentType in this.componentTypes)
+      this.chunkSize = chunkSize;
+      this.ComponentTypes = componentTypes;
+      foreach (Type componentType in this.ComponentTypes)
       {
         this.chunks[componentType] = new List<IComponent[]>();
       }
@@ -59,7 +60,7 @@ namespace ECS
     /// </remarks>
     /// <param name="entity">Entity to add.</param>
     /// <param name="components">Exhaustive list of components attached to the <paramref name="entity"/>.</param>
-    public void AddEntity(int entity, params IComponent[] components)
+    public void AddEntity(int entity, IEnumerable<IComponent> components)
     {
       throw new NotImplementedException();
     }
@@ -85,7 +86,7 @@ namespace ECS
     /// <param name="entity">Entity to get components of.</param>
     /// <param name="components">Returns the components of requested <paramref name="entity"/> if supplied <paramref name="entity"/> was present in this <see cref="Archetype"/>, <see langword="null"/> otherwise.</param>
     /// <returns><see langword="true"/> if supplied <paramref name="entity"/> was present in this <see cref="Archetype"/>.</returns>
-    public bool TryGetEntityComponents(int entity, out IComponent[] components)
+    public bool TryGetEntityComponents(int entity, out ICollection<IComponent> components)
     {
       if (!this.identifierIndex.TryGetValue(entity, out int index))
       {
@@ -93,15 +94,16 @@ namespace ECS
         return false;
       }
 
-      components = new IComponent[this.chunks.Count];
+      IComponent[] componentArray = new IComponent[this.chunks.Count];
       this.ConvertIndex(index, out int chunkIndex, out int entityIndex);
 
       index = 0; // Reuse of variable for index in component array.
       foreach (List<IComponent[]> chunkList in this.chunks.Values)
       {
-        components[index++] = chunkList[chunkIndex][entityIndex];
+        componentArray[index++] = chunkList[chunkIndex][entityIndex];
       }
 
+      components = componentArray;
       return true;
     }
 

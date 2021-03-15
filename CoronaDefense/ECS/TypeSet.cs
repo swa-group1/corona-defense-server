@@ -12,16 +12,18 @@ namespace ECS
   /// <summary>
   /// Set of types. Two <see cref="TypeSet"/>s created independently, but with the same <see cref="Type"/>s are equal.
   /// </summary>
+  /// <remarks>
+  /// Instances of this class are immutable.
+  /// </remarks>
   internal class TypeSet : IEnumerable<Type>
   {
     private readonly HashSet<Type> types;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="TypeSet"/> class from supplied <paramref name="components"/>.
+    /// Initializes a new instance of the <see cref="TypeSet"/> class.
     /// </summary>
-    /// <param name="components">An array of <see cref="IComponent"/>s to retrieve types from.</param>
-    public TypeSet(params IComponent[] components)
-      : this(components.Select(delegate(IComponent component) { return component.GetType(); }).ToArray())
+    public TypeSet()
+      : this(Array.Empty<Type>())
     {
     }
 
@@ -29,7 +31,7 @@ namespace ECS
     /// Initializes a new instance of the <see cref="TypeSet"/> class.
     /// </summary>
     /// <param name="types">List of types to be part of new <see cref="TypeSet"/>. Duplicates are removed.</param>
-    public TypeSet(params Type[] types)
+    public TypeSet(IEnumerable<Type> types)
     {
       this.types = new HashSet<Type>(types);
     }

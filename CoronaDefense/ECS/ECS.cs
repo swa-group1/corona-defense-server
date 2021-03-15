@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ECS
 {
@@ -25,7 +26,7 @@ namespace ECS
     /// <summary>
     /// The ID of the next entity created by this <see cref="ECS"/>
     /// </summary>
-    private int nextEntityID = 0;
+    private int nextEntityId = 0;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ECS"/> class.
@@ -39,10 +40,10 @@ namespace ECS
     /// <summary>
     /// Takes an entity and its components, finds the <see cref="TypeSet"/> from those components, and adds the entity to the archetype corresponding to that <see cref="TypeSet"/>.
     /// </summary>
-    public void AddEntityToArchetype(int entity, params IComponent[] components)
+    private void AddEntityToArchetype(int entity, ICollection<IComponent> components)
     {
-      TypeSet typeSet = new TypeSet(components);
-      GetArchetype(typeSet).addEntity(entity, components);
+      TypeSet typeSet = new TypeSet(components.GetTypes());
+      this.GetArchetype(typeSet).AddEntity(entity, components);
     }
 
     /// <summary>
@@ -53,32 +54,45 @@ namespace ECS
     /// </remarks>
     /// <param name="entity">Integer ID of entity to add component to.</param>
     /// <param name="components">Components to add.</param>
-    public void AddComponents(int entity, params IComponent[] components)
+    public void AddComponents(int entity, ICollection<IComponent> components)
     {
       // Find archetype and components of old entity
-      Archetype oldArchetype;
-      IComponent[] oldComponents;
-      foreach (Archetype archetype in this.archetypes.Values) {
-        if (archetype.TryGetEntity(entity, out oldComponents)) {
+      Archetype oldArchetype = null;
+      ICollection<IComponent> oldComponents = null;
+      foreach (Archetype archetype in this.archetypes.Values)
+      {
+        if (archetype.TryGetEntityComponents(entity, out oldComponents))
+        {
           oldArchetype = archetype;
-          break
+          break;
         }
       }
-      
+
+      if (oldArchetype == null)
+      {
+        return;
+      }
+
       // Remove from old archetype
-      oldArchetype.RemoveEntity(entity);
+      // No need to check return as the entity is guaranteed to be in the archetype.
+      oldArchetype.TryRemoveEntity(entity);
 
       // Add to new archetype with method call.
-      Archetypes newArchetype = GetArchetype(new Typeset(components))
+      TypeSet typeSet = new TypeSet(oldArchetype.ComponentTypes.Concat(components.GetTypes()));
+      Archetype newArchetype = this.GetArchetype(typeSet);
+      newArchetype.AddEntity(entity, oldComponents.Concat(components));
     }
 
     /// <summary>
-    /// Create an entity in this <see cref="ECS"/> without any component.
+    /// Create an entity in this <see cref="ECS"/> supplied <paramref name="components"/>.
     /// </summary>
+    /// <param name="components">Components of entity to create.</param>
     /// <returns><see cref="int"/> identifier for created entity.</returns>
-    public int CreateEntity(params IComponent[] components)
+    public int CreateEntity(ICollection<IComponent> components)
     {
-      this.AddEntityToArchetype(nextEntityID++, components);
+      int id = this.nextEntityId++;
+      this.AddEntityToArchetype(id, components);
+      return id;
     }
 
     /// <summary>
@@ -93,20 +107,20 @@ namespace ECS
     /// <summary>
     /// Takes a <see cref="TypeSet"/> and checks if an <see cref="Archetype"/> already exists for it, if not, it creates a new one.
     /// </summary>
-    public Archetype GetArchetype(TypeSet typeSet)
+    private Archetype GetArchetype(TypeSet typeSet)
     {
-      Archetype archetype;
-      if (!this.archetypes.TryGetValue(typeSet, out archetype))
+      if (!this.archetypes.TryGetValue(typeSet, out Archetype archetype))
       {
         archetype = this.CreateArchetype(typeSet);
       }
+
       return archetype;
     }
 
     /// <summary>
     /// Takes a <see cref="TypeSet"/> and creates a new <see cref="Archetype"/> from it, adding it to the archetypes map
     /// </summary>
-    public Archetype CreateArchetype(TypeSet typeSet)
+    private Archetype CreateArchetype(TypeSet typeSet)
     {
       Archetype archetype = new Archetype(this.chunkSize, typeSet);
       this.archetypes[typeSet] = archetype;
