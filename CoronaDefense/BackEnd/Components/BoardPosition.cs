@@ -15,20 +15,20 @@ namespace BackEnd.Components
     /// X-coordinate of this <see cref="BoardPosition"/>.
     /// </summary>
     // ReSharper disable once MemberCanBePrivate.Global
-    public readonly int X;
+    public readonly byte X;
 
     /// <summary>
     /// Y-coordinate of this <see cref="BoardPosition"/>.
     /// </summary>
     // ReSharper disable once MemberCanBePrivate.Global
-    public readonly int Y;
+    public readonly byte Y;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="BoardPosition"/> struct.
     /// </summary>
     /// <param name="x">X-coordinate.</param>
     /// <param name="y">Y-coordinate.</param>
-    public BoardPosition(int x, int y)
+    public BoardPosition(byte x, byte y)
     {
       this.X = x;
       this.Y = y;
@@ -40,9 +40,24 @@ namespace BackEnd.Components
     /// <param name="x"> Move x parameter by.</param>
     /// <param name="y">Move y parameter by.</param>
     /// <returns>New position. </returns>
-    public BoardPosition Move(int x, int y)
+    public BoardPosition Move(sbyte x, sbyte y)
     {
       return new BoardPosition(this.X + x, this.Y + y);
+    }
+
+    /// <inheritdoc/>
+    public int Size { get { return 2; } }
+    
+    /// <inheritdoc/>
+    public byte[] ToBytes()
+    {
+      return new byte[] { this.X, this.Y };
+    }
+    
+    /// <inheritdoc/>
+    public BoardPosition FromBytes(byte[] bytes)
+    {
+      return new BoardPosition(bytes[0], bytes[1]);
     }
   }
 }

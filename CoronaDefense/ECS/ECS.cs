@@ -19,11 +19,6 @@ namespace ECS
     private readonly Dictionary<TypeSet, Archetype> archetypes = new Dictionary<TypeSet, Archetype>();
 
     /// <summary>
-    /// Max size of chunks for <see cref="Archetype"/>s in this <see cref="ECS"/>.
-    /// </summary>
-    private readonly int chunkSize = 16;
-
-    /// <summary>
     /// The ID of the next entity created by this <see cref="ECS"/>
     /// </summary>
     private int nextEntityId = 0;

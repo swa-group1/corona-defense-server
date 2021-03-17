@@ -7,23 +7,28 @@ namespace ECS
   /// <summary>
   /// Category intended for data <see langword="struct"/>s used in <see cref="ECS"/>.
   /// </summary>
-  public interface IComponent
-  {
-  }
-
-  /// <summary>
-  /// Extension methods for usage of <see cref="IComponent"/>.
-  /// </summary>
-  public static class IComponentExtension
+  public interface IComponent<T>
+    where T : IComponent<T>
   {
     /// <summary>
-    /// Create an <see cref="IEnumerable{T}"/> with the types of the supplied <paramref name="components"/>.
+    /// How many <see langword="byte"/>s the component takes up.
     /// </summary>
-    /// <param name="components"><see cref="IComponent"/>s to get <see cref="Type"/>s of.</param>
-    /// <returns>Types of <paramref name="components"/>.</returns>
-    public static IEnumerable<Type> GetTypes(this IEnumerable<IComponent> components)
-    {
-      return components.Select(delegate(IComponent component) { return component.GetType(); });
-    }
+    /// <remarks>
+    /// Two instances of the same type should never return different sizes.
+    /// </remarks>
+    int Size { get; }
+    
+    /// <summary>
+    /// Converts the component to an array of <see langword="byte"/>s to be stored in an archetype.
+    /// </summary>
+    byte[] ToBytes();
+    
+    /// <summary>
+    /// Converts an array of bytes with length <see cref="Size"/> to an instance of type (TODO: type ref)
+    /// </summary>
+    /// <remarks>
+    /// It should be assumed that the incoming <see langword="byte"/> array is of length <see cref="Size"/>; this will be handled by <see cref="Archetype"/>.
+    /// </remarks>
+    T FromBytes(byte[] bytes);
   }
 }

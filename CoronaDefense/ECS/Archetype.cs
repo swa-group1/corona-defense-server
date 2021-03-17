@@ -13,22 +13,12 @@ namespace ECS
   internal class Archetype
   {
     /// <summary>
-    /// Map from component types to lists with component chunks.
+    /// Map from component types to lists with components encoded as <see langword="byte"/>s.
     /// </summary>
-    private readonly Dictionary<Type, List<IComponent[]>> chunks = new Dictionary<Type, List<IComponent[]>>();
+    private readonly Dictionary<Type, Chunk> chunks = new Dictionary<Type, Chunk>();
 
     /// <summary>
-    /// Max size of chunks in this <see cref="Archetype"/>.
-    /// </summary>
-    private readonly int chunkSize;
-
-    /// <summary>
-    /// Set of components types in this <see cref="Archetype"/>.
-    /// </summary>
-    public TypeSet ComponentTypes { get; }
-
-    /// <summary>
-    /// Map from entity IDs to indices in chunks.
+    /// Map from entity IDs to indices in component lists.
     /// </summary>
     private readonly Dictionary<int, int> identifierIndex = new Dictionary<int, int>();
 
@@ -40,15 +30,12 @@ namespace ECS
     /// <summary>
     /// Initializes a new instance of the <see cref="Archetype"/> class.
     /// </summary>
-    /// <param name="chunkSize">Max size of chunks in the new <see cref="Archetype"/>.</param>
-    /// <param name="componentTypes">List of component types in arbitrary order.</param>
-    public Archetype(int chunkSize, TypeSet componentTypes)
+    // TODO: add params doc.
+    public Archetype(int initialEntity, IEnumerable<IComponent> components)
     {
-      this.chunkSize = chunkSize;
-      this.ComponentTypes = componentTypes;
-      foreach (Type componentType in this.ComponentTypes)
+      foreach (IComponent component in components)
       {
-        this.chunks[componentType] = new List<IComponent[]>();
+        this.chunks[component.GetType()] = new Chunk(component);
       }
     }
 
@@ -63,18 +50,6 @@ namespace ECS
     public void AddEntity(int entity, IEnumerable<IComponent> components)
     {
       throw new NotImplementedException();
-    }
-
-    /// <summary>
-    /// Convert supplied <paramref name="index"/> to a pair of indices to be used in chunks.
-    /// </summary>
-    /// <param name="index">Index to convert to index pair.</param>
-    /// <param name="chunkIndex">Index of the chunk the original <paramref name="index"/> is in.</param>
-    /// <param name="entityIndex">Index of the entity within the chunk.</param>
-    private void ConvertIndex(int index, out int chunkIndex, out int entityIndex)
-    {
-      chunkIndex = index / this.chunkSize;
-      entityIndex = index % this.chunkSize;
     }
 
     /// <summary>
@@ -94,16 +69,15 @@ namespace ECS
         return false;
       }
 
-      IComponent[] componentArray = new IComponent[this.chunks.Count];
-      this.ConvertIndex(index, out int chunkIndex, out int entityIndex);
-
-      index = 0; // Reuse of variable for index in component array.
-      foreach (List<IComponent[]> chunkList in this.chunks.Values)
+      List<IComponent> components = new List<IComponent>(this.chunks.Count);
+      foreach (KeyValuePair<Type, Chunk> pair in this.chunks)
       {
-        componentArray[index++] = chunkList[chunkIndex][entityIndex];
+        int index = this.identifierIndex[entity] * pair.Value.componentSize;
+        byte[] bytes = new byte[pair.Value.componentSize];
+        pair.Value.components.CopyTo(index, bytes, 0, pair.Value.componentSize);
+        IComponent component = ((IComponent)Activator.CreateInstance(pair.Key)).FromBytes(bytes);
+        components.Add(component);
       }
-
-      components = componentArray;
       return true;
     }
 
