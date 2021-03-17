@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace ECS
 {
     // TODO: Doc
@@ -13,7 +15,7 @@ namespace ECS
         public Chunk(IComponent component)
         {
             this.componentSize = component.Size;
-            this.components = new List<byte> { component.ToBytes() };
+            this.components = new List<byte>(component.ToBytes());
         }
     }
 }

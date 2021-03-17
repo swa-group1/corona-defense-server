@@ -69,15 +69,16 @@ namespace ECS
         return false;
       }
 
-      List<IComponent> components = new List<IComponent>(this.chunks.Count);
+      components = new List<IComponent>(this.chunks.Count);
       foreach (KeyValuePair<Type, Chunk> pair in this.chunks)
       {
-        int index = this.identifierIndex[entity] * pair.Value.componentSize;
-        byte[] bytes = new byte[pair.Value.componentSize];
-        pair.Value.components.CopyTo(index, bytes, 0, pair.Value.componentSize);
-        IComponent component = ((IComponent)Activator.CreateInstance(pair.Key)).FromBytes(bytes);
+        int chunkIndex = index * pair.Value.componentSize; // Convert raw index to index within chunk.
+        byte[] bytes = new byte[pair.Value.componentSize]; // Create space for byte array.
+        pair.Value.components.CopyTo(chunkIndex, bytes, 0, pair.Value.componentSize); // Fill byte array.
+        IComponent component = ((IComponent)Activator.CreateInstance(pair.Key))?.FromBytes(bytes); // Convert bytes to component
         components.Add(component);
       }
+
       return true;
     }
 
@@ -88,21 +89,7 @@ namespace ECS
     /// <returns><see langword="true"/> if the supplied <paramref name="entity"/> was present and was removed.</returns>
     public bool TryRemoveEntity(int entity)
     {
-      if (!this.identifierIndex.TryGetValue(entity, out int index))
-      {
-        return false;
-      }
-
-      int lastIndex = --this.numberOfEntities;
-      this.ConvertIndex(index, out int chunkIndex, out int entityIndex);
-      this.ConvertIndex(lastIndex, out int lastChunkIndex, out int lastEntityIndex);
-
-      foreach (List<IComponent[]> chunkList in this.chunks.Values)
-      {
-        chunkList[chunkIndex][entityIndex] = chunkList[lastChunkIndex][lastEntityIndex];
-      }
-
-      return true;
+      throw new NotImplementedException();
     }
   }
 }

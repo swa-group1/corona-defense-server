@@ -7,9 +7,9 @@ using ECS;
 namespace BackEnd.Components
 {
   /// <summary>
-  /// Component for health
+  /// Component for health.
   /// </summary>
-  internal readonly struct HP : IComponent<HP>
+  internal readonly struct HP : IComponent
   {
     /// <summary>
     /// Byte value of current HP (0-255).
@@ -26,38 +26,42 @@ namespace BackEnd.Components
     }
 
     /// <summary>
-    /// Get a new <see cref="HP"> by adding a small positive integer to the amount of health points.
+    /// Get a new <see cref="HP"/> by adding a small positive integer to the amount of health points.
     /// </summary>
     /// <param name="left">Original amount of health points.</param>
     /// <param name="right">Increase HP by this value.</param>
     /// <returns> New HP with updated value.</returns>
     public static HP operator +(HP left, byte right)
     {
-      if (change < 255 - Hp)
+      if (right < 255 - left.Hp)
       {
-        return new HP(this.Hp + hp);
-      } else {
-        return new HP(255);
+        return new HP((byte)(left.Hp + right));
       }
+
+      return new HP(255);
     }
 
     /// <summary>
-    /// Get a new <see cref="HP"> by subtracting a small positive integer from the amount of health points.
+    /// Get a new <see cref="HP"/> by subtracting a small positive integer from the amount of health points.
     /// </summary>
     /// <param name="left">Original amount of health points.</param>
     /// <param name="right">Decrease HP by this value.</param>
     /// <returns> New HP with updated value.</returns>
     public static HP operator -(HP left, byte right)
     {
-      if (this.Hp < change) {
+      if (left.Hp < right)
+      {
         return new HP(0);
-      } else {
-        return new HP(this.Hp + change);
       }
+
+      return new HP((byte)(left.Hp + right));
     }
 
     /// <inheritdoc/>
-    public int Size { get { return 1; } }
+    public int Size
+    {
+      get { return 1; }
+    }
 
     /// <inheritdoc/>
     public byte[] ToBytes()
@@ -66,7 +70,7 @@ namespace BackEnd.Components
     }
 
     /// <inheritdoc/>
-    public HP FromBytes(byte[] bytes)
+    public IComponent FromBytes(byte[] bytes)
     {
       return new HP(bytes[0]);
     }

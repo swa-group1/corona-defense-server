@@ -42,20 +42,23 @@ namespace BackEnd.Components
     /// <returns>New position. </returns>
     public BoardPosition Move(sbyte x, sbyte y)
     {
-      return new BoardPosition(this.X + x, this.Y + y);
+      return new BoardPosition((byte)(this.X + x), (byte)(this.Y + y));
     }
 
     /// <inheritdoc/>
-    public int Size { get { return 2; } }
-    
+    public int Size
+    {
+      get { return 2; }
+    }
+
     /// <inheritdoc/>
     public byte[] ToBytes()
     {
       return new byte[] { this.X, this.Y };
     }
-    
+
     /// <inheritdoc/>
-    public BoardPosition FromBytes(byte[] bytes)
+    public IComponent FromBytes(byte[] bytes)
     {
       return new BoardPosition(bytes[0], bytes[1]);
     }
