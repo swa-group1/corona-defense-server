@@ -1,3 +1,8 @@
+// <copyright file="HighScoreListController.cs" company="NTNU: SWA group 1 (2021)">
+// Copyright (c) NTNU: SWA group 1 (2021). All rights reserved.
+// </copyright>
+
+using API.Schemas;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
@@ -11,26 +16,26 @@ namespace API.Controllers
   [Route("[controller]")]
   public class HighScoreListController : ControllerBase
   {
-    private readonly ILogger<WeatherForecastController> logger;
+    private readonly ILogger<HighScoreListController> logger;
 
     /// <summary>
-    /// 
+    /// Initializes a new instance of the <see cref="HighScoreListController"/> class.
     /// </summary>
-    /// <param name="logger"></param>
-    public HighScoreListController(ILogger<WeatherForecastController> logger)
+    /// <param name="logger">Logger of this <see cref="HighScoreListController"/>.</param>
+    public HighScoreListController(ILogger<HighScoreListController> logger)
     {
       this.logger = logger;
     }
 
     [HttpGet]
-    public HighScoreList Get()
+    public HighScoreListResult Get()
     {
-      return new HighScoreList()
+      return new HighScoreListResult()
       {
-        Scores = new List<HighScoreList.Score>()
+        Scores = new List<HighScoreListResult.Score>()
         {
-          new HighScoreList.Score() { Name = "Laonard", Value = 100 },
-          new HighScoreList.Score() { Name = "Maka", Value = 99 },
+          new HighScoreListResult.Score() { Name = "Laonard", Value = 100 },
+          new HighScoreListResult.Score() { Name = "Maka", Value = 99 },
         },
       };
     }

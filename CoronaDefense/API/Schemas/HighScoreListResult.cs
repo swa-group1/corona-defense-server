@@ -1,22 +1,21 @@
-using Newtonsoft.Json;
-using System;
+// <copyright file="HighScoreListResult.cs" company="NTNU: SWA group 1 (2021)">
+// Copyright (c) NTNU: SWA group 1 (2021). All rights reserved.
+// </copyright>
+
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-#nullable enable
-
-namespace API
+namespace API.Schemas
 {
   /// <summary>
   /// List of the highest scores observed.
   /// </summary>
-  public class HighScoreList
+  public class HighScoreListResult : RequestResult
   {
     /// <summary>
     /// Gets list of the highest scores observed.
     /// </summary>
     [Required]
-    [JsonProperty(Required = Required.DisallowNull)]
     public List<Score> Scores { get; set; } = new List<Score>();
 
     /// <summary>
@@ -28,12 +27,12 @@ namespace API
       /// Personal indicator, or nickname, associated with this <see cref="Score"/>.
       /// </summary>
       [Required]
-      [JsonProperty(Required = Required.DisallowNull)]
       public string Name { get; set; } = string.Empty;
 
       /// <summary>
       /// Amount of points achieved in the game this <see cref="Score"/> is from.
       /// </summary>
+      [Required]
       public int Value { get; set; }
     }
   }
