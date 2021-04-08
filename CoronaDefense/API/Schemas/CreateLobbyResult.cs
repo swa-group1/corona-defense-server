@@ -14,7 +14,6 @@ namespace API.Schemas
     /// <summary>
     /// Gets or sets ID of the created lobby.
     /// </summary>
-    [Required]
     public long LobbyId { get; set; }
   }
 }

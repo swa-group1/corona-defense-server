@@ -19,9 +19,9 @@ namespace API.Controllers
     private readonly ILogger<SellTowerController> logger;
 
     /// <summary>
-    /// TODO
+    /// Initializes a new instance of the <see cref="SellTowerController"/> class.
     /// </summary>
-    /// <param name="logger"></param>
+    /// <param name="logger">Logger of this <see cref="SellTowerController"/>.</param>
     public SellTowerController(ILogger<SellTowerController> logger)
     {
       this.logger = logger;

@@ -12,7 +12,7 @@ namespace API.Schemas
   public class RequestResult
   {
     /// <summary>
-    /// Gets or sets text describing normal
+    /// Gets or sets text describing normal.
     /// </summary>
     [Required]
     public string Details { get; set; } = "Success.";
