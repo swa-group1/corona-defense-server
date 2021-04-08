@@ -65,7 +65,7 @@ namespace ECS
       this.entities.Add(entity);
       foreach (IComponent component in components)
       {
-        chunks[component.GetType()].components.AddRange(component.ToBytes());
+        chunks[component.GetType()].Components.AddRange(component.ToBytes());
       }
       this.numberOfEntities++;
       return true;
@@ -91,9 +91,9 @@ namespace ECS
       components = new List<IComponent>(this.chunks.Count);
       foreach (Chunk chunk in this.chunks.Values)
       {
-        int chunkIndex = index * chunk.componentSize; // Convert raw index to index within chunk.
-        byte[] bytes = new byte[chunk.componentSize]; // Create space for byte array.
-        chunk.components.CopyTo(chunkIndex, bytes, 0, chunk.componentSize); // Fill byte array.
+        int chunkIndex = index * chunk.ComponentSize; // Convert raw index to index within chunk.
+        byte[] bytes = new byte[chunk.ComponentSize]; // Create space for byte array.
+        chunk.Components.CopyTo(chunkIndex, bytes, 0, chunk.ComponentSize); // Fill byte array.
         IComponent component = chunk.FromBytes(bytes); // Convert bytes to component
         components.Add(component);
       }
@@ -118,15 +118,15 @@ namespace ECS
       // Move data
       foreach (Chunk chunk in this.chunks.Values)
       {
-        int indexInChunk = index * chunk.componentSize; // Convert raw index to index within chunk.
-        int lastIndexInChunk = this.numberOfEntities * chunk.componentSize; // Convert index of last component to index within chunk.
-        byte[] lastComponent = byte[chunk.componentSize]; // Create buffer for last component.
-        chunk.components.CopyTo(lastIndexInChunk, lastComponent, 0, chunk.componentSize); // Copy last component.
+        int indexInChunk = index * chunk.ComponentSize; // Convert raw index to index within chunk.
+        int lastIndexInChunk = this.numberOfEntities * chunk.ComponentSize; // Convert index of last component to index within chunk.
+        byte[] lastComponent = byte[chunk.ComponentSize]; // Create buffer for last component.
+        chunk.Components.CopyTo(lastIndexInChunk, lastComponent, 0, chunk.ComponentSize); // Copy last component.
         foreach (byte data in lastComponent)
         {
-          chunk.components[indexInChunk++] = data;
+          chunk.Components[indexInChunk++] = data;
         }
-        chunk.components.RemoveRange(lastIndexInChunk, chunk.componentSize);
+        chunk.Components.RemoveRange(lastIndexInChunk, chunk.ComponentSize);
       }
 
       // Change index and entity list
