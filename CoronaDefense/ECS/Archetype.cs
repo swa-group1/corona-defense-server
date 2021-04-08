@@ -30,12 +30,13 @@ namespace ECS
     /// <summary>
     /// Number of entities currently stored in this <see cref="Archetype"/>.
     /// </summary>
-    private int numberOfEntities = 0;
+    private int numberOfEntities;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Archetype"/> class.
     /// </summary>
-    // TODO: add params doc.
+    /// <param name="initialEntity">Initial entity of the new <see cref="Archetype"/>.</param>
+    /// <param name="components">Components on the <paramref name="initialEntity"/> of the new <see cref="Archetype"/>.</param>
     public Archetype(int initialEntity, IEnumerable<IComponent> components)
     {
       this.entities.Add(initialEntity);
@@ -43,6 +44,7 @@ namespace ECS
       {
         this.chunks[component.GetType()] = new Chunk(component);
       }
+
       this.numberOfEntities++;
     }
 
@@ -54,7 +56,7 @@ namespace ECS
     /// </remarks>
     /// <param name="entity">Entity to add.</param>
     /// <param name="components">Exhaustive list of components attached to the <paramref name="entity"/>.</param>
-    /// <returns></returns>
+    /// <returns><see langowrd="true"/> if <paramref name="entity"/> was added successfully, <see langword="false"/> otherwise.</returns>
     public bool TryAddEntity(int entity, IEnumerable<IComponent> components)
     {
       if (this.identifierIndex.ContainsKey(entity))
@@ -65,8 +67,9 @@ namespace ECS
       this.entities.Add(entity);
       foreach (IComponent component in components)
       {
-        chunks[component.GetType()].Components.AddRange(component.ToBytes());
+        this.chunks[component.GetType()].Components.AddRange(component.ToBytes());
       }
+
       this.numberOfEntities++;
       return true;
     }
@@ -112,25 +115,26 @@ namespace ECS
       {
         return false;
       }
-      
+
       this.numberOfEntities--;
-    
+
       // Move data
       foreach (Chunk chunk in this.chunks.Values)
       {
         int indexInChunk = index * chunk.ComponentSize; // Convert raw index to index within chunk.
         int lastIndexInChunk = this.numberOfEntities * chunk.ComponentSize; // Convert index of last component to index within chunk.
-        byte[] lastComponent = byte[chunk.ComponentSize]; // Create buffer for last component.
+        byte[] lastComponent = new byte[chunk.ComponentSize]; // Create buffer for last component.
         chunk.Components.CopyTo(lastIndexInChunk, lastComponent, 0, chunk.ComponentSize); // Copy last component.
         foreach (byte data in lastComponent)
         {
           chunk.Components[indexInChunk++] = data;
         }
+
         chunk.Components.RemoveRange(lastIndexInChunk, chunk.ComponentSize);
       }
 
       // Change index and entity list
-      int lastEntity = this.entities[this.numberOfEntities]
+      int lastEntity = this.entities[this.numberOfEntities];
       this.identifierIndex.Remove(entity);
       this.identifierIndex[lastEntity] = index;
       this.entities[index] = lastEntity;
