@@ -2,6 +2,8 @@
 // Copyright (c) NTNU: SWA group 1 (2021). All rights reserved.
 // </copyright>
 
+using API.GlobalMessages;
+
 namespace API.APIEndpoint
 {
   /// <summary>
@@ -9,6 +11,16 @@ namespace API.APIEndpoint
   /// </summary>
   public interface IObserver
   {
+    /// <summary>
+    /// React to a request to create a new lobby.
+    /// </summary>
+    /// <param name="message"><see cref="CreateLobbyMessage"/> with information about the request.</param>
+    /// <returns><see langword="true"/> if </returns>
+    bool OnCreateLobbyMessage(CreateLobbyMessage message)
+    {
+      return true;
+    }
+
     /// <summary>
     /// React to a <see cref="IGlobalMessage"/> from a <see cref="APIEndpoint"/>.
     /// </summary>
