@@ -22,6 +22,14 @@ Create new lobby
     Returns:
         Status of request
         ID of lobby
+        
+Get lobby list
+    Type: Global
+    Params:
+    Returns:
+        Status of request
+        Lobby list
+        
 
 Join lobby
     Type: Global
