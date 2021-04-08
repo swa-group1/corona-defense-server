@@ -21,7 +21,7 @@ namespace ECS
     /// <summary>
     /// The ID of the next entity created by this <see cref="ECS"/>.
     /// </summary>
-    private int nextEntityId = 0;
+    private int nextEntityId;
 
     /// <summary>
     /// Takes an entity and its components, finds the <see cref="TypeSet"/> from those components, and adds the entity to the archetype corresponding to that <see cref="TypeSet"/>.
@@ -32,7 +32,7 @@ namespace ECS
       if (this.archetypes.TryGetValue(typeSet, out Archetype archetype))
       {
         // Archetype did exist beforehand.
-        archetype.AddEntity(entity, components);
+        _ = archetype.TryAddEntity(entity, components);
       }
       else
       {
@@ -56,11 +56,13 @@ namespace ECS
       Archetype oldArchetype = null;
       foreach (Archetype archetype in this.archetypes.Values)
       {
-        if (archetype.TryGetEntityComponents(entity, out oldComponents))
+        if (!archetype.TryGetEntityComponents(entity, out oldComponents))
         {
-          oldArchetype = archetype;
-          break;
+          continue;
         }
+
+        oldArchetype = archetype;
+        break;
       }
 
       if (oldArchetype == null)
