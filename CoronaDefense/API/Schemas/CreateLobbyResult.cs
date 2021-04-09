@@ -2,8 +2,6 @@
 // Copyright (c) NTNU: SWA group 1 (2021). All rights reserved.
 // </copyright>
 
-using System.ComponentModel.DataAnnotations;
-
 namespace API.Schemas
 {
   /// <summary>
