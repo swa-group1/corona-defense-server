@@ -77,7 +77,7 @@ namespace BackEnd
       0x00, // Player count
     };
 
-    private byte[] TurretPositionBuffer { get; } = new byte[]
+    private byte[] TowerPositionBuffer { get; } = new byte[]
     {
       0x33, // Byte code
       0x05, // Length
@@ -88,7 +88,7 @@ namespace BackEnd
       0x00, // Y position
     };
 
-    private byte[] TurretRemovedBuffer { get; } = new byte[]
+    private byte[] TowerRemovedBuffer { get; } = new byte[]
     {
       0x40, // Byte code
       0x02, // Length
@@ -275,27 +275,27 @@ namespace BackEnd
     /// <param name="type">Type number of tower.</param>
     /// <param name="x">X position of tower.</param>
     /// <param name="y">Y position of tower.</param>
-    internal void TurretPosition(short id, byte type, byte x, byte y)
+    internal void TowerPosition(short id, byte type, byte x, byte y)
     {
-      this.TurretPositionBuffer[3] = (byte)id;
+      this.TowerPositionBuffer[3] = (byte)id;
       id >>= 8;
-      this.TurretPositionBuffer[2] = (byte)id;
-      this.TurretPositionBuffer[4] = type;
-      this.TurretPositionBuffer[5] = x;
-      this.TurretPositionBuffer[6] = y;
-      this.Broadcast(this.TurretPositionBuffer);
+      this.TowerPositionBuffer[2] = (byte)id;
+      this.TowerPositionBuffer[4] = type;
+      this.TowerPositionBuffer[5] = x;
+      this.TowerPositionBuffer[6] = y;
+      this.Broadcast(this.TowerPositionBuffer);
     }
 
     /// <summary>
     /// Broadcast that a tower has been removed.
     /// </summary>
     /// <param name="towerId">The ID of the tower that has been removed.</param>
-    internal void TurretRemoved(short towerId)
+    internal void TowerRemoved(short towerId)
     {
-      this.TurretRemovedBuffer[3] = (byte)towerId;
+      this.TowerRemovedBuffer[3] = (byte)towerId;
       towerId >>= 8;
-      this.TurretRemovedBuffer[2] = (byte)towerId;
-      this.Broadcast(this.TurretRemovedBuffer);
+      this.TowerRemovedBuffer[2] = (byte)towerId;
+      this.Broadcast(this.TowerRemovedBuffer);
     }
 
     /// <summary>
