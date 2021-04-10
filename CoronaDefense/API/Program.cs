@@ -3,22 +3,24 @@ using Microsoft.Extensions.Hosting;
 
 namespace API
 {
-  public class Program
+  /// <summary>
+  /// Entry point of API program.
+  /// </summary>
+  public static class Program
   {
+    /// <summary>
+    /// Start API.
+    /// </summary>
+    /// <param name="args">Arguments supplied to the host builder.</param>
     public static void Main(string[] args)
     {
-      CreateHostBuilder(args).Build().Run();
-    }
-
-    public static IHostBuilder CreateHostBuilder(string[] args)
-    {
-      return Host.CreateDefaultBuilder(args)
+      Host.CreateDefaultBuilder(args)
         .ConfigureWebHostDefaults(
           delegate(IWebHostBuilder webBuilder)
           {
             webBuilder.UseStartup<Startup>();
           }
-        );
+        ).Build().Run();
     }
   }
 }
