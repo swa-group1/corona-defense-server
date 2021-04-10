@@ -7,6 +7,7 @@ namespace BackEnd
     private static void Main(string[] args)
     {
       Console.WriteLine("Hello World!");
+      API.Program.Main(Array.Empty<string>());
     }
   }
 }
