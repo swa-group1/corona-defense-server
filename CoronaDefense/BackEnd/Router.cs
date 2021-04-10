@@ -2,7 +2,6 @@
 // Copyright (c) NTNU: SWA group 1 (2021). All rights reserved.
 // </copyright>
 
-using API.APIEndpoint;
 using System;
 using System.Collections.Generic;
 
@@ -11,7 +10,7 @@ namespace BackEnd
   /// <summary>
   /// Router that route <see cref="ILocalMessage"/>s from an <see cref="APIEndpoint"/> to <see cref="Router.IReceiver"/>s.
   /// </summary>
-  internal partial class Router : IObserver
+  internal partial class Router
   {
     /// <summary>
     /// Internal backing generator used for address generation.
@@ -22,29 +21,6 @@ namespace BackEnd
     /// Map from <see cref="long"/> addresses to the receivers of this <see cref="Router"/>.
     /// </summary>
     private readonly Dictionary<long, IReceiver> receivers = new Dictionary<long, IReceiver>();
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="Router"/> class.
-    /// </summary>
-    /// <param name="api">The Api Endpoint to connect to.</param>
-    public Router(IAPIEndpoint api)
-    {
-      api.AttachObserver(this);
-    }
-
-    /// <inheritdoc/>
-    public void OnLocalMessage(ILocalMessage message)
-    {
-      long address = message.Address;
-
-      // Check if this router recognizes the address.
-      if (!this.receivers.TryGetValue(address, out IReceiver receiver))
-      {
-        return;
-      }
-
-      receiver.OnMessage(message);
-    }
 
     /// <summary>
     /// Create a new random <see cref="long"/> acting as an address.

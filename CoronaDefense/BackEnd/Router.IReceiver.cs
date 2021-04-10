@@ -2,8 +2,6 @@
 // Copyright (c) NTNU: SWA group 1 (2021). All rights reserved.
 // </copyright>
 
-using API.APIEndpoint;
-
 namespace BackEnd
 {
   internal partial class Router
@@ -13,11 +11,6 @@ namespace BackEnd
     /// </summary>
     internal interface IReceiver
     {
-      /// <summary>
-      /// Notify this <see cref="IReceiver"/> about a incoming <see cref="ILocalMessage"/> addressed to it.
-      /// </summary>
-      /// <param name="message">Message to react to.</param>
-      public void OnMessage(ILocalMessage message);
     }
   }
 }
