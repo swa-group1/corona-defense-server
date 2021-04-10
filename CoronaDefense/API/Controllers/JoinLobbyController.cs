@@ -2,6 +2,7 @@
 // Copyright (c) NTNU: SWA group 1 (2021). All rights reserved.
 // </copyright>
 
+using API.Requests;
 using API.Schemas;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -30,11 +31,13 @@ namespace API.Controllers
     [HttpPatch]
     public JoinLobbyResult Patch([Required] long lobbyId, [Required] string password)
     {
-      return new JoinLobbyResult()
-      {
-        AccessToken = 1337,
-        LobbyId = lobbyId,
-      };
+      return API.Instance.JoinLobbyHandler.ProcessRequest(
+        new JoinLobbyRequest()
+        {
+          LobbyId = lobbyId,
+          Password = password,
+        }
+      );
     }
   }
 }

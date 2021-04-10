@@ -2,6 +2,7 @@
 // Copyright (c) NTNU: SWA group 1 (2021). All rights reserved.
 // </copyright>
 
+using API.Requests;
 using API.Schemas;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -29,7 +30,13 @@ namespace API.Controllers
     [HttpPatch]
     public RequestResult Patch(long lobbyId, long accessToken)
     {
-      return new RequestResult();
+      return API.Instance.StartRoundHandler.ProcessRequest(
+        new LocalRequest()
+        {
+          LobbyId = lobbyId,
+          AccessToken = accessToken,
+        }
+      );
     }
   }
 }

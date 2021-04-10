@@ -30,14 +30,7 @@ namespace API.Controllers
     [HttpGet]
     public HighScoreListResult Get()
     {
-      return new HighScoreListResult()
-      {
-        Scores = new List<HighScoreListResult.Score>()
-        {
-          new HighScoreListResult.Score() { Name = "Laonard", Value = 100 },
-          new HighScoreListResult.Score() { Name = "Maka", Value = 99 },
-        },
-      };
+      return API.Instance.HighScoreListHandler.ProcessRequest();
     }
   }
 }

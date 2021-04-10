@@ -2,6 +2,7 @@
 // Copyright (c) NTNU: SWA group 1 (2021). All rights reserved.
 // </copyright>
 
+using API.Requests;
 using API.Schemas;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -30,14 +31,7 @@ namespace API.Controllers
     [HttpGet]
     public LobbyList Get()
     {
-      return new LobbyList()
-      {
-        Lobbies = new List<Lobby>()
-        {
-          new Lobby() { Id = 1, Name = "Tarjei", PlayerCount = 99 },
-          new Lobby() { Id = 2, Name = "Sultan", PlayerCount = 0 },
-        },
-      };
+      return API.Instance.LobbyListHandler.ProcessRequest();
     }
   }
 }

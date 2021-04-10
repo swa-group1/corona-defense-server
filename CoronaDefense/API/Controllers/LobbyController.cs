@@ -2,6 +2,7 @@
 // Copyright (c) NTNU: SWA group 1 (2021). All rights reserved.
 // </copyright>
 
+using API.Requests;
 using API.Schemas;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -28,17 +29,14 @@ namespace API.Controllers
     }
 
     [HttpGet]
-    public LobbyResult Get([Required] int id)
+    public LobbyResult Get([Required] long id)
     {
-      return new LobbyResult()
-      {
-        Lobby = new Lobby()
+      return API.Instance.LobbyHandler.ProcessRequest(
+        new LobbyRequest()
         {
-          Id = id,
-          Name = "Tarjei's lobby",
-          PlayerCount = 99,
-        },
-      };
+            Id = id,
+        }
+      );
     }
   }
 }

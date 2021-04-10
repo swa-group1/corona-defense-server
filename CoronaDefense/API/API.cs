@@ -9,28 +9,88 @@ using System;
 namespace API
 {
   /// <summary>
-  /// Receives requests from clients through a REST-api and exposes such events to attached <see cref="IObserver{T}"/>s.
+  /// Receives requests from clients through a REST-api and exposes such events to attached <see cref="IRequestHandler{TRequest,TResult}"/>s.
   /// </summary>
   public class API
   {
-    private IRequestHandler<LocalRequest, RequestResult> activateClientHandler;
-    private IRequestHandler<CreateLobbyRequest, CreateLobbyResult> createLobbyHandler;
-    private IRequestHandler<HighScoreListResult> highScoreListHandler;
-    private IRequestHandler<JoinLobbyRequest, JoinLobbyResult> joinLobbyHandler;
-    private IRequestHandler<LocalRequest, RequestResult> leaveLobbyHandler;
-    private IRequestHandler<LobbyRequest, LobbyResult> lobbyHandler;
-    private IRequestHandler<LobbyList> lobbyListHandler;
-    private IRequestHandler<PlaceTowerRequest, RequestResult> placeTowerHandler;
-    private IRequestHandler<SelltowerRequest, RequestResult> sellTowerHandler;
-    private IRequestHandler<LocalRequest, RequestResult> startRoundHandler;
-    private IRequestHandler<VerifyVersionRequest, VerifyVersionResult> verifyVersionHandler;
+    /// <summary>
+    /// Backing field for singleton.
+    /// </summary>
+    private static readonly Lazy<API> Lazy = new Lazy<API>(() => { return new API(); });
+
+    /// <summary>
+    /// Gets request handler for the ActivateClient endpoint.
+    /// </summary>
+    internal IRequestHandler<LocalRequest, RequestResult> ActivateClientHandler { get; private set; }
+
+    /// <summary>
+    /// Gets request handler for the CreateLobby endpoint.
+    /// </summary>
+    internal IRequestHandler<CreateLobbyRequest, CreateLobbyResult> CreateLobbyHandler { get; private set; }
+
+    /// <summary>
+    /// Gets request handler for the HighScoreList endpoint.
+    /// </summary>
+    internal IRequestHandler<HighScoreListResult> HighScoreListHandler { get; private set; }
+
+    /// <summary>
+    /// Gets request handler for the JoinLobby endpoint.
+    /// </summary>
+    internal IRequestHandler<JoinLobbyRequest, JoinLobbyResult> JoinLobbyHandler { get; private set; }
+
+    /// <summary>
+    /// Gets request handler for the LeaveLobby endpoint.
+    /// </summary>
+    internal IRequestHandler<LocalRequest, RequestResult> LeaveLobbyHandler { get; private set; }
+
+    /// <summary>
+    /// Gets request handler for the Lobby endpoint.
+    /// </summary>
+    internal IRequestHandler<LobbyRequest, LobbyResult> LobbyHandler { get; private set; }
+
+    /// <summary>
+    /// Gets request handler for the LobbyList endpoint.
+    /// </summary>
+    internal IRequestHandler<LobbyList> LobbyListHandler { get; private set; }
+
+    /// <summary>
+    /// Gets request handler for the PlaceTower endpoint.
+    /// </summary>
+    internal IRequestHandler<PlaceTowerRequest, RequestResult> PlaceTowerHandler { get; private set; }
+
+    /// <summary>
+    /// Gets request handler for the SellTower endpoint.
+    /// </summary>
+    internal IRequestHandler<SelltowerRequest, RequestResult> SellTowerHandler { get; private set; }
+
+    /// <summary>
+    /// Gets request handler for the StartRound endpoint.
+    /// </summary>
+    internal IRequestHandler<LocalRequest, RequestResult> StartRoundHandler { get; private set; }
+
+    /// <summary>
+    /// Gets request handler for the VerifyVersion endpoint.
+    /// </summary>
+    internal IRequestHandler<VerifyVersionRequest, VerifyVersionResult> VerifyVersionHandler { get; private set; }
+
+    /// <summary>
+    /// Gets singleton <see cref="API"/> instance.
+    /// </summary>
+    public static API Instance
+    {
+      get { return Lazy.Value; }
+    }
+
+    private API()
+    {
+    }
 
     /// <summary>
     /// Attach handler to the ActivateClient endpoint.
     /// </summary>
     public void AttachActivateClientHandler(IRequestHandler<LocalRequest, RequestResult> handler)
     {
-      this.activateClientHandler = handler;
+      this.ActivateClientHandler = handler;
     }
 
     /// <summary>
@@ -38,7 +98,7 @@ namespace API
     /// </summary>
     public void AttachCreateLobbyHandler(IRequestHandler<CreateLobbyRequest, CreateLobbyResult> handler)
     {
-      this.createLobbyHandler = handler;
+      this.CreateLobbyHandler = handler;
     }
 
     /// <summary>
@@ -46,7 +106,7 @@ namespace API
     /// </summary>
     public void AttachHighScoreListHandler(IRequestHandler<HighScoreListResult> handler)
     {
-      this.highScoreListHandler = handler;
+      this.HighScoreListHandler = handler;
     }
 
     /// <summary>
@@ -54,7 +114,7 @@ namespace API
     /// </summary>
     public void AttachJoinLobbyHandler(IRequestHandler<JoinLobbyRequest, JoinLobbyResult> handler)
     {
-      this.joinLobbyHandler = handler;
+      this.JoinLobbyHandler = handler;
     }
 
     /// <summary>
@@ -62,7 +122,7 @@ namespace API
     /// </summary>
     public void AttachLeaveLobbyHandler(IRequestHandler<LocalRequest, RequestResult> handler)
     {
-      this.leaveLobbyHandler = handler;
+      this.LeaveLobbyHandler = handler;
     }
 
     /// <summary>
@@ -70,7 +130,7 @@ namespace API
     /// </summary>
     public void AttachLobbyHandler(IRequestHandler<LobbyRequest, LobbyResult> handler)
     {
-      this.lobbyHandler = handler;
+      this.LobbyHandler = handler;
     }
 
     /// <summary>
@@ -78,7 +138,7 @@ namespace API
     /// </summary>
     public void AttachLobbyListHandler(IRequestHandler<LobbyList> handler)
     {
-      this.lobbyListHandler = handler;
+      this.LobbyListHandler = handler;
     }
 
     /// <summary>
@@ -86,7 +146,7 @@ namespace API
     /// </summary>
     public void AttachPlaceTowerHandler(IRequestHandler<PlaceTowerRequest, RequestResult> handler)
     {
-      this.placeTowerHandler = handler;
+      this.PlaceTowerHandler = handler;
     }
 
     /// <summary>
@@ -94,7 +154,7 @@ namespace API
     /// </summary>
     public void AttachSellTowerHHandler(IRequestHandler<SelltowerRequest, RequestResult> handler)
     {
-      this.sellTowerHandler = handler;
+      this.SellTowerHandler = handler;
     }
 
     /// <summary>
@@ -102,7 +162,7 @@ namespace API
     /// </summary>
     public void AttachStartRoundHandler(IRequestHandler<LocalRequest, RequestResult> handler)
     {
-      this.startRoundHandler = handler;
+      this.StartRoundHandler = handler;
     }
 
     /// <summary>
@@ -110,7 +170,7 @@ namespace API
     /// </summary>
     public void AttachVerifyVersionHandler(IRequestHandler<VerifyVersionRequest, VerifyVersionResult> handler)
     {
-      this.verifyVersionHandler = handler;
+      this.VerifyVersionHandler = handler;
     }
   }
 }

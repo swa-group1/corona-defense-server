@@ -12,6 +12,6 @@ namespace API.Requests
     /// <summary>
     /// Gets ID of lobby to get.
     /// </summary>
-    public string Id { get; init; }
+    public long Id { get; init; }
   }
 }

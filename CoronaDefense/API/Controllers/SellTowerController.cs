@@ -2,6 +2,7 @@
 // Copyright (c) NTNU: SWA group 1 (2021). All rights reserved.
 // </copyright>
 
+using API.Requests;
 using API.Schemas;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -30,7 +31,14 @@ namespace API.Controllers
     [HttpPatch]
     public RequestResult Patch(long lobbyId, long accessToken, int towerId)
     {
-      return new RequestResult();
+      return API.Instance.SellTowerHandler.ProcessRequest(
+        new SelltowerRequest()
+        {
+          LobbyId = lobbyId,
+          AccessToken = accessToken,
+          TowerId = towerId,
+        }
+      );
     }
   }
 }

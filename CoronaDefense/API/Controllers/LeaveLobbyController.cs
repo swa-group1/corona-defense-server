@@ -6,6 +6,7 @@ using API.Schemas;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
+using API.Requests;
 
 namespace API.Controllers
 {
@@ -30,7 +31,13 @@ namespace API.Controllers
     [HttpPatch]
     public RequestResult Patch(long lobbyId, long accessToken)
     {
-      return new RequestResult();
+      return API.Instance.LeaveLobbyHandler.ProcessRequest(
+        new LocalRequest()
+        {
+          LobbyId = lobbyId,
+          AccessToken = accessToken,
+        }
+      );
     }
   }
 }

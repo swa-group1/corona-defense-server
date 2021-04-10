@@ -30,10 +30,13 @@ namespace API.Controllers
     [HttpPost]
     public CreateLobbyResult Post([Required] string name, [Required] string password)
     {
-      return new CreateLobbyResult()
-      {
-        LobbyId = 1,
-      };
+      return API.Instance.CreateLobbyHandler.ProcessRequest(
+        new Requests.CreateLobbyRequest()
+        {
+          Name = name,
+          Password = password,
+        }
+      );
     }
   }
 }

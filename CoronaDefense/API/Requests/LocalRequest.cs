@@ -17,6 +17,6 @@ namespace API.Requests
     /// <summary>
     /// Gets access token of client.
     /// </summary>
-    public string AccessToken { get; init; }
+    public long AccessToken { get; init; }
   }
 }
