@@ -1,13 +1,13 @@
-// <copyright file="StartRoundRequest.cs" company="NTNU: SWA group 1 (2021)">
+﻿// <copyright file="LocalRequest.cs" company="NTNU: SWA group 1 (2021)">
 // Copyright (c) NTNU: SWA group 1 (2021). All rights reserved.
 // </copyright>
 
 namespace API.Requests
 {
   /// <summary>
-  /// Request to start round.
+  /// A request that concerns one game instance.
   /// </summary>
-  public class StartRoundRequest
+  public class LocalRequest
   {
     /// <summary>
     /// Gets ID of lobby in which to place tower.
@@ -20,4 +20,3 @@ namespace API.Requests
     public string AccessToken { get; init; }
   }
 }
-

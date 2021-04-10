@@ -13,22 +13,22 @@ namespace API
   /// </summary>
   public class API
   {
-    private IRequestHandler<ActivateClientRequest, RequestResult> activateClientHandler;
+    private IRequestHandler<LocalRequest, RequestResult> activateClientHandler;
     private IRequestHandler<CreateLobbyRequest, CreateLobbyResult> createLobbyHandler;
     private IRequestHandler<HighScoreListResult> highScoreListHandler;
     private IRequestHandler<JoinLobbyRequest, JoinLobbyResult> joinLobbyHandler;
-    private IRequestHandler<LeaveLobbyRequest, RequestResult> leaveLobbyHandler;
+    private IRequestHandler<LocalRequest, RequestResult> leaveLobbyHandler;
     private IRequestHandler<LobbyRequest, LobbyResult> lobbyHandler;
     private IRequestHandler<LobbyList> lobbyListHandler;
     private IRequestHandler<PlaceTowerRequest, RequestResult> placeTowerHandler;
     private IRequestHandler<SelltowerRequest, RequestResult> sellTowerHandler;
-    private IRequestHandler<StartRoundRequest, RequestResult> startRoundHandler;
+    private IRequestHandler<LocalRequest, RequestResult> startRoundHandler;
     private IRequestHandler<VerifyVersionRequest, VerifyVersionResult> verifyVersionHandler;
 
     /// <summary>
     /// Attach handler to the ActivateClient endpoint.
     /// </summary>
-    public void AttachActivateClientHandler(IRequestHandler<ActivateClientRequest, RequestResult> handler)
+    public void AttachActivateClientHandler(IRequestHandler<LocalRequest, RequestResult> handler)
     {
       this.activateClientHandler = handler;
     }
@@ -60,7 +60,7 @@ namespace API
     /// <summary>
     /// Attach handler to the LeaveLobby endpoint.
     /// </summary>
-    public void AttachLeaveLobbyHandler(IRequestHandler<LeaveLobbyRequest, RequestResult> handler)
+    public void AttachLeaveLobbyHandler(IRequestHandler<LocalRequest, RequestResult> handler)
     {
       this.leaveLobbyHandler = handler;
     }
@@ -100,7 +100,7 @@ namespace API
     /// <summary>
     /// Attach handler to the StartRound endpoint.
     /// </summary>
-    public void AttachStartRoundHandler(IRequestHandler<StartRoundRequest, RequestResult> handler)
+    public void AttachStartRoundHandler(IRequestHandler<LocalRequest, RequestResult> handler)
     {
       this.startRoundHandler = handler;
     }

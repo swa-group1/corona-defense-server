@@ -28,7 +28,7 @@ namespace API.Controllers
     }
 
     [HttpPatch]
-    public RequestResult Patch([Required] long accessToken)
+    public RequestResult Patch([Required] long lobbyId, [Required] long accessToken)
     {
       return new RequestResult();
     }

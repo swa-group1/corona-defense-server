@@ -7,18 +7,8 @@ namespace API.Requests
   /// <summary>
   /// Request to place tower.
   /// </summary>
-  public class PlaceTowerRequest
+  public class PlaceTowerRequest : LocalRequest
   {
-    /// <summary>
-    /// Gets ID of lobby in which to place tower.
-    /// </summary>
-    public long LobbyId { get; init; }
-
-    /// <summary>
-    /// Gets access token of client.
-    /// </summary>
-    public string AccessToken { get; init; }
-
     /// <summary>
     /// Gets X position of tower to place.
     /// </summary>
