@@ -1,8 +1,10 @@
-namespace API {
+namespace API
+{
     /// <summary>
-    /// Enum containing the available API endpoints. 
+    /// Enum containing the available API endpoints.
     /// </summary>
-    enum Endpoints {
+    public enum Endpoints
+    {
         ActivateClient,
         CreateLobby,
         HighScoreList,
