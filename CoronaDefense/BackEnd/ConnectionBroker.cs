@@ -47,7 +47,7 @@ namespace BackEnd
       this.PublicSocket.Bind(endPoint);
       this.PublicSocket.Listen(16);
 
-      this.Start();
+      _ = Task.Run(this.Start);
     }
 
     /// <inheritdoc/>
