@@ -6,6 +6,7 @@ using API;
 using API.Requests;
 using API.Schemas;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace BackEnd
 {
@@ -19,6 +20,11 @@ namespace BackEnd
     IRequestHandler<LobbyList>,
     IRequestHandler<VerifyVersionRequest, VerifyVersionResult>
   {
+    /// <summary>
+    /// Gets lobbies on this server, associated with their addresses.
+    /// </summary>
+    private Dictionary<long, Lobby> Lobbies { get; } = new Dictionary<long, Lobby>();
+
     /// <summary>
     /// Initializes a new instance of the <see cref="Orchestrator"/> class.
     /// </summary>
@@ -96,11 +102,9 @@ namespace BackEnd
     {
       return new LobbyList()
       {
-        Lobbies = new List<API.Schemas.Lobby>()
-        {
-          new API.Schemas.Lobby() { Id = 1L, Name = "Tarjeis Lobby", PlayerCount = 99, },
-          new API.Schemas.Lobby() { Id = 2L, Name = "Sultans Lobby", PlayerCount = -1, },
-        },
+        Lobbies = this.Lobbies.Values
+          .Select(delegate(Lobby lobby) { return new API.Schemas.Lobby() { Id = lobby.Id, Name = lobby.Name, PlayerCount = lobby.PlayerCount, }; })
+          .ToList(),
       };
     }
 
