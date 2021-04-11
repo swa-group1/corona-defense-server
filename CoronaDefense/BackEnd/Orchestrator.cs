@@ -5,7 +5,6 @@
 using API;
 using API.Requests;
 using API.Schemas;
-using System;
 using System.Collections.Generic;
 
 namespace BackEnd
