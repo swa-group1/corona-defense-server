@@ -51,6 +51,12 @@ namespace BackEnd.Router
     void SellTower(SelltowerRequest request);
 
     /// <summary>
+    /// Start game.
+    /// </summary>
+    /// <param name="request">Specifics of the request.</param>
+    void StartGame(StartGameRequest request);
+
+    /// <summary>
     /// Start round.
     /// </summary>
     /// <param name="request">Specifics of the request.</param>

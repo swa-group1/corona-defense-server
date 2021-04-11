@@ -3,13 +3,14 @@
 // </copyright>
 
 using API.Requests;
+using API.Schemas;
 
 namespace BackEnd.Router
 {
   /// <summary>
   /// <see cref="LocalRequestRouter"/> for requests to sell towers.
   /// </summary>
-  internal class SellTowerRouter : LocalRequestRouter<SelltowerRequest>
+  internal class SellTowerRouter : LocalRequestRouter<SelltowerRequest, RequestResult>
   {
     /// <summary>
     /// Initializes a new instance of the <see cref="SellTowerRouter"/> class.

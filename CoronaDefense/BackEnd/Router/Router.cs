@@ -32,12 +32,13 @@ namespace BackEnd.Router
       API.API.Instance.AttachLeaveLobbyHandler(new LeaveLobbyRouter(this));
       API.API.Instance.AttachPlaceTowerHandler(new PlaceTowerRouter(this));
       API.API.Instance.AttachSellTowerHHandler(new SellTowerRouter(this));
+      API.API.Instance.AttachStartGameHandler(new StartGameRouter(this));
       API.API.Instance.AttachStartRoundHandler(new StartRoundRouter(this));
     }
 
     /// <summary>
     /// Create a new random <see cref="long"/> acting as an address.
-    /// </summary>
+    /// </summary>s
     /// <returns>The generated <see cref="long"/>.</returns>
     private static long GetRandomAddress()
     {

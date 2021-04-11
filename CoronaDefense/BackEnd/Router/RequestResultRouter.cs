@@ -8,13 +8,14 @@ using API.Schemas;
 namespace BackEnd.Router
 {
   /// <summary>
-  /// Standard <see cref="Router.RequestRouter{TRequest,TResult}"/> for requests of type <see cref="LocalRequest"/> and with <see cref="RequestResult"/> output.
+  /// Standard <see cref="Router.RequestRouter{TRequest,TResult}"/> for requests with output that is a subclass of <see cref="RequestResult"/>.
   /// </summary>
   /// <typeparam name="TRequest">Type of request to route.</typeparam>
-  internal abstract class RequestResultRouter<TRequest> : Router.RequestRouter<TRequest, RequestResult>
+  internal abstract class RequestResultRouter<TRequest, TResult> : Router.RequestRouter<TRequest, TResult>
+    where TResult : RequestResult, new()
   {
     /// <summary>
-    /// Initializes a new instance of the <see cref="RequestResultRouter{TRequest}"/> class.
+    /// Initializes a new instance of the <see cref="RequestResultRouter{TRequest,TResult}"/> class.
     /// </summary>
     /// <param name="router"><see cref="Router"/> whose lookup table should be utilized.</param>
     protected RequestResultRouter(Router router)
@@ -30,11 +31,11 @@ namespace BackEnd.Router
     protected abstract void ExecuteRequest(IReceiver receiver, TRequest request);
 
     /// <inheritdoc/>
-    protected override RequestResult ForwardRequest(IReceiver receiver, TRequest request)
+    protected override TResult ForwardRequest(IReceiver receiver, TRequest request)
     {
       this.ExecuteRequest(receiver, request);
 
-      return new RequestResult()
+      return new TResult()
       {
         Success = true,
         Details = "Request to lobby was transmitted successfully. Note, this does not mean the request was carried out without problems.",
@@ -42,9 +43,9 @@ namespace BackEnd.Router
     }
 
     /// <inheritdoc/>
-    protected override RequestResult GenerateInvalidLobbyIdResult(TRequest request)
+    protected override TResult GenerateInvalidLobbyIdResult(TRequest request)
     {
-      return new RequestResult()
+      return new TResult()
       {
         Success = false,
         Details = InvalidLobbyIdMessage,

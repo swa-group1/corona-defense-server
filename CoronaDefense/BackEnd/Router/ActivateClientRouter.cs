@@ -3,13 +3,14 @@
 // </copyright>
 
 using API.Requests;
+using API.Schemas;
 
 namespace BackEnd.Router
 {
   /// <summary>
   /// <see cref="LocalRequestRouter"/> for requests to activate clients.
   /// </summary>
-  internal class ActivateClientRouter : LocalRequestRouter
+  internal class ActivateClientRouter : LocalRequestRouter<LocalRequest, RequestResult>
   {
     /// <summary>
     /// Initializes a new instance of the <see cref="ActivateClientRouter"/> class.

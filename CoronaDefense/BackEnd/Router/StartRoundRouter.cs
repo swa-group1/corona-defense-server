@@ -3,13 +3,14 @@
 // </copyright>
 
 using API.Requests;
+using API.Schemas;
 
 namespace BackEnd.Router
 {
   /// <summary>
   /// <see cref="LocalRequestRouter"/> for requests to start a round.
   /// </summary>
-  internal class StartRoundRouter : LocalRequestRouter
+  internal class StartRoundRouter : LocalRequestRouter<LocalRequest, RequestResult>
   {
     /// <summary>
     /// Initializes a new instance of the <see cref="StartRoundRouter"/> class.

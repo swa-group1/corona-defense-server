@@ -32,9 +32,9 @@ namespace API
     {
       services.AddControllers();
       services.AddSwaggerGen(
-        delegate(SwaggerGenOptions c)
+        delegate (SwaggerGenOptions c)
         {
-          c.SwaggerDoc("v1", new OpenApiInfo { Title = "CoronaDefense_API", Version = "v1" });
+          c.SwaggerDoc("v1.1", new OpenApiInfo { Title = "CoronaDefense_API", Version = "v1.1" });
         }
       );
     }
