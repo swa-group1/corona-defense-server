@@ -24,11 +24,9 @@ namespace BackEnd.Demo
 
       Socket socket = new Socket(serverEndPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
       socket.Connect(serverEndPoint);
-      Console.WriteLine(socket.LocalEndPoint);
 
       byte[] connectionNumberBytes = new byte[8];
       socket.Receive(connectionNumberBytes);
-      Console.WriteLine(BitConverter.ToString(connectionNumberBytes));
 
       if (BitConverter.IsLittleEndian)
       {
@@ -37,7 +35,6 @@ namespace BackEnd.Demo
 
       socket.Close();
 
-      Console.WriteLine(BitConverter.ToString(connectionNumberBytes));
       Console.WriteLine(BitConverter.ToInt64(connectionNumberBytes));
     }
   }
