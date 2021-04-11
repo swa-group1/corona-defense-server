@@ -6,7 +6,9 @@ namespace BackEnd
   {
     private static void Main(string[] args)
     {
-      Console.WriteLine("Hello World!");
+      Orchestrator orchestrator = new Orchestrator();
+      Router.Router router = new Router.Router();
+
       API.Program.Main(Array.Empty<string>());
     }
   }
