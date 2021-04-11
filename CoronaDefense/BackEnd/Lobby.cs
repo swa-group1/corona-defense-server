@@ -5,6 +5,7 @@
 using API.Requests;
 using API.Schemas;
 using BackEnd.Router;
+using System.Collections.Generic;
 
 namespace BackEnd
 {
@@ -32,6 +33,8 @@ namespace BackEnd
     /// Gets the number of players, or clients, currently connected to this <see cref="Lobby"/>.
     /// </summary>
     public int PlayerCount { get; private set; } = 0;
+
+    private List<IObserver> Observers { get; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Lobby"/> class.
@@ -92,6 +95,26 @@ namespace BackEnd
     public void StartRound(LocalRequest request)
     {
       throw new System.NotImplementedException();
+    }
+
+    /// <summary>
+    /// Add observer to this Lobby.
+    /// </summary>
+    public void addObserver(IObserver observer)
+    {
+      this.Observers.Add(observer);
+    }
+
+    /// <summary>
+    /// Observer that reacts to a selection of events that can befall a <see cref="Lobby"/>
+    /// </summary>
+    public interface IObserver
+    {
+      /// <summary>
+      /// Observer gets an opportunity to react to a <see cref="Lobby"/> closing.
+      /// </summary>
+      /// <param name="lobbyId"/>ID of lobby that closed.</param>
+      void OnClose(long lobbyId);
     }
   }
 }
