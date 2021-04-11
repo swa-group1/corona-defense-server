@@ -10,7 +10,7 @@ using System.Collections.Generic;
 namespace BackEnd
 {
   /// <summary>
-  /// A class describing a back-end orchestrator that handles global client-requests that do not concern a specific <see cref="ModelInstance"/>s. This includes creating new <see cref="ModelInstance"/>s.
+  /// A class describing a back-end orchestrator that handles global client-requests that do not concern a specific <see cref="Lobby"/>s. This includes creating new <see cref="Lobby"/>s.
   /// </summary>
   internal class Orchestrator :
     IRequestHandler<CreateLobbyRequest, CreateLobbyResult>,
@@ -79,7 +79,7 @@ namespace BackEnd
     {
       return new LobbyResult()
       {
-        Lobby = new Lobby()
+        Lobby = new API.Schemas.Lobby()
         {
           Id = request.Id,
           Name = "Tarjeis Lobby",
@@ -96,10 +96,10 @@ namespace BackEnd
     {
       return new LobbyList()
       {
-        Lobbies = new List<Lobby>()
+        Lobbies = new List<API.Schemas.Lobby>()
         {
-          new Lobby() { Id = 1L, Name = "Tarjeis Lobby", PlayerCount = 99, },
-          new Lobby() { Id = 2L, Name = "Sultans Lobby", PlayerCount = -1, },
+          new API.Schemas.Lobby() { Id = 1L, Name = "Tarjeis Lobby", PlayerCount = 99, },
+          new API.Schemas.Lobby() { Id = 2L, Name = "Sultans Lobby", PlayerCount = -1, },
         },
       };
     }
