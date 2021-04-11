@@ -6,11 +6,12 @@ using API;
 using API.Requests;
 using API.Schemas;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace BackEnd
 {
   /// <summary>
-  /// A class describing a back-end orchestrator that handles global client-requests that do not concern a specific <see cref="ModelInstance"/>s. This includes creating new <see cref="ModelInstance"/>s.
+  /// A class describing a back-end orchestrator that handles global client-requests that do not concern a specific <see cref="Lobby"/>s. This includes creating new <see cref="Lobby"/>s.
   /// </summary>
   internal class Orchestrator :
     IRequestHandler<CreateLobbyRequest, CreateLobbyResult>,
@@ -19,6 +20,19 @@ namespace BackEnd
     IRequestHandler<LobbyList>,
     IRequestHandler<VerifyVersionRequest, VerifyVersionResult>
   {
+    /// <summary>
+    /// Gets lobbies on this server, associated with their addresses.
+    /// </summary>
+    private Dictionary<long, Lobby> Lobbies { get; } = new Dictionary<long, Lobby>();
+
+    private HashSet<string> VersionsInvalid { get; } = new HashSet<string>()
+    {
+    };
+
+    private HashSet<string> VersionsValid { get; } = new HashSet<string>()
+    {
+    };
+
     /// <summary>
     /// Initializes a new instance of the <see cref="Orchestrator"/> class.
     /// </summary>
@@ -49,7 +63,7 @@ namespace BackEnd
     /// <summary>
     /// Method that processes high score list retrieval request.
     /// </summary>
-    /// <returns>The <see cref="HighScoreListResult"/></returns>
+    /// <returns>The <see cref="HighScoreListResult"/>.</returns>
     HighScoreListResult IRequestHandler<HighScoreListResult>.ProcessRequest()
     {
       return new HighScoreListResult()
@@ -79,7 +93,7 @@ namespace BackEnd
     {
       return new LobbyResult()
       {
-        Lobby = new Lobby()
+        Lobby = new API.Schemas.Lobby()
         {
           Id = request.Id,
           Name = "Tarjeis Lobby",
@@ -96,11 +110,9 @@ namespace BackEnd
     {
       return new LobbyList()
       {
-        Lobbies = new List<Lobby>()
-        {
-          new Lobby() { Id = 1L, Name = "Tarjeis Lobby", PlayerCount = 99, },
-          new Lobby() { Id = 2L, Name = "Sultans Lobby", PlayerCount = -1, },
-        },
+        Lobbies = this.Lobbies.Values
+          .Select(delegate(Lobby lobby) { return new API.Schemas.Lobby() { Id = lobby.Id, Name = lobby.Name, PlayerCount = lobby.PlayerCount, }; })
+          .ToList(),
       };
     }
 
@@ -111,8 +123,30 @@ namespace BackEnd
     /// <returns>The <see cref="VerifyVersionResult"/>.</returns>
     VerifyVersionResult IRequestHandler<VerifyVersionRequest, VerifyVersionResult>.ProcessRequest(VerifyVersionRequest request)
     {
-      return new VerifyVersionResult() {
-        ValidVersion = true,
+      string details;
+      bool valid;
+      if (this.VersionsValid.Contains(request.Version))
+      {
+        details = "Supplied version is supported by this server.";
+        valid = true;
+      }
+      else if (this.VersionsInvalid.Contains(request.Version))
+      {
+        details = "Supplied version is unsupported by this server.";
+        valid = false;
+      }
+      else
+      {
+        details = "Supplied version is unrecognized by this server.";
+        valid = false;
+      }
+
+      return new VerifyVersionResult()
+      {
+        Success = true,
+        Details = details,
+
+        ValidVersion = valid,
       };
     }
   }

@@ -10,7 +10,7 @@ using System.Net.Sockets;
 namespace BackEnd
 {
   /// <summary>
-  /// Broadcaster for a <see cref="ModelInstance"/>. Functionality to send game events to all connected clients.
+  /// Broadcaster for a <see cref="Lobby"/>. Functionality to send game events to all connected clients.
   /// </summary>
   internal class Broadcaster
   {
