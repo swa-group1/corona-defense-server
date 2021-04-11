@@ -29,13 +29,14 @@ namespace API.Controllers
     }
 
     [HttpPatch]
-    public JoinLobbyResult Patch([Required] long lobbyId, [Required] string password)
+    public JoinLobbyResult Patch([Required] long lobbyId, [Required] string password, [Required] long connectionNumber )
     {
       return API.Instance.JoinLobbyHandler.ProcessRequest(
         new JoinLobbyRequest()
         {
           LobbyId = lobbyId,
           Password = password,
+          ConnectionNumber = connectionNumber,
         }
       );
     }
