@@ -20,7 +20,10 @@ namespace BackEnd
     /// </summary>
     private const int PortNumber = 19001;
 
-    private Dictionary<long, Socket> connectionPool = new Dictionary<long, Socket>();
+    /// <summary>
+    /// Gets a map between connection numbers and <see cref="Socket"/>s that are open, but that are not used in any lobbies.
+    /// </summary>
+    private Dictionary<long, Socket> ConnectionPool { get; } = new Dictionary<long, Socket>();
 
     /// <summary>
     /// Gets public socket that accepts new connections.
@@ -48,13 +51,13 @@ namespace BackEnd
     }
 
     /// <summary>
-    /// Add unused established connection to the <see cref="connectionPool"/>.
+    /// Add unused established connection to the <see cref="ConnectionPool"/>.
     /// </summary>
     /// <param name="connectionNumber">Connection number assigned to the connection with the supplied <paramref name="socket"/>.</param>
     /// <param name="socket"><see cref="Socket"/> of connection.</param>
     private void AddConnectionToPool(long connectionNumber, Socket socket)
     {
-      this.connectionPool.Add(connectionNumber, socket);
+      this.ConnectionPool.Add(connectionNumber, socket);
       Console.WriteLine($"Connection number {connectionNumber} added to connection pool.");
     }
 
@@ -75,7 +78,7 @@ namespace BackEnd
           {
             connectionNumber = this.RandomLong;
           }
-          while (this.connectionPool.ContainsKey(connectionNumber));
+          while (this.ConnectionPool.ContainsKey(connectionNumber));
           this.AddConnectionToPool(connectionNumber, clientSocket);
           _ = Task.Run(async () => { await WriteConnectionNumber(clientSocket, connectionNumber); });
         }
