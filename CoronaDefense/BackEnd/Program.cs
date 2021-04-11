@@ -1,7 +1,14 @@
-﻿using System;
+﻿// <copyright file="Program.cs" company="NTNU: SWA group 1 (2021)">
+// Copyright (c) NTNU: SWA group 1 (2021). All rights reserved.
+// </copyright>
+
+using System;
 
 namespace BackEnd
 {
+  /// <summary>
+  /// Entry point of <see cref="BackEnd"/>.
+  /// </summary>
   internal static class Program
   {
     private static void Main(string[] args)

@@ -18,7 +18,7 @@ namespace BackEnd
     /// <summary>
     /// Default time before a <see cref="Lobby"/> should close itself because of inactivity.
     /// </summary>
-    private const int lobbyTimeOut = 2 * 60 * 1000;
+    private const int LobbyTimeOut = 2 * 60 * 1000;
 
     /// <summary>
     /// Gets the ID of this <see cref="Lobby"/>.
@@ -41,7 +41,7 @@ namespace BackEnd
     private int playerCount;
 
     /// <summary>
-    /// If <see cref="playerCount"/> is currently 0, the <see cref="Timer"/> counting towards 
+    /// If <see cref="playerCount"/> is currently 0, the <see cref="Timer"/> counting towards.
     /// </summary>
     private Timer playerCountZeroTimer = null;
 
@@ -64,7 +64,7 @@ namespace BackEnd
           Timer timer = new Timer()
           {
             AutoReset = false,
-            Interval = lobbyTimeOut,
+            Interval = LobbyTimeOut,
           };
           timer.Elapsed += this.OnNoPlayerTimerElapsed;
           timer.Start();
@@ -93,12 +93,6 @@ namespace BackEnd
       this.Password = password;
 
       this.PlayerCount = 0;
-    }
-
-    /// <inheritdoc/>
-    public void ActivateClient(LocalRequest request)
-    {
-      throw new System.NotImplementedException();
     }
 
     /// <inheritdoc/>
@@ -146,6 +140,7 @@ namespace BackEnd
     /// <summary>
     /// Add observer to this Lobby.
     /// </summary>
+    /// <param name="observer">Observer to notify of events in this <see cref="Lobby"/>.</param>
     public void AddObserver(IObserver observer)
     {
       this.Observers.Add(observer);
@@ -171,14 +166,14 @@ namespace BackEnd
     }
 
     /// <summary>
-    /// Observer that reacts to a selection of events that can befall a <see cref="Lobby"/>
+    /// Observer that reacts to a selection of events that can befall a <see cref="Lobby"/>.
     /// </summary>
     public interface IObserver
     {
       /// <summary>
       /// Observer gets an opportunity to react to a <see cref="Lobby"/> closing.
       /// </summary>
-      /// <param name="lobbyId"/>ID of lobby that closed.</param>
+      /// <param name="lobbyId">ID of lobby that closed.</param>
       void OnClose(long lobbyId);
     }
   }

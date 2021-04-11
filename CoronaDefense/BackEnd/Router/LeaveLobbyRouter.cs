@@ -8,7 +8,7 @@ using API.Schemas;
 namespace BackEnd.Router
 {
   /// <summary>
-  /// <see cref="LocalRequestRouter"/> for requests to leave a lobby.
+  /// <see cref="LocalRequestRouter{TRequest,TResult}"/> for requests to leave a lobby.
   /// </summary>
   internal class LeaveLobbyRouter : LocalRequestRouter<LocalRequest, RequestResult>
   {
