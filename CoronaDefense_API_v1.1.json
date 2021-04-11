@@ -1,0 +1,754 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "CoronaDefense_API",
+    "version": "v1"
+  },
+  "paths": {
+    "/ActivateClient": {
+      "patch": {
+        "tags": [
+          "ActivateClient"
+        ],
+        "parameters": [
+          {
+            "name": "lobbyId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "accessToken",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/RequestResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RequestResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RequestResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/CreateLobby": {
+      "post": {
+        "tags": [
+          "CreateLobby"
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "password",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateLobbyResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateLobbyResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateLobbyResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/HighScoreList": {
+      "get": {
+        "tags": [
+          "HighScoreList"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/HighScoreListResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HighScoreListResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HighScoreListResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/JoinLobby": {
+      "patch": {
+        "tags": [
+          "JoinLobby"
+        ],
+        "parameters": [
+          {
+            "name": "lobbyId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "password",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/JoinLobbyResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JoinLobbyResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JoinLobbyResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/LeaveLobby": {
+      "patch": {
+        "tags": [
+          "LeaveLobby"
+        ],
+        "parameters": [
+          {
+            "name": "lobbyId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "accessToken",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/RequestResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RequestResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RequestResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Lobby": {
+      "get": {
+        "tags": [
+          "Lobby"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/LobbyResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LobbyResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LobbyResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/LobbyList": {
+      "get": {
+        "tags": [
+          "LobbyList"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/LobbyList"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LobbyList"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LobbyList"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/PlaceTower": {
+      "patch": {
+        "tags": [
+          "PlaceTower"
+        ],
+        "parameters": [
+          {
+            "name": "lobbyId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "accessToken",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "x",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "y",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/RequestResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RequestResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RequestResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/SellTower": {
+      "patch": {
+        "tags": [
+          "SellTower"
+        ],
+        "parameters": [
+          {
+            "name": "lobbyId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "accessToken",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "towerId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/RequestResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RequestResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RequestResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/StartGame": {
+      "patch": {
+        "tags": [
+          "StartGame"
+        ],
+        "parameters": [
+          {
+            "name": "lobbyId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "accessToken",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "stageNumber",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "byte"
+            }
+          },
+          {
+            "name": "difficulty",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/Difficulties"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/RequestResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RequestResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RequestResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/StartRound": {
+      "patch": {
+        "tags": [
+          "StartRound"
+        ],
+        "parameters": [
+          {
+            "name": "lobbyId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "accessToken",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/RequestResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RequestResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RequestResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/VerifyVersion": {
+      "get": {
+        "tags": [
+          "VerifyVersion"
+        ],
+        "parameters": [
+          {
+            "name": "version",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/VerifyVersionResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VerifyVersionResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VerifyVersionResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "RequestResult": {
+        "required": [
+          "details",
+          "success"
+        ],
+        "type": "object",
+        "properties": {
+          "details": {
+            "type": "string"
+          },
+          "success": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateLobbyResult": {
+        "required": [
+          "details",
+          "success"
+        ],
+        "type": "object",
+        "properties": {
+          "details": {
+            "type": "string"
+          },
+          "success": {
+            "type": "boolean"
+          },
+          "lobbyId": {
+            "type": "integer",
+            "format": "int64"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Score": {
+        "required": [
+          "name",
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "value": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "HighScoreListResult": {
+        "required": [
+          "details",
+          "scores",
+          "success"
+        ],
+        "type": "object",
+        "properties": {
+          "details": {
+            "type": "string"
+          },
+          "success": {
+            "type": "boolean"
+          },
+          "scores": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Score"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "JoinLobbyResult": {
+        "required": [
+          "details",
+          "lobbyId",
+          "success"
+        ],
+        "type": "object",
+        "properties": {
+          "details": {
+            "type": "string"
+          },
+          "success": {
+            "type": "boolean"
+          },
+          "accessToken": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "lobbyId": {
+            "type": "integer",
+            "format": "int64"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Lobby": {
+        "required": [
+          "id",
+          "name",
+          "playerCount"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "name": {
+            "type": "string"
+          },
+          "playerCount": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "LobbyResult": {
+        "required": [
+          "details",
+          "success"
+        ],
+        "type": "object",
+        "properties": {
+          "details": {
+            "type": "string"
+          },
+          "success": {
+            "type": "boolean"
+          },
+          "lobby": {
+            "$ref": "#/components/schemas/Lobby"
+          }
+        },
+        "additionalProperties": false
+      },
+      "LobbyList": {
+        "required": [
+          "lobbies"
+        ],
+        "type": "object",
+        "properties": {
+          "lobbies": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Lobby"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "Difficulties": {
+        "enum": [
+          0,
+          1,
+          2
+        ],
+        "type": "integer",
+        "format": "int32"
+      },
+      "VerifyVersionResult": {
+        "required": [
+          "details",
+          "success",
+          "validVersion"
+        ],
+        "type": "object",
+        "properties": {
+          "details": {
+            "type": "string"
+          },
+          "success": {
+            "type": "boolean"
+          },
+          "validVersion": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}
