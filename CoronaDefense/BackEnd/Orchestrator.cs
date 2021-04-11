@@ -19,7 +19,8 @@ namespace BackEnd
     IRequestHandler<HighScoreListResult>,
     IRequestHandler<LobbyRequest, LobbyResult>,
     IRequestHandler<LobbyList>,
-    IRequestHandler<VerifyVersionRequest, VerifyVersionResult>
+    IRequestHandler<VerifyVersionRequest, VerifyVersionResult>,
+    Lobby.IObserver
   {
     /// <summary>
     /// Gets lobbies on this server, associated with their addresses.
@@ -63,6 +64,7 @@ namespace BackEnd
     {
       Lobby lobby = new Lobby(request.Name, request.Password, this.Router);
       this.Lobbies.Add(lobby.Id, lobby);
+      lobby.AddObserver(this);
 
       return new CreateLobbyResult()
       {
@@ -170,6 +172,12 @@ namespace BackEnd
 
         ValidVersion = valid,
       };
+    }
+
+    /// <inheritdoc/>
+    public void OnClose(long lobbyId)
+    {
+        this.Lobbies.Remove(lobbyId);
     }
   }
 }
