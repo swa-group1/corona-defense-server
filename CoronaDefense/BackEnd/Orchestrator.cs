@@ -49,7 +49,7 @@ namespace BackEnd
     /// <summary>
     /// Method that processes high score list retrieval request.
     /// </summary>
-    /// <returns>The <see cref="HighScoreListResult"/></returns>
+    /// <returns>The <see cref="HighScoreListResult"/>.</returns>
     HighScoreListResult IRequestHandler<HighScoreListResult>.ProcessRequest()
     {
       return new HighScoreListResult()
@@ -111,7 +111,8 @@ namespace BackEnd
     /// <returns>The <see cref="VerifyVersionResult"/>.</returns>
     VerifyVersionResult IRequestHandler<VerifyVersionRequest, VerifyVersionResult>.ProcessRequest(VerifyVersionRequest request)
     {
-      return new VerifyVersionResult() {
+      return new VerifyVersionResult()
+      {
         ValidVersion = true,
       };
     }
