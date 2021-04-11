@@ -18,7 +18,7 @@ namespace BackEnd
     IRequestHandler<CreateLobbyRequest, CreateLobbyResult>,
     IRequestHandler<HighScoreListResult>,
     IRequestHandler<LobbyRequest, LobbyResult>,
-    IRequestHandler<LobbyList>,
+    IRequestHandler<LobbyListResult>,
     IRequestHandler<VerifyVersionRequest, VerifyVersionResult>,
     Lobby.IObserver
   {
@@ -129,10 +129,10 @@ namespace BackEnd
     /// <summary>
     /// Method that processes lobby list retrieval request.
     /// </summary>
-    /// <returns>The <see cref="LobbyList"/>.</returns>
-    LobbyList IRequestHandler<LobbyList>.ProcessRequest()
+    /// <returns>The <see cref="LobbyListResult"/>.</returns>
+    LobbyListResult IRequestHandler<LobbyListResult>.ProcessRequest()
     {
-      return new LobbyList()
+      return new LobbyListResult()
       {
         Lobbies = this.Lobbies.Values
           .Select(delegate(Lobby lobby) { return new API.Schemas.Lobby() { Id = lobby.Id, Name = lobby.Name, PlayerCount = lobby.PlayerCount, }; })

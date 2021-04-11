@@ -18,5 +18,10 @@ namespace API.Requests
     /// Gets password of lobby.
     /// </summary>
     public string Password { get; init; }
+
+    /// <summary>
+    /// Gets connection number client has obtained from connection broker.
+    /// </summary>
+    public long ConnectionNumber { get; init; }
   }
 }

@@ -10,13 +10,8 @@ namespace BackEnd.Router
   /// <summary>
   /// Router that route requests from an <see cref="API.API"/> to <see cref="IReceiver"/>s.
   /// </summary>
-  internal partial class Router
+  internal partial class Router : ServerRandom
   {
-    /// <summary>
-    /// Internal backing generator used for address generation.
-    /// </summary>
-    private static readonly Random Random = new Random();
-
     /// <summary>
     /// Map from <see cref="long"/> addresses to the receivers of this <see cref="Router"/>.
     /// </summary>
@@ -37,18 +32,6 @@ namespace BackEnd.Router
     }
 
     /// <summary>
-    /// Create a new random <see cref="long"/> acting as an address.
-    /// </summary>s
-    /// <returns>The generated <see cref="long"/>.</returns>
-    private static long GetRandomAddress()
-    {
-      byte[] buffer = new byte[8];
-      Random.NextBytes(buffer);
-      long address = BitConverter.ToInt64(buffer, 0);
-      return address;
-    }
-
-    /// <summary>
     /// Register <see cref="IReceiver"/> as a possible destination for messages routed through it.
     /// </summary>
     /// <param name="receiver">Receiver to register.</param>
@@ -59,7 +42,7 @@ namespace BackEnd.Router
       long address;
       do
       {
-        address = GetRandomAddress();
+        address = this.RandomLong;
       }
       while (this.receivers.ContainsKey(address));
 

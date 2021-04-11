@@ -8,7 +8,7 @@ using API.Schemas;
 namespace BackEnd.Router
 {
   /// <summary>
-  /// <see cref="LocalRequestRouter"/> for requests to join a lobby.
+  /// <see cref="BackEnd.Router.Router.RequestRouter{TRequest,TResult}"/> for requests to join a lobby.
   /// </summary>
   internal class JoinLobbyRouter : Router.RequestRouter<JoinLobbyRequest, JoinLobbyResult>
   {
