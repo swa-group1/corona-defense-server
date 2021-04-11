@@ -25,6 +25,14 @@ namespace BackEnd
     /// </summary>
     private Dictionary<long, Lobby> Lobbies { get; } = new Dictionary<long, Lobby>();
 
+    private HashSet<string> VersionsInvalid { get; } = new HashSet<string>()
+    {
+    };
+
+    private HashSet<string> VersionsValid { get; } = new HashSet<string>()
+    {
+    };
+
     /// <summary>
     /// Initializes a new instance of the <see cref="Orchestrator"/> class.
     /// </summary>
@@ -115,9 +123,30 @@ namespace BackEnd
     /// <returns>The <see cref="VerifyVersionResult"/>.</returns>
     VerifyVersionResult IRequestHandler<VerifyVersionRequest, VerifyVersionResult>.ProcessRequest(VerifyVersionRequest request)
     {
+      string details;
+      bool valid;
+      if (this.VersionsValid.Contains(request.Version))
+      {
+        details = "Supplied version is supported by this server.";
+        valid = true;
+      }
+      else if (this.VersionsInvalid.Contains(request.Version))
+      {
+        details = "Supplied version is unsupported by this server.";
+        valid = false;
+      }
+      else
+      {
+        details = "Supplied version is unrecognized by this server.";
+        valid = false;
+      }
+
       return new VerifyVersionResult()
       {
-        ValidVersion = true,
+        Success = true,
+        Details = details,
+
+        ValidVersion = valid,
       };
     }
   }
