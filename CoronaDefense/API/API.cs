@@ -64,6 +64,11 @@ namespace API
     internal IRequestHandler<SelltowerRequest, RequestResult> SellTowerHandler { get; private set; }
 
     /// <summary>
+    /// Gets request handler for the StartGame endpoint.
+    /// </summary>
+    internal IRequestHandler<StartGameRequest, StartGameResult> StartGameHandler { get; private set; }
+
+    /// <summary>
     /// Gets request handler for the StartRound endpoint.
     /// </summary>
     internal IRequestHandler<LocalRequest, RequestResult> StartRoundHandler { get; private set; }
@@ -155,6 +160,14 @@ namespace API
     public void AttachSellTowerHHandler(IRequestHandler<SelltowerRequest, RequestResult> handler)
     {
       this.SellTowerHandler = handler;
+    }
+
+    /// <summary>
+    /// Attach handler to the StartGame endpoint.
+    /// </summary>
+    public void AttachStartGameHandler(IRequestHandler<StartGameRequest, StartGameResult> handler)
+    {
+      this.StartGameHandler = handler;
     }
 
     /// <summary>

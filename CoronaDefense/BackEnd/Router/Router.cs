@@ -37,7 +37,7 @@ namespace BackEnd.Router
 
     /// <summary>
     /// Create a new random <see cref="long"/> acting as an address.
-    /// </summary>
+    /// </summary>s
     /// <returns>The generated <see cref="long"/>.</returns>
     private static long GetRandomAddress()
     {
