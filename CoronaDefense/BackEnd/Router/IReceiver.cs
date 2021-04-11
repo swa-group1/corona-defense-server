@@ -54,7 +54,7 @@ namespace BackEnd.Router
     /// Start game.
     /// </summary>
     /// <param name="request">Specifics of the request.</param>
-    void StartGame(LocalRequest request);
+    void StartGame(StartGameRequest request);
 
     /// <summary>
     /// Start round.

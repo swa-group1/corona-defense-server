@@ -76,6 +76,12 @@ namespace BackEnd
     }
 
     /// <inheritdoc/>
+    public void StartGame(StartGameRequest request)
+    {
+      throw new System.NotImplementedException();
+    }
+
+    /// <inheritdoc/>
     public void StartRound(LocalRequest request)
     {
       throw new System.NotImplementedException();

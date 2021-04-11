@@ -3,13 +3,14 @@
 // </copyright>
 
 using API.Requests;
+using API.Schemas;
 
 namespace BackEnd.Router
 {
   /// <summary>
   /// <see cref="LocalRequestRouter"/> for requests to place a tower.
   /// </summary>
-  internal class PlaceTowerRouter : LocalRequestRouter<PlaceTowerRequest>
+  internal class PlaceTowerRouter : LocalRequestRouter<PlaceTowerRequest, RequestResult>
   {
     /// <summary>
     /// Initializes a new instance of the <see cref="PlaceTowerRouter"/> class.

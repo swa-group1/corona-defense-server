@@ -3,13 +3,14 @@
 // </copyright>
 
 using API.Requests;
+using API.Schemas;
 
 namespace BackEnd.Router
 {
   /// <summary>
   /// <see cref="LocalRequestRouter"/> for requests to start a game.
   /// </summary>
-  internal class StartGameRouter : LocalRequestRouter
+  internal class StartGameRouter : LocalRequestRouter<StartGameRequest, StartGameResult>
   {
     /// <summary>
     /// Initializes a new instance of the <see cref="StartGameRouter"/> class.
@@ -21,7 +22,7 @@ namespace BackEnd.Router
     }
 
     /// <inheritdoc/>
-    protected override void ExecuteRequest(IReceiver receiver, LocalRequest request)
+    protected override void ExecuteRequest(IReceiver receiver, StartGameRequest request)
     {
       receiver.StartGame(request);
     }
