@@ -6,6 +6,7 @@ namespace BackEnd
   {
     private static void Main(string[] args)
     {
+      ConnectionBroker connectionBroker = new ConnectionBroker();
       Router.Router router = new Router.Router();
       Orchestrator orchestrator = new Orchestrator(router);
 
