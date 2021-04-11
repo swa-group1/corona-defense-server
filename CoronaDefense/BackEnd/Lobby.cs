@@ -78,7 +78,7 @@ namespace BackEnd
       }
     }
 
-    private List<IObserver> Observers { get; }
+    private List<IObserver> Observers { get; } = new List<IObserver>();
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Lobby"/> class.
