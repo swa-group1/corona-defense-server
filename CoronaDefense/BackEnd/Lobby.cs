@@ -24,6 +24,11 @@ namespace BackEnd
     public string Name { get; }
 
     /// <summary>
+    /// Gets password of this <see cref="Lobby"/>.
+    /// </summary>
+    private string Password { get; }
+
+    /// <summary>
     /// Gets the number of players, or clients, currently connected to this <see cref="Lobby"/>.
     /// </summary>
     public int PlayerCount { get; private set; } = 0;
@@ -32,11 +37,13 @@ namespace BackEnd
     /// Initializes a new instance of the <see cref="Lobby"/> class.
     /// </summary>
     /// <param name="name">Name of the new <see cref="Lobby"/>.</param>
+    /// <param name="password">Password of the new <see cref="Lobby"/>.</param>
     /// <param name="router">Router the new <see cref="Lobby"/> should connect to.</param>
-    public Lobby(string name, Router.Router router)
+    public Lobby(string name, string password, Router.Router router)
     {
       this.Id = router.Register(this);
       this.Name = name;
+      this.Password = password;
     }
 
     /// <inheritdoc/>

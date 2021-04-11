@@ -5,6 +5,7 @@
 using API;
 using API.Requests;
 using API.Schemas;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -25,6 +26,11 @@ namespace BackEnd
     /// </summary>
     private Dictionary<long, Lobby> Lobbies { get; } = new Dictionary<long, Lobby>();
 
+    /// <summary>
+    /// Gets router to connect new lobbies to.
+    /// </summary>
+    private Router.Router Router { get; }
+
     private HashSet<string> VersionsInvalid { get; } = new HashSet<string>()
     {
     };
@@ -36,8 +42,11 @@ namespace BackEnd
     /// <summary>
     /// Initializes a new instance of the <see cref="Orchestrator"/> class.
     /// </summary>
-    internal Orchestrator()
+    /// <param name="router">Router to connect new lobbies to.</param>
+    internal Orchestrator(Router.Router router)
     {
+      this.Router = router;
+
       API.API.Instance.AttachCreateLobbyHandler(this);
       API.API.Instance.AttachHighScoreListHandler(this);
       API.API.Instance.AttachLobbyHandler(this);
@@ -52,11 +61,15 @@ namespace BackEnd
     /// <returns>The <see cref="CreateLobbyResult"/>.</returns>
     CreateLobbyResult IRequestHandler<CreateLobbyRequest, CreateLobbyResult>.ProcessRequest(CreateLobbyRequest request)
     {
+      Lobby lobby = new Lobby(request.Name, request.Password, this.Router);
+      this.Lobbies.Add(lobby.Id, lobby);
+
       return new CreateLobbyResult()
       {
-        Details = "Lobby was created.",
+        Success = true,
+        Details = $"Lobby with name {lobby.Name} was created.",
 
-        LobbyId = 1,
+        LobbyId = lobby.Id,
       };
     }
 
