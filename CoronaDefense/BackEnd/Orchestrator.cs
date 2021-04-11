@@ -91,14 +91,22 @@ namespace BackEnd
     /// <returns>The <see cref="LobbyResult"/>.</returns>
     LobbyResult IRequestHandler<LobbyRequest, LobbyResult>.ProcessRequest(LobbyRequest request)
     {
-      return new LobbyResult()
+      if (Lobbies.TryGetValue(request.Id, out Lobby lobby))
       {
-        Lobby = new API.Schemas.Lobby()
+        return new LobbyResult()
         {
-          Id = request.Id,
-          Name = "Tarjeis Lobby",
-          PlayerCount = 99,
-        },
+          Lobby = new API.Schemas.Lobby()
+          {
+            Id = lobby.Id,
+            Name = lobby.Name,
+            PlayerCount = lobby.PlayerCount,
+          }
+        };
+      }
+      else return new LobbyResult()
+      {
+        Success = false,
+        Details = "Could not find lobby with id: " + request.Id.ToString(),
       };
     }
 
@@ -111,7 +119,7 @@ namespace BackEnd
       return new LobbyList()
       {
         Lobbies = this.Lobbies.Values
-          .Select(delegate(Lobby lobby) { return new API.Schemas.Lobby() { Id = lobby.Id, Name = lobby.Name, PlayerCount = lobby.PlayerCount, }; })
+          .Select(delegate (Lobby lobby) { return new API.Schemas.Lobby() { Id = lobby.Id, Name = lobby.Name, PlayerCount = lobby.PlayerCount, }; })
           .ToList(),
       };
     }
