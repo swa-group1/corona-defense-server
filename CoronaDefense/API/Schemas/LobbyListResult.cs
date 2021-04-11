@@ -1,4 +1,4 @@
-// <copyright file="LobbyList.cs" company="NTNU: SWA group 1 (2021)">
+// <copyright file="LobbyListResult.cs" company="NTNU: SWA group 1 (2021)">
 // Copyright (c) NTNU: SWA group 1 (2021). All rights reserved.
 // </copyright>
 
@@ -10,7 +10,7 @@ namespace API.Schemas
   /// <summary>
   /// List of the available lobbies.
   /// </summary>
-  public class LobbyList
+  public class LobbyListResult : RequestResult
   {
     /// <summary>
     /// Gets or sets list of available lobbies.

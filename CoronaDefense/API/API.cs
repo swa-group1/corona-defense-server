@@ -51,7 +51,7 @@ namespace API
     /// <summary>
     /// Gets request handler for the LobbyList endpoint.
     /// </summary>
-    internal IRequestHandler<LobbyList> LobbyListHandler { get; private set; }
+    internal IRequestHandler<LobbyListResult> LobbyListHandler { get; private set; }
 
     /// <summary>
     /// Gets request handler for the PlaceTower endpoint.
@@ -141,7 +141,7 @@ namespace API
     /// <summary>
     /// Attach handler to the LobbyList endpoint.
     /// </summary>
-    public void AttachLobbyListHandler(IRequestHandler<LobbyList> handler)
+    public void AttachLobbyListHandler(IRequestHandler<LobbyListResult> handler)
     {
       this.LobbyListHandler = handler;
     }
