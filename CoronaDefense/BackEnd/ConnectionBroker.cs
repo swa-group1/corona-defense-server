@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
+using System.Timers;
 
 namespace BackEnd
 {
@@ -15,6 +16,11 @@ namespace BackEnd
   /// </summary>
   internal class ConnectionBroker : ServerRandom, IDisposable
   {
+    /// <summary>
+    /// Duration in milliseconds before a connection is timed out because it has not joined a <see cref="Lobby"/> yet.
+    /// </summary>
+    private const int TimeoutDuration = 2 * 60 * 1000;
+
     /// <summary>
     /// Port number this port will bind to.
     /// </summary>
@@ -62,6 +68,23 @@ namespace BackEnd
     }
 
     /// <summary>
+    /// Disconnect connection with <paramref name="connectionNumber"/> because of inactivity.
+    /// </summary>
+    /// <param name="connectionNumber">Connection number of connection to time out.</param>
+    private void ConnectionTimeout(long connectionNumber)
+    {
+      if (!this.ConnectionPool.TryGetValue(connectionNumber, out Socket socket))
+      {
+        Console.WriteLine($"Connection with number {connectionNumber} is inactive use and does not need to be timed out.");
+        return;
+      }
+
+      socket.Close();
+      this.ConnectionPool.Remove(connectionNumber);
+      Console.WriteLine($"Connection with number {connectionNumber} was inactive and has been timed out.");
+    }
+
+    /// <summary>
     /// Accept and process connections.
     /// </summary>
     private void Start()
@@ -80,6 +103,15 @@ namespace BackEnd
           }
           while (this.ConnectionPool.ContainsKey(connectionNumber));
           this.AddConnectionToPool(connectionNumber, clientSocket);
+
+          Timer timer = new Timer()
+          {
+            AutoReset = false,
+            Interval = TimeoutDuration,
+          };
+          timer.Elapsed += delegate { this.ConnectionTimeout(connectionNumber); };
+          timer.Start();
+
           _ = Task.Run(async () => { await WriteConnectionNumber(clientSocket, connectionNumber); });
         }
         catch (ObjectDisposedException)
