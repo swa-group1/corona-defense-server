@@ -24,6 +24,11 @@ namespace BackEnd
     public string Name { get; }
 
     /// <summary>
+    /// Gets the number of players, or clients, currently connected to this <see cref="Lobby"/>.
+    /// </summary>
+    public int PlayerCount { get; private set; } = 0;
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="Lobby"/> class.
     /// </summary>
     /// <param name="name">Name of the new <see cref="Lobby"/>.</param>
