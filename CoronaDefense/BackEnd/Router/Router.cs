@@ -32,6 +32,7 @@ namespace BackEnd.Router
       API.API.Instance.AttachLeaveLobbyHandler(new LeaveLobbyRouter(this));
       API.API.Instance.AttachPlaceTowerHandler(new PlaceTowerRouter(this));
       API.API.Instance.AttachSellTowerHHandler(new SellTowerRouter(this));
+      API.API.Instance.AttachStartGameHandler(new StartGameRouter(this));
       API.API.Instance.AttachStartRoundHandler(new StartRoundRouter(this));
     }
 
