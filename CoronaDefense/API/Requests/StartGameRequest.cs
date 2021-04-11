@@ -19,7 +19,7 @@ namespace API.Requests
     /// </summary>
     public Difficulties Difficulty { get; init; }
 
-    ///  <summary>
+    /// <summary>
     /// Available difficulties
     /// </summary>
     public enum Difficulties
