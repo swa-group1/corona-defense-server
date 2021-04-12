@@ -23,6 +23,11 @@ namespace BackEnd
     Lobby.IObserver
   {
     /// <summary>
+    /// Gets the <see cref="ConnectionBroker"/> that lobbies created by this <see cref="Orchestrator"/> should request sockets from.
+    /// </summary>
+    private ConnectionBroker ConnectionBroker { get; }
+
+    /// <summary>
     /// Gets lobbies on this server, associated with their addresses.
     /// </summary>
     private Dictionary<long, Lobby> Lobbies { get; } = new Dictionary<long, Lobby>();
@@ -43,9 +48,11 @@ namespace BackEnd
     /// <summary>
     /// Initializes a new instance of the <see cref="Orchestrator"/> class.
     /// </summary>
+    /// <param name="connectionBroker">The <see cref="ConnectionBroker"/> that lobbies created by this <see cref="Orchestrator"/> should request sockets from.</param>
     /// <param name="router">Router to connect new lobbies to.</param>
-    internal Orchestrator(Router.Router router)
+    internal Orchestrator(ConnectionBroker connectionBroker, Router.Router router)
     {
+      this.ConnectionBroker = connectionBroker;
       this.Router = router;
 
       API.API.Instance.AttachCreateLobbyHandler(this);
@@ -62,7 +69,7 @@ namespace BackEnd
     /// <returns>The <see cref="CreateLobbyResult"/>.</returns>
     CreateLobbyResult IRequestHandler<CreateLobbyRequest, CreateLobbyResult>.ProcessRequest(CreateLobbyRequest request)
     {
-      Lobby lobby = new Lobby(request.Name, request.Password, this.Router);
+      Lobby lobby = new Lobby(request.Name, request.Password, this.ConnectionBroker, this.Router);
       this.Lobbies.Add(lobby.Id, lobby);
       lobby.AddObserver(this);
 

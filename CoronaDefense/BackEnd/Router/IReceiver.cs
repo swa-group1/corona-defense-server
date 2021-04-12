@@ -26,13 +26,6 @@ namespace BackEnd.Router
     void LeaveLobby(LocalRequest request);
 
     /// <summary>
-    /// Get lobby.
-    /// </summary>
-    /// <param name="request">Specifics of the request.</param>
-    /// <returns>The response of the request to be sent to the client.</returns>
-    LobbyResult GetLobby(LobbyRequest request);
-
-    /// <summary>
     /// Place tower.
     /// </summary>
     /// <param name="request">Specifics of the request.</param>

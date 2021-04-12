@@ -13,8 +13,15 @@ namespace BackEnd
   /// <summary>
   /// Model of a game-instance. Contains all the state for one running instance of the game.
   /// </summary>
-  internal class Lobby : IReceiver
+  internal class Lobby : ServerRandom, IReceiver
   {
+    /// <summary>
+    /// Gets the set of access tokens of clients currently connected to this <see cref="Lobby"/>.
+    /// </summary>
+    private HashSet<long> AccessTokens { get; } = new HashSet<long>();
+
+    private Broadcaster Broadcaster { get; }
+
     /// <summary>
     /// Default time before a <see cref="Lobby"/> should close itself because of inactivity.
     /// </summary>
@@ -85,30 +92,65 @@ namespace BackEnd
     /// </summary>
     /// <param name="name">Name of the new <see cref="Lobby"/>.</param>
     /// <param name="password">Password of the new <see cref="Lobby"/>.</param>
+    /// <param name="connectionBroker"></param>
     /// <param name="router">Router the new <see cref="Lobby"/> should connect to.</param>
-    public Lobby(string name, string password, Router.Router router)
+    public Lobby(string name, string password, ConnectionBroker connectionBroker, Router.Router router)
     {
       this.Id = router.Register(this);
       this.Name = name;
       this.Password = password;
 
       this.PlayerCount = 0;
+
+      this.Broadcaster = new Broadcaster(connectionBroker);
     }
 
     /// <inheritdoc/>
     public JoinLobbyResult JoinLobby(JoinLobbyRequest request)
     {
-      throw new System.NotImplementedException();
+      if (request.Password != this.Password)
+      {
+        return new JoinLobbyResult()
+        {
+          Success = false,
+          Details = "Password was not correct.",
+
+          LobbyId = this.Id,
+        };
+      }
+
+      long accessToken;
+      do
+      {
+        accessToken = this.RandomLong;
+      }
+      while (this.AccessTokens.Contains(accessToken));
+
+      if (!this.Broadcaster.TryAssociateWithConnection(accessToken, request.ConnectionNumber))
+      {
+        return new JoinLobbyResult()
+        {
+          Success = false,
+          Details = "Connection number was not found to map to a valid open connection to the server.",
+
+          LobbyId = this.Id,
+        };
+      }
+
+      this.AccessTokens.Add(accessToken);
+      this.playerCount++;
+
+      this.Broadcaster.Ping();
+
+      return new JoinLobbyResult()
+      {
+        AccessToken = accessToken,
+        LobbyId = this.Id,
+      };
     }
 
     /// <inheritdoc/>
     public void LeaveLobby(LocalRequest request)
-    {
-      throw new System.NotImplementedException();
-    }
-
-    /// <inheritdoc/>
-    public LobbyResult GetLobby(LobbyRequest request)
     {
       throw new System.NotImplementedException();
     }

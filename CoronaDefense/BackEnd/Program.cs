@@ -15,7 +15,7 @@ namespace BackEnd
     {
       ConnectionBroker connectionBroker = new ConnectionBroker();
       Router.Router router = new Router.Router();
-      Orchestrator orchestrator = new Orchestrator(router);
+      Orchestrator orchestrator = new Orchestrator(connectionBroker, router);
 
       API.Program.Main(Array.Empty<string>());
     }
