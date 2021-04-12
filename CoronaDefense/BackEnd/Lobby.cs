@@ -152,7 +152,11 @@ namespace BackEnd
     /// <inheritdoc/>
     public void LeaveLobby(LocalRequest request)
     {
-      throw new System.NotImplementedException();
+      if (this.AccessTokens.Remove(request.AccessToken))
+      {
+        this.Broadcaster.DisconnectClient(request.AccessToken);
+        this.PlayerCount--;
+      }
     }
 
     /// <inheritdoc/>
