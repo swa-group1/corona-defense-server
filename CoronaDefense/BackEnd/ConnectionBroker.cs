@@ -75,7 +75,7 @@ namespace BackEnd
     {
       if (!this.ConnectionPool.TryGetValue(connectionNumber, out Socket socket))
       {
-        Console.WriteLine($"Connection with number {connectionNumber} is inactive use and does not need to be timed out.");
+        Console.WriteLine($"Connection with number {connectionNumber} is in use and does not need to be timed out.");
         return;
       }
 
