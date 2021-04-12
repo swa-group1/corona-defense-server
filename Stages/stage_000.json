@@ -1,1 +1,1 @@
-{"number":1,"name":"The Scary Place","pathSize":1,"pathStart":5,"pathEnd":29,"xSize":10,"ySize":10,"blockedTiles":[{"x":3,"y":7},{"x":4,"y":7},{"x":4,"y":8}],"pathPoints":[{"x":-5,"y":6},{"x":3,"y":6},{"x":3,"y":2},{"x":7,"y":2},{"x":7,"y":6},{"x":5,"y":6},{"x":6,"y":-5}]}
+{"Number":1,"Name":"The Scary Place","PathSize":1,"PathStart":5,"PathEnd":29,"XSize":10,"YSize":10,"BlockedTiles":[{"X":3,"Y":7},{"X":4,"Y":7},{"X":4,"Y":8}],"pathPoints":[{"X":-5,"Y":6},{"X":3,"Y":6},{"X":3,"Y":2},{"X":7,"Y":2},{"X":7,"Y":6},{"X":5,"Y":6},{"X":6,"Y":-5}]}
