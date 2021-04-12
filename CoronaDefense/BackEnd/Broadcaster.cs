@@ -19,6 +19,11 @@ namespace BackEnd
     /// </summary>
     private ConnectionBroker ConnectionBroker { get; }
 
+    /// <summary>
+    /// Dictionary connecting access tokens to sockets.
+    /// </summary>
+    private Dictionary<long, Socket> Sockets { get; } = new Dictionary<long, Socket>();
+
     private static byte[] PingBuffer { get; } = new byte[]
     {
       0x10, // Byte code
@@ -152,11 +157,6 @@ namespace BackEnd
     };
 
     /// <summary>
-    /// Dictionary connecting access tokens to sockets.
-    /// </summary>
-    private readonly Dictionary<long, Socket> sockets = new Dictionary<long, Socket>();
-
-    /// <summary>
     /// Initializes a new instance of the <see cref="Broadcaster"/> class.
     /// </summary>
     /// <param name="connectionBroker"><see cref="ConnectionBroker"/> that the new <see cref="Broadcaster"> should get <see cref="Socket"/>s from.</param>
@@ -171,10 +171,25 @@ namespace BackEnd
     /// <param name="buffer">Buffer to send to <see cref="sockets"/>.</param>
     private void Broadcast(byte[] buffer)
     {
-      foreach (Socket socket in this.sockets.Values)
+      foreach (Socket socket in this.Sockets.Values)
       {
         socket.Send(buffer);
       }
+    }
+
+    /// <summary>
+    /// Disconnect socket associated with supplied <paramref name="accessToken"/>.
+    /// </summary>
+    /// <param name="accessToken"/>Access token of connection to close.</param>
+    internal void DisconnectClient(long accessToken)
+    {
+      if (!this.Sockets.TryGetValue(accessToken, out Socket clientSocket))
+      {
+        return;
+      }
+
+      clientSocket.Close();
+      this.Sockets.Remove(accessToken);
     }
 
     /// <summary>
@@ -190,7 +205,7 @@ namespace BackEnd
         return false;
       }
 
-      this.sockets.Add(accessToken, clientSocket);
+      this.Sockets.Add(accessToken, clientSocket);
       return true;
     }
 
