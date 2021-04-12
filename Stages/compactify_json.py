@@ -18,7 +18,7 @@ def main() -> None:
     result: str = compactify_json(content)
 
     json_file = open(sys.argv[2], "w")
-    json_file.write()
+    json_file.write(result)
     json_file.close()
 
 def compactify_json(content: str) -> str:
