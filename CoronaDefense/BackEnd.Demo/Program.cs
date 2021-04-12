@@ -33,9 +33,13 @@ namespace BackEnd.Demo
         Array.Reverse(connectionNumberBytes);
       }
 
-      socket.Close();
-
       Console.WriteLine(BitConverter.ToInt64(connectionNumberBytes));
+
+      byte[] bytes = new byte[5];
+      socket.Receive(bytes);
+      Console.WriteLine(BitConverter.ToString(bytes));
+
+      socket.Close();
     }
   }
 }
