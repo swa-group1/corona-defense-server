@@ -1,0 +1,24 @@
+{
+	"number": 1,
+	"name": "The Scary Place",
+	"pathSize": 1,
+	"pathStart": 5,
+	"pathEnd": 29,
+	"xSize": 10,
+	"ySize": 10,
+	"blockedTiles": [
+		{ "x": 3, "y": 7 },
+		{ "x": 4, "y": 7 },
+		{ "x": 4, "y": 8 }
+	],
+	"pathPoints": [
+		{ "x": -5, "y": 6 },
+		{ "x": 3, "y": 6 },
+		{ "x": 3, "y": 2 },
+		{ "x": 7, "y": 2 },
+		{ "x": 7, "y": 6 },
+		{ "x": 5, "y": 6 },
+		{ "x": 6, "y": -5 }
+	]
+ }
+  

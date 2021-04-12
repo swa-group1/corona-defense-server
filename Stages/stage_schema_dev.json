@@ -1,0 +1,72 @@
+{
+	"title": "Stage",
+	"description": "A stage in CoronaDefense",
+	"type": "object",
+	"properties": {
+		"number": {
+			"description": "A unique number of this stage",
+			"type": "integer"
+		},
+		"name": {
+			"description": "The display name of this stage",
+			"type": "string"
+		},
+		"pathSize": {
+			"description": "The width of the path extending from the base path",
+			"type": "integer"
+		},
+		"pathStart": {
+			"description": "The number of tiles before the first visible tile",
+			"type": "integer"
+		},
+		"pathEnd": {
+			"description": "The number of tiles before the first tile on the trailing end of the stage that is not visible",
+			"type": "integer"
+		},
+		"xSize": {
+			"description": "The number of tile columns in x direction",
+			"type": "integer"
+		},
+		"ySize": {
+			"description": "The number of tile rows in y direction",
+			"type": "integer"
+		},
+		"blockedTiles": {
+			"description": "Tiles that towers can not occupy",
+			"type": "array",
+			"items": {
+				"description": "One tile that towers can not occupy",
+				"type": "object",
+				"properties": {
+					"x": { "type": "integer" },
+					"y": { "type": "integer" }
+				},
+				"required": [ "x", "y" ]
+			}
+		},
+		"pathPoints": {
+			"description": "Points that the path passes through",
+			"type": "array",
+			"items": {
+				"description": "One point that the path passes through",
+				"type": "object",
+				"properties": {
+					"x": { "type": "integer" },
+					"y": { "type": "integer" }
+				},
+				"required": [ "x", "y" ]
+			}
+		}
+	},
+	"required": [
+		"number",
+		"name",
+		"pathSize",
+		"pathStart",
+		"pathEnd",
+		"xSize",
+		"ySize",
+		"blockedTiles",
+		"pathPoints"
+	]
+}
