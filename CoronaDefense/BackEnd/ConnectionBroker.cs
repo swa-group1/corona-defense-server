@@ -122,6 +122,22 @@ namespace BackEnd
     }
 
     /// <summary>
+    /// Attempt to claim an already established connection between the server, through this <see cref="ConnectionBroker"/>, and a client.
+    /// </summary>
+    /// <param name="connectionNumber">Connection number of connection to claim.</param>
+    /// <param name="clientSocket">Returns the <see cref="Socket"/> of the connection.</param>
+    /// <returns><see langword="true"/> if the connection existed and was successfully claimed.</returns>
+    public bool TryClaimConnection(long connectionNumber, out Socket clientSocket)
+    {
+      if (!this.ConnectionPool.TryGetValue(connectionNumber, out clientSocket)) {
+        return false;
+      }
+
+      this.ConnectionPool.Remove(connectionNumber);
+      return true;
+    }
+
+    /// <summary>
     /// Write supplied <paramref name="connectionNumber"/> to supplied <paramref name="socket"/>.
     /// </summary>
     /// <param name="socket"><see cref="Socket"/> to write <paramref name="connectionNumber"/> to.</param>
