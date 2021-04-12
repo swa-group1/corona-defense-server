@@ -14,6 +14,11 @@ namespace BackEnd
   /// </summary>
   internal class Broadcaster
   {
+    /// <summary>
+    /// Gets <see cref="ConnectionBroker"/> that this <see cref="Broadcaster"> should get <see cref="Socket"/>s from.
+    /// </summary>
+    private ConnectionBroker ConnectionBroker { get; }
+
     private static byte[] PingBuffer { get; } = new byte[]
     {
       0x10, // Byte code
@@ -152,6 +157,15 @@ namespace BackEnd
     private readonly Dictionary<long, Socket> sockets = new Dictionary<long, Socket>();
 
     /// <summary>
+    /// Initializes a new instance of the <see cref="Broadcaster"/> class.
+    /// </summary>
+    /// <param name="connectionBroker"><see cref="ConnectionBroker"/> that the new <see cref="Broadcaster"> should get <see cref="Socket"/>s from.</param>
+    public Broadcaster(ConnectionBroker connectionBroker)
+    {
+      this.ConnectionBroker = connectionBroker;
+    }
+
+    /// <summary>
     /// Send supplied <paramref name="buffer"/> to all <see cref="sockets"/>.
     /// </summary>
     /// <param name="buffer">Buffer to send to <see cref="sockets"/>.</param>
@@ -164,20 +178,20 @@ namespace BackEnd
     }
 
     /// <summary>
-    /// Initializes a new socket and connects to client if the client is not already connected.
+    /// Attempt to associate client with specific <paramref name="accessToken"/> to connection with supplied <paramref name="connectionNumebr"/>.
     /// </summary>
-    /// <param name="accessToken">Access token to associate with the new <see cref="Socket"/>.</param>
-    /// <param name="address">Address to connect to.</param>
-    internal void ConnectTo(long accessToken, EndPoint address)
+    /// <param name="accessToken">Access token to associate with the retrieved <see cref="Socket"/>.</param>
+    /// <param name="connectionNumber">Connection number of connection to claim from <see cref="ConnectionBroker"/></param>
+    /// <returns><see langword="true"/> if connection was associated with <paramref name="accessToken"/>.</returns>
+    internal bool TryAssociateWithConnection(long accessToken, long connectionNumber)
     {
-      if (this.sockets.ContainsKey(accessToken))
+      if (!this.ConnectionBroker.TryClaimConnection(connectionNumber, out Socket clientSocket))
       {
-        throw new ArgumentException($"Access token already registered in this {nameof(Broadcaster)}.");
+        return false;
       }
 
-      Socket socket = new Socket(address.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-      socket.Connect(address);
-      this.sockets.Add(accessToken, socket);
+      this.sockets.Add(accessToken, clientSocket);
+      return true;
     }
 
     /// <summary>
