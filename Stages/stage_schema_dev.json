@@ -1,41 +1,29 @@
 {
 	"title": "Stage",
-	"description": "A stage in CoronaDefense",
+	"description": "A stage in CoronaDefense.",
 	"type": "object",
 	"properties": {
 		"Number": {
-			"description": "A unique number of this stage",
+			"description": "A unique number of this stage.",
 			"type": "integer"
 		},
 		"Name": {
-			"description": "The display name of this stage",
+			"description": "The display name of this stage.",
 			"type": "string"
 		},
-		"PathSize": {
-			"description": "The width of the path extending from the base path",
-			"type": "integer"
-		},
-		"PathStart": {
-			"description": "The number of tiles before the first visible tile",
-			"type": "integer"
-		},
-		"PathEnd": {
-			"description": "The number of tiles before the first tile on the trailing end of the stage that is not visible",
-			"type": "integer"
-		},
 		"XSize": {
-			"description": "The number of tile columns in x direction",
+			"description": "The number of tile columns in x direction.",
 			"type": "integer"
 		},
 		"YSize": {
-			"description": "The number of tile rows in y direction",
+			"description": "The number of tile rows in y direction.",
 			"type": "integer"
 		},
 		"BlockedTiles": {
-			"description": "Tiles that towers can not occupy",
+			"description": "Tiles that towers can not occupy.",
 			"type": "array",
 			"items": {
-				"description": "One tile that towers can not occupy",
+				"description": "One tile that towers can not occupy.",
 				"type": "object",
 				"properties": {
 					"X": { "type": "integer" },
@@ -45,14 +33,14 @@
 			}
 		},
 		"PathPoints": {
-			"description": "Points that the path passes through",
+			"description": "Points that the path passes through.",
 			"type": "array",
 			"items": {
-				"description": "One point that the path passes through",
+				"description": "One point that the path passes through.",
 				"type": "object",
 				"properties": {
-					"X": { "type": "integer" },
-					"Y": { "type": "integer" }
+					"X": { "type": "float" },
+					"Y": { "type": "float" }
 				},
 				"required": [ "X", "Y" ]
 			}
@@ -61,9 +49,6 @@
 	"required": [
 		"Number",
 		"Name",
-		"PathSize",
-		"PathStart",
-		"PathEnd",
 		"XSize",
 		"YSize",
 		"BlockedTiles",

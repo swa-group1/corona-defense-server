@@ -29,9 +29,9 @@ namespace BackEnd.Game
     private static int StepsInTile = 2 * HalfOfStepsInTile;
 
     /// <summary>
-    /// Gets the cumulative number of steps until the start of each line segment.
+    /// TODO
     /// </summary>
-    private List<int> CumulativeStepsPerLineSegment { get; } = new List<int>();
+    private List<double> CumulativePathLengths { get; } = new List<double>();
 
     /// <summary>
     /// Gets the affine functions for X-values in line segments from the described path.
@@ -54,21 +54,6 @@ namespace BackEnd.Game
     public string Name { get; init; }
 
     /// <summary>
-    /// Gets the width of the path extending from the base path.
-    /// </summary>
-    public int PathSize { get; init; }
-
-    /// <summary>
-    /// Gets the number of tiles before the first visible tile.
-    /// </summary>
-    public int PathStart { get; init; }
-
-    /// <summary>
-    /// Gets the number of tiles before the first tile on the trailing end of the stage that is not visible.
-    /// </summary>
-    public int PathEnd { get; init; }
-
-    /// <summary>
     /// Gets the number of tile columns in x direction.
     /// </summary>
     public int XSize { get; init; }
@@ -86,12 +71,12 @@ namespace BackEnd.Game
     /// <summary>
     /// Backing-field of <see cref="PathPoints"/>.
     /// </summary>
-    private IList<Tile> pathPoints;
+    private IList<Point> pathPoints;
 
     /// <summary>
     /// Gets points that the path passes through.
     /// </summary>
-    public IList<Tile> PathPoints
+    public IList<Point> PathPoints
     {
       get
       {
@@ -113,146 +98,46 @@ namespace BackEnd.Game
     /// </remarks>
     private void CalculatePath()
     {
-      this.CumulativeStepsPerLineSegment.Clear();
+      this.CumulativePathLengths.Clear();
       this.LineSegmentsX.Clear();
       this.LineSegmentsY.Clear();
 
-      List<CardinalDirection> directions = new List<CardinalDirection>();
-      List<int> lengths = new List<int>();
-      List<bool> positivities = new List<bool>();
+      // Adding edge-case logic for requesting a point before the path.
+      this.CumulativePathLengths.Add(0d);
+      this.LineSegmentsX.Add(AffineLine.Constant(this.PathPoints[0].X));
+      this.LineSegmentsY.Add(AffineLine.Constant(this.PathPoints[0].Y));
 
+      double cumulativePathLength = 0d;
       for (int i = 1; i < this.PathPoints.Count; i++)
       {
-        Tile first = this.PathPoints[i - 1];
-        Tile second = this.PathPoints[i];
+        Point first = this.PathPoints[i - 1];
+        Point second = this.PathPoints[i];
+        double deltaX = second.X - first.X;
+        double deltaY = second.Y - first.Y;
+        double newCumulativePathLength = cumulativePathLength + Math.Sqrt((deltaX * deltaX) + (deltaY * deltaY));
 
-        int deltaX = second.X - first.X;
-        int deltaY = second.Y - first.Y;
+        this.LineSegmentsX.Add(new AffineLine(cumulativePathLength, first.X, newCumulativePathLength, second.X));
+        this.LineSegmentsY.Add(new AffineLine(cumulativePathLength, first.Y, newCumulativePathLength, second.Y));
 
-        // Ensure path line moves only in x or y direction.
-        if (deltaX * deltaY != 0)
-        {
-          throw new NotSupportedException("Stages with paths that do not follow the grid lines are not supported.");
-        }
-
-        int sum = deltaX + deltaX;
-
-        // Check that not both deltas are zero.
-        if (sum == 0)
-        {
-          // When both are zero, the two path points are identical and this section can be skipped.
-          this.PathPoints.RemoveAt(i);
-          i--;
-          continue;
-        }
-
-        if (deltaX != 0)
-        {
-          // Movement is along the X-axis.
-          directions.Add(0 < deltaX ? CardinalDirection.East : CardinalDirection.West);
-        }
-        else
-        {
-          // Movement is along the Y-axis.
-          directions.Add(0 < deltaY ? CardinalDirection.North : CardinalDirection.South);
-        }
-
-        lengths.Add(Math.Abs(sum));
-        positivities.Add(0 < sum);
+        cumulativePathLength = newCumulativePathLength;
+        this.CumulativePathLengths.Add(cumulativePathLength);
       }
 
-      directions.Add(Reverse(directions[directions.Count - 1]));
-      lengths.Add(0);
-      positivities.Add(!positivities[positivities.Count - 1]);
-
-      int HalfOfStepsInBend = HalfOfStepsInTile * this.PathSize;
-
-      int cumulativeSteps = 0;
-
-      CardinalDirection previousDirection = Reverse(directions[0]);
-      (double x, double y) previousPoint;
-      bool previousPositivity = !positivities[0];
-      for (int i = 0, max = directions.Count - 1; i < max; i++)
-      {
-        int steps = StepsInTile * lengths[i];
-
-        (double x, double y) firstPoint;
-        if (Reverse(previousDirection) == directions[i] || previousDirection == directions[i])
-        {
-          // Turn or continuation
-          firstPoint = Offset(this.pathPoints[i], HalfOfStepsInBend, PositiveNormal(directions[i]));
-        }
-        else
-        {
-          // Must be bend
-          firstPoint = Offset(this.pathPoints[i], HalfOfStepsInBend, CardinalDirection.East, CardinalDirection.North);
-          steps += positivities[i] ? -HalfOfStepsInBend : HalfOfStepsInBend;
-        }
-
-        this.CumulativeStepsPerLineSegment.Add(cumulativeSteps);
-        this.LineSegmentsX.Add(new AffineLine(cumulativeSteps, this.pathPoints[i - 1].X, nextCumulativeSteps, this.pathPoints[i].X));
-        this.LineSegmentsY.Add(new AffineLine(cumulativeSteps, this.pathPoints[i - 1].Y, nextCumulativeSteps, this.pathPoints[i].Y));
-
-        previousDirection = directions[i];
-        previousPositivity = positivities[i];
-      }
-
-      return;
-
-      this.CumulativeStepsPerLineSegment.Add(0);
-      this.LineSegmentsX.Add(new AffineLine(0, 0, 1, 0));
-      this.LineSegmentsY.Add(new AffineLine(0, 0, 1, 0));
-
-      for (int i = 1; i < this.PathPoints.Count; i++)
-      {
-        int deltaX = this.PathPoints[i].X - this.PathPoints[i - 1].X;
-        int deltaY = this.PathPoints[i].Y - this.PathPoints[i - 1].Y;
-
-        
-
-        // Check that not both deltas are zero.
-        if (sum == 0)
-        {
-          // When both are zero, the two path points are identical and this section can be skipped.
-          continue;
-        }
-
-        int nextCumulativeSteps = cumulativeSteps + sum * StepsInTile + (0 < sum ? HalfOfStepsInTile : -HalfOfStepsInTile) * this.PathSize;
-        this.CumulativeStepsPerLineSegment.Add(cumulativeSteps);
-
-        double halfTile = 0.5d * this.PathSize;
-        this.LineSegmentsX.Add(new AffineLine(cumulativeSteps, this.pathPoints[i - 1].X, nextCumulativeSteps, this.pathPoints[i].X));
-        this.LineSegmentsY.Add(new AffineLine(cumulativeSteps, this.pathPoints[i - 1].Y, nextCumulativeSteps, this.pathPoints[i].Y));
-      }
+      // Adding edge-case logic for requesting a point after path.
+      this.CumulativePathLengths.Add(double.MaxValue);
+      this.LineSegmentsX.Add(AffineLine.Constant(this.PathPoints[this.PathPoints.Count - 1].X));
+      this.LineSegmentsY.Add(AffineLine.Constant(this.PathPoints[this.PathPoints.Count - 1].Y));
     }
 
-    // TODO
-    private static (double x, double y) Offset(Tile tile, double magnitude, params CardinalDirection[] directions)
+    public Point GetPointAlongPath(double length)
     {
-      double x = tile.X;
-      double y = tile.Y;
-      foreach (CardinalDirection direction in directions)
+      int insertIndex = this.CumulativePathLengths.BinarySearch(length);
+      insertIndex = insertIndex < 0 ? ~insertIndex : insertIndex;
+      return new Point()
       {
-        switch (direction)
-        {
-        case CardinalDirection.East:
-          x += magnitude;
-          break;
-        case CardinalDirection.North:
-          y += magnitude;
-          break;
-        case CardinalDirection.South:
-          y -= magnitude;
-          break;
-        case CardinalDirection.West:
-          x -= magnitude;
-          break;
-        default:
-          break;
-        }
-      }
-
-      return (x, y);
+        X = this.LineSegmentsX[insertIndex].Evaluate(length),
+        Y = this.LineSegmentsY[insertIndex].Evaluate(length),
+      };
     }
 
     /// <summary>
@@ -265,86 +150,81 @@ namespace BackEnd.Game
       return JsonConvert.DeserializeObject<Stage>(jsonContent);
     }
 
-    // TODO
-    private static CardinalDirection PositiveNormal(CardinalDirection direction)
-    {
-      switch (direction)
-      {
-        case CardinalDirection.East:
-          return CardinalDirection.North;
-        case CardinalDirection.North:
-          return CardinalDirection.East;
-        case CardinalDirection.South:
-          return CardinalDirection.East;
-        case CardinalDirection.West:
-          return CardinalDirection.North;
-        default:
-          return CardinalDirection.North;
-      }
-    }
-
-    // TODO
-    private static CardinalDirection Reverse(CardinalDirection direction)
-    {
-      switch (direction)
-      {
-        case CardinalDirection.East:
-          return CardinalDirection.West;
-        case CardinalDirection.North:
-          return CardinalDirection.South;
-        case CardinalDirection.South:
-          return CardinalDirection.North;
-        case CardinalDirection.West:
-          return CardinalDirection.East;
-        default:
-          return CardinalDirection.North;
-      }
-    }
-
     /// <summary>
-    /// Affine line segment. 
+    /// Affine line segment.
     /// </summary>
     private class AffineLine
     {
       /// <summary>
       /// Gets the slope value of line.
       /// </summary>
-      private double A { get; }
+      private double A { get; init; }
 
       /// <summary>
       /// Gets the contant value of line.
       /// </summary>
-      private double B { get; }
+      private double B { get; init; }
 
       /// <summary>
       /// 
       /// </summary>
-      /// <param name="step0"></param>
+      /// <param name="pathLength0"></param>
       /// <param name="value0"></param>
-      /// <param name="step1"></param>
+      /// <param name="pathLength1"></param>
       /// <param name="value1"></param>
-      public AffineLine(int step0, double value0, int step1, double value1)
+
+      // TODO
+      private AffineLine()
       {
-        this.A = (value1 - value0) / (step1 - step0);
-        this.B = value0 - this.A * step0; 
+      }
+
+      // TODO
+      public AffineLine(double pathLength0, double value0, double pathLength1, double value1)
+      {
+        this.A = (value1 - value0) / (pathLength1 - pathLength0);
+        this.B = value0 - this.A * pathLength0; 
+      }
+
+      public static AffineLine Constant(double contant)
+      {
+        return new AffineLine()
+        {
+          A = 0,
+          B = contant,
+        };
       }
 
       /// <summary>
       /// Evaluate the value at a certain point.
       /// <summary>
       /// <param name="step">The step value to evaluate.</param>
-      public double Evaluate(int step)
+      public double Evaluate(double length)
       {
-        return this.A * step + this.B;
+        return this.A * length + this.B;
       }
     }
 
-    private enum CardinalDirection
+    /// <summary>
+    /// reference to a specific point on the game board.
+    /// </summary>
+    public class Point 
     {
-      East,
-      North,
-      South,
-      West,
+      /// <summary>
+      /// Gets the X coordinate of this <see cref="Point"/>.
+      /// </summary>
+      public double X { get; init; }
+
+      /// <summary>
+      /// Gets the Y coordinate of this <see cref="Point"/>.
+      /// </summary>
+      public double Y { get; init; }
+
+       /// <inheritdoc/>
+      public override string ToString()
+      {
+        return $"Point {{ X: {this.X}, Y: {this.Y} }}";
+      }
+
     }
 
     /// <summary>
