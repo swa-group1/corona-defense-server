@@ -33,9 +33,8 @@ namespace BackEnd
     private byte[] GameModeBuffer { get; } = new byte[]
     {
       0x21, // Byte code
-      0x02, // Length
+      0x01, // Length
       0x00, // Stage number
-      0x00,
     };
 
     private byte[] InputRoundBuffer { get; } = new byte[]
