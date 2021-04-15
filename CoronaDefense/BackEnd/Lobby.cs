@@ -13,12 +13,19 @@ namespace BackEnd
   /// <summary>
   /// Model of a game-instance. Contains all the state for one running instance of the game.
   /// </summary>
-  internal class Lobby : IReceiver
+  internal class Lobby : ServerRandom, IReceiver
   {
+    /// <summary>
+    /// Gets the set of access tokens of clients currently connected to this <see cref="Lobby"/>.
+    /// </summary>
+    private HashSet<long> AccessTokens { get; } = new HashSet<long>();
+
+    private Broadcaster Broadcaster { get; }
+
     /// <summary>
     /// Default time before a <see cref="Lobby"/> should close itself because of inactivity.
     /// </summary>
-    private const int lobbyTimeOut = 2 * 60 * 1000;
+    private const int LobbyTimeOut = 2 * 60 * 1000;
 
     /// <summary>
     /// Gets the ID of this <see cref="Lobby"/>.
@@ -41,7 +48,7 @@ namespace BackEnd
     private int playerCount;
 
     /// <summary>
-    /// If <see cref="playerCount"/> is currently 0, the <see cref="Timer"/> counting towards 
+    /// If <see cref="playerCount"/> is currently 0, the <see cref="Timer"/> counting towards.
     /// </summary>
     private Timer playerCountZeroTimer = null;
 
@@ -64,7 +71,7 @@ namespace BackEnd
           Timer timer = new Timer()
           {
             AutoReset = false,
-            Interval = lobbyTimeOut,
+            Interval = LobbyTimeOut,
           };
           timer.Elapsed += this.OnNoPlayerTimerElapsed;
           timer.Start();
@@ -85,38 +92,71 @@ namespace BackEnd
     /// </summary>
     /// <param name="name">Name of the new <see cref="Lobby"/>.</param>
     /// <param name="password">Password of the new <see cref="Lobby"/>.</param>
+    /// <param name="connectionBroker"></param>
     /// <param name="router">Router the new <see cref="Lobby"/> should connect to.</param>
-    public Lobby(string name, string password, Router.Router router)
+    public Lobby(string name, string password, ConnectionBroker connectionBroker, Router.Router router)
     {
       this.Id = router.Register(this);
       this.Name = name;
       this.Password = password;
 
       this.PlayerCount = 0;
-    }
 
-    /// <inheritdoc/>
-    public void ActivateClient(LocalRequest request)
-    {
-      throw new System.NotImplementedException();
+      this.Broadcaster = new Broadcaster(connectionBroker);
     }
 
     /// <inheritdoc/>
     public JoinLobbyResult JoinLobby(JoinLobbyRequest request)
     {
-      throw new System.NotImplementedException();
+      if (request.Password != this.Password)
+      {
+        return new JoinLobbyResult()
+        {
+          Success = false,
+          Details = "Password was not correct.",
+
+          LobbyId = this.Id,
+        };
+      }
+
+      long accessToken;
+      do
+      {
+        accessToken = this.RandomLong;
+      }
+      while (this.AccessTokens.Contains(accessToken));
+
+      if (!this.Broadcaster.TryAssociateWithConnection(accessToken, request.ConnectionNumber))
+      {
+        return new JoinLobbyResult()
+        {
+          Success = false,
+          Details = "Connection number was not found to map to a valid open connection to the server.",
+
+          LobbyId = this.Id,
+        };
+      }
+
+      this.AccessTokens.Add(accessToken);
+      this.playerCount++;
+
+      this.Broadcaster.Ping();
+
+      return new JoinLobbyResult()
+      {
+        AccessToken = accessToken,
+        LobbyId = this.Id,
+      };
     }
 
     /// <inheritdoc/>
     public void LeaveLobby(LocalRequest request)
     {
-      throw new System.NotImplementedException();
-    }
-
-    /// <inheritdoc/>
-    public LobbyResult GetLobby(LobbyRequest request)
-    {
-      throw new System.NotImplementedException();
+      if (this.AccessTokens.Remove(request.AccessToken))
+      {
+        this.Broadcaster.DisconnectClient(request.AccessToken);
+        this.PlayerCount--;
+      }
     }
 
     /// <inheritdoc/>
@@ -146,6 +186,7 @@ namespace BackEnd
     /// <summary>
     /// Add observer to this Lobby.
     /// </summary>
+    /// <param name="observer">Observer to notify of events in this <see cref="Lobby"/>.</param>
     public void AddObserver(IObserver observer)
     {
       this.Observers.Add(observer);
@@ -171,14 +212,14 @@ namespace BackEnd
     }
 
     /// <summary>
-    /// Observer that reacts to a selection of events that can befall a <see cref="Lobby"/>
+    /// Observer that reacts to a selection of events that can befall a <see cref="Lobby"/>.
     /// </summary>
     public interface IObserver
     {
       /// <summary>
       /// Observer gets an opportunity to react to a <see cref="Lobby"/> closing.
       /// </summary>
-      /// <param name="lobbyId"/>ID of lobby that closed.</param>
+      /// <param name="lobbyId">ID of lobby that closed.</param>
       void OnClose(long lobbyId);
     }
   }

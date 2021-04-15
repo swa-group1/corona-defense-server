@@ -11,12 +11,13 @@ namespace BackEnd.Router
   /// Standard <see cref="Router.RequestRouter{TRequest,TResult}"/> for requests that are of a type that is a subclass of <see cref="LocalRequest"/> and with output that is a subclass of <see cref="RequestResult"/>.
   /// </summary>
   /// <typeparam name="TRequest">Local request type to route.</typeparam>
+  /// <typeparam name="TResult">Type of result of request.</typeparam>
   internal abstract class LocalRequestRouter<TRequest, TResult> : RequestResultRouter<TRequest, TResult>
     where TRequest : LocalRequest
     where TResult : RequestResult, new()
   {
     /// <summary>
-    /// Initializes a new instance of the <see cref="LocalRequestRouter{TRequest}"/> class.
+    /// Initializes a new instance of the <see cref="LocalRequestRouter{TRequest,TResult}"/> class.
     /// </summary>
     /// <param name="router"><see cref="Router"/> whose lookup table should be utilized.</param>
     protected LocalRequestRouter(Router router)

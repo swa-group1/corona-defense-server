@@ -19,11 +19,6 @@ namespace API
     private static readonly Lazy<API> Lazy = new Lazy<API>(() => { return new API(); });
 
     /// <summary>
-    /// Gets request handler for the ActivateClient endpoint.
-    /// </summary>
-    internal IRequestHandler<LocalRequest, RequestResult> ActivateClientHandler { get; private set; }
-
-    /// <summary>
     /// Gets request handler for the CreateLobby endpoint.
     /// </summary>
     internal IRequestHandler<CreateLobbyRequest, CreateLobbyResult> CreateLobbyHandler { get; private set; }
@@ -88,14 +83,6 @@ namespace API
 
     private API()
     {
-    }
-
-    /// <summary>
-    /// Attach handler to the ActivateClient endpoint.
-    /// </summary>
-    public void AttachActivateClientHandler(IRequestHandler<LocalRequest, RequestResult> handler)
-    {
-      this.ActivateClientHandler = handler;
     }
 
     /// <summary>

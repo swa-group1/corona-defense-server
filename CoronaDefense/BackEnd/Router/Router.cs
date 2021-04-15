@@ -22,7 +22,6 @@ namespace BackEnd.Router
     /// </summary>
     internal Router()
     {
-      API.API.Instance.AttachActivateClientHandler(new ActivateClientRouter(this));
       API.API.Instance.AttachJoinLobbyHandler(new JoinLobbyRouter(this));
       API.API.Instance.AttachLeaveLobbyHandler(new LeaveLobbyRouter(this));
       API.API.Instance.AttachPlaceTowerHandler(new PlaceTowerRouter(this));

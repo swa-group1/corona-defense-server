@@ -14,6 +14,16 @@ namespace BackEnd
   /// </summary>
   internal class Broadcaster
   {
+    /// <summary>
+    /// Gets <see cref="ConnectionBroker"/> that this <see cref="Broadcaster"> should get <see cref="Socket"/>s from.
+    /// </summary>
+    private ConnectionBroker ConnectionBroker { get; }
+
+    /// <summary>
+    /// Dictionary connecting access tokens to sockets.
+    /// </summary>
+    private Dictionary<long, Socket> Sockets { get; } = new Dictionary<long, Socket>();
+
     private static byte[] PingBuffer { get; } = new byte[]
     {
       0x10, // Byte code
@@ -146,9 +156,13 @@ namespace BackEnd
     };
 
     /// <summary>
-    /// Dictionary connecting access tokens to sockets.
+    /// Initializes a new instance of the <see cref="Broadcaster"/> class.
     /// </summary>
-    private readonly Dictionary<long, Socket> sockets = new Dictionary<long, Socket>();
+    /// <param name="connectionBroker"><see cref="ConnectionBroker"/> that the new <see cref="Broadcaster"> should get <see cref="Socket"/>s from.</param>
+    public Broadcaster(ConnectionBroker connectionBroker)
+    {
+      this.ConnectionBroker = connectionBroker;
+    }
 
     /// <summary>
     /// Send supplied <paramref name="buffer"/> to all <see cref="sockets"/>.
@@ -156,27 +170,42 @@ namespace BackEnd
     /// <param name="buffer">Buffer to send to <see cref="sockets"/>.</param>
     private void Broadcast(byte[] buffer)
     {
-      foreach (Socket socket in this.sockets.Values)
+      foreach (Socket socket in this.Sockets.Values)
       {
         socket.Send(buffer);
       }
     }
 
     /// <summary>
-    /// Initializes a new socket and connects to client if the client is not already connected.
+    /// Disconnect socket associated with supplied <paramref name="accessToken"/>.
     /// </summary>
-    /// <param name="accessToken">Access token to associate with the new <see cref="Socket"/>.</param>
-    /// <param name="address">Address to connect to.</param>
-    internal void ConnectTo(long accessToken, EndPoint address)
+    /// <param name="accessToken"/>Access token of connection to close.</param>
+    internal void DisconnectClient(long accessToken)
     {
-      if (this.sockets.ContainsKey(accessToken))
+      if (!this.Sockets.TryGetValue(accessToken, out Socket clientSocket))
       {
-        throw new ArgumentException($"Access token already registered in this {nameof(Broadcaster)}.");
+        return;
       }
 
-      Socket socket = new Socket(address.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-      socket.Connect(address);
-      this.sockets.Add(accessToken, socket);
+      clientSocket.Close();
+      this.Sockets.Remove(accessToken);
+    }
+
+    /// <summary>
+    /// Attempt to associate client with specific <paramref name="accessToken"/> to connection with supplied <paramref name="connectionNumebr"/>.
+    /// </summary>
+    /// <param name="accessToken">Access token to associate with the retrieved <see cref="Socket"/>.</param>
+    /// <param name="connectionNumber">Connection number of connection to claim from <see cref="ConnectionBroker"/></param>
+    /// <returns><see langword="true"/> if connection was associated with <paramref name="accessToken"/>.</returns>
+    internal bool TryAssociateWithConnection(long accessToken, long connectionNumber)
+    {
+      if (!this.ConnectionBroker.TryClaimConnection(connectionNumber, out Socket clientSocket))
+      {
+        return false;
+      }
+
+      this.Sockets.Add(accessToken, clientSocket);
+      return true;
     }
 
     /// <summary>

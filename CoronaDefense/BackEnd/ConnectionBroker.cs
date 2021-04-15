@@ -75,7 +75,7 @@ namespace BackEnd
     {
       if (!this.ConnectionPool.TryGetValue(connectionNumber, out Socket socket))
       {
-        Console.WriteLine($"Connection with number {connectionNumber} is inactive use and does not need to be timed out.");
+        Console.WriteLine($"Connection with number {connectionNumber} is in use and does not need to be timed out.");
         return;
       }
 
@@ -119,6 +119,22 @@ namespace BackEnd
           break;
         }
       }
+    }
+
+    /// <summary>
+    /// Attempt to claim an already established connection between the server, through this <see cref="ConnectionBroker"/>, and a client.
+    /// </summary>
+    /// <param name="connectionNumber">Connection number of connection to claim.</param>
+    /// <param name="clientSocket">Returns the <see cref="Socket"/> of the connection.</param>
+    /// <returns><see langword="true"/> if the connection existed and was successfully claimed.</returns>
+    public bool TryClaimConnection(long connectionNumber, out Socket clientSocket)
+    {
+      if (!this.ConnectionPool.TryGetValue(connectionNumber, out clientSocket)) {
+        return false;
+      }
+
+      this.ConnectionPool.Remove(connectionNumber);
+      return true;
     }
 
     /// <summary>
