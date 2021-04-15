@@ -2,11 +2,11 @@
 // Copyright (c) NTNU: SWA group 1 (2021). All rights reserved.
 // </copyright>
 
+using API.Requests;
 using API.Schemas;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System.Collections.Generic;
-using API.Requests;
+using System.ComponentModel.DataAnnotations;
 
 namespace API.Controllers
 {
@@ -29,7 +29,7 @@ namespace API.Controllers
     }
 
     [HttpPatch]
-    public RequestResult Patch(long lobbyId, long accessToken)
+    public RequestResult Patch([Required] long lobbyId, [Required] long accessToken)
     {
       return API.Instance.LeaveLobbyHandler.ProcessRequest(
         new LocalRequest()

@@ -6,7 +6,7 @@ using API.Requests;
 using API.Schemas;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace API.Controllers
 {
@@ -29,7 +29,7 @@ namespace API.Controllers
     }
 
     [HttpPatch]
-    public RequestResult Patch(long lobbyId, long accessToken, int towerId)
+    public RequestResult Patch([Required] long lobbyId, [Required] long accessToken, [Required] int towerId)
     {
       return API.Instance.SellTowerHandler.ProcessRequest(
         new SelltowerRequest()
