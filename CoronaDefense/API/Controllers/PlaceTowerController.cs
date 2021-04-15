@@ -28,13 +28,14 @@ namespace API.Controllers
     }
 
     [HttpPatch]
-    public RequestResult Patch(long lobbyId, long accessToken, int x, int y)
+    public RequestResult Patch(long lobbyId, long accessToken, int towerTypeNumber, int x, int y)
     {
       return API.Instance.PlaceTowerHandler.ProcessRequest(
         new PlaceTowerRequest()
         {
           LobbyId = lobbyId,
           AccessToken = accessToken,
+          TowerTypeNumber = towerTypeNumber,
           XPosition = x,
           YPosition = y,
         }
