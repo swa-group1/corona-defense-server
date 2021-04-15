@@ -34,7 +34,7 @@ namespace API
       services.AddSwaggerGen(
         delegate (SwaggerGenOptions c)
         {
-          c.SwaggerDoc("v1", new OpenApiInfo { Title = "CoronaDefense_API", Version = "v1.1" });
+          c.SwaggerDoc("v1", new OpenApiInfo { Title = "CoronaDefense_API", Version = "v1.2" });
         }
       );
     }
