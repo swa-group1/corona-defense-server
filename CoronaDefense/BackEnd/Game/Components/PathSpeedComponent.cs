@@ -10,7 +10,7 @@ namespace BackEnd.Game.Components
   internal struct PathSpeedComponent
   {
     /// <summary>
-    /// Value descriving how far the entity moves along the path in one second.
+    /// Value describing how far the entity moves along the path in one second.
     /// </summary>
     public double Speed;
   }
