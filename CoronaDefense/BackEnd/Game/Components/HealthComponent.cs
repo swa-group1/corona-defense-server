@@ -2,12 +2,12 @@
 // Copyright (c) NTNU: SWA group 1 (2021). All rights reserved.
 // </copyright>
 
-namespace BackEnd.Game.Component
+namespace BackEnd.Game.Components
 {
   /// <summary>
   /// Component containing a number of health points.
   /// </summary>
-  public struct HealthComponent
+  internal struct HealthComponent
   {
     /// <summary>
     /// Number of health points.

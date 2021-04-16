@@ -2,12 +2,12 @@
 // Copyright (c) NTNU: SWA group 1 (2021). All rights reserved.
 // </copyright>
 
-namespace BackEnd.Game.Component
+namespace BackEnd.Game.Components
 {
   /// <summary>
   /// Component describing a position along the path.
   /// </summary>
-  public struct PathPositionComponent
+  internal struct PathPositionComponent
   {
     /// <summary>
     /// Value describing how far along the path the position is located.
