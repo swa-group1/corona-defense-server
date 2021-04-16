@@ -2,29 +2,46 @@
 // Copyright (c) NTNU: SWA group 1 (2021). All rights reserved.
 // </copyright>
 
+using API.Requests;
 using BackEnd.Game.Components;
 using Leopotam.Ecs;
+using System.Collections.Concurrent;
 
 namespace BackEnd.Game.Systems
 {
-  internal class PlaceTowerSystem : IEcsInitSystem 
+  /// <summary>
+  /// 
+  /// </summary>
+  internal class PlaceTowerSystem : IEcsRunSystem
   {
+    private readonly EcsFilter<GameComponent> gameFilter = null;
+    private readonly ConcurrentQueue<PlaceTowerRequest> inputQueue;
     private readonly EcsWorld world = null;
 
-    public void Init()
+    public PlaceTowerSystem(ConcurrentQueue<PlaceTowerRequest> inputQueue)
     {
-      this.world.NewEntity().Replace(new TowerComponent()
+      this.inputQueue = inputQueue;
+    }
+
+    /// <inheritdoc/>
+    public void Run()
+    {
+      GameComponent game = this.gameFilter.Get1(0);
+      while (this.inputQueue.TryDequeue(out PlaceTowerRequest request))
       {
-        TimeUntilReloaded = 3d,
-      });
-      this.world.NewEntity().Replace(new TowerComponent()
-      {
-        TimeUntilReloaded = 1d,
-      });
-      this.world.NewEntity().Replace(new TowerComponent()
-      {
-        TimeUntilReloaded = 2d,
-      });
+        EcsEntity tower = this.world.NewEntity();
+        ref TowerComponent towerComponent = ref tower.Get<TowerComponent>();
+        towerComponent.ProjectileSpeed = 1d;
+        towerComponent.ProjectileSpriteNumber = 1;
+        towerComponent.ReloadTime = 1d;
+        towerComponent.TowerSpriteNumber = 1;
+        ref BoardPositionComponent towerPosition = ref tower.Get<BoardPositionComponent>();
+        towerPosition.X = request.XPosition;
+        towerPosition.Y = request.YPosition;
+
+        game.Broadcaster.TowerPosition((short)tower.GetInternalId(), (byte)request.TowerTypeNumber, (byte)request.XPosition, (byte)request.YPosition);
+      }
+
     }
   }
 }

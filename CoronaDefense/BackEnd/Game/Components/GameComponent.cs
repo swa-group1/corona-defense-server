@@ -10,6 +10,11 @@ namespace BackEnd.Game.Components
   internal struct GameComponent
   {
     /// <summary>
+    /// Broadcaster to send messages over.
+    /// </summary>
+    public Broadcaster Broadcaster;
+
+    /// <summary>
     /// Value in seconds describing the duration of one tick.
     /// </summary>
     public double TickDuration;

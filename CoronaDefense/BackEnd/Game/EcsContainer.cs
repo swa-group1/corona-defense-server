@@ -1,5 +1,7 @@
+using API.Requests;
 using BackEnd.Game.Systems;
 using Leopotam.Ecs;
+using System.Collections.Concurrent;
 
 namespace BackEnd.Game
 {
@@ -10,13 +12,15 @@ namespace BackEnd.Game
     private EcsWorld world;
     private EcsSystems systems;
 
-    public EcsContainer()
+    public ConcurrentQueue<PlaceTowerRequest> PlaceTowerRequests { get; } = new ConcurrentQueue<PlaceTowerRequest>();
+
+    public EcsContainer(Broadcaster broadcaster)
     {
       this.world = new EcsWorld();
       this.systems = new EcsSystems(this.world);
 
-      this.systems.Add(new GameInitializeSystem(1d / TickNumber));
-      this.systems.Add(new PlaceTowerSystem());
+      this.systems.Add(new GameInitializeSystem(broadcaster, 1d / TickNumber));
+      this.systems.Add(new PlaceTowerSystem(this.PlaceTowerRequests));
       this.systems.Add(new PathMoveSystem());
       this.systems.Add(new ReloadSystem());
       this.systems.Add(new TowerReloadTimePrintSystem());
