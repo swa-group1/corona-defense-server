@@ -15,16 +15,19 @@ namespace BackEnd.Game.Systems
     private readonly EcsWorld world = null;
 
     private readonly Broadcaster broadcaster;
+    private readonly Stage stage;
     private readonly double tickDuration;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="GameInitializeSystem"/> class.
     /// </summary>
     /// <param name="broadcaster"><see cref="Broadcaster"/> to be used to send messages to clients.</param>
+    /// <param name="stage"><see cref="Stage"/> of this game.</param>
     /// <param name="tickDuration">Duration of tick in seconds.</param>
-    public GameInitializeSystem(Broadcaster broadcaster, double tickDuration)
+    public GameInitializeSystem(Broadcaster broadcaster, Stage stage, double tickDuration)
     {
       this.broadcaster = broadcaster;
+      this.stage = stage;
       this.tickDuration = tickDuration;
     }
 
@@ -33,7 +36,9 @@ namespace BackEnd.Game.Systems
     {
       ref GameComponent game = ref this.world.NewEntity().Get<GameComponent>();
       game.Broadcaster = this.broadcaster;
+      game.Stage = this.stage;
       game.TickDuration = this.tickDuration;
+      game.Time = 0d;
     }
   }
 }

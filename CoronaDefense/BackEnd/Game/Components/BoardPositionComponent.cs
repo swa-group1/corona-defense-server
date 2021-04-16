@@ -10,13 +10,8 @@ namespace BackEnd.Game.Components
   internal struct BoardPositionComponent
   {
     /// <summary>
-    /// X coordinate of position.
+    /// Tile where entity is located.
     /// </summary>
-    public int X;
-
-    /// <summary>
-    /// Y coordinate of position.
-    /// </summary>
-    public int Y;
+    public Stage.Tile Position;
   }
 }

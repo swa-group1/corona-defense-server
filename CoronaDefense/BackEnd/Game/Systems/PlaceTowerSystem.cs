@@ -10,7 +10,7 @@ using System.Collections.Concurrent;
 namespace BackEnd.Game.Systems
 {
   /// <summary>
-  /// 
+  /// System to place towers in game on request.
   /// </summary>
   internal class PlaceTowerSystem : IEcsRunSystem
   {
@@ -18,6 +18,10 @@ namespace BackEnd.Game.Systems
     private readonly ConcurrentQueue<PlaceTowerRequest> inputQueue;
     private readonly EcsWorld world = null;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="PlaceTowerSystem"/> class.
+    /// </summary>
+    /// <param name="inputQueue">Queue to take input requests from.</param>
     public PlaceTowerSystem(ConcurrentQueue<PlaceTowerRequest> inputQueue)
     {
       this.inputQueue = inputQueue;
@@ -29,6 +33,18 @@ namespace BackEnd.Game.Systems
       GameComponent game = this.gameFilter.Get1(0);
       while (this.inputQueue.TryDequeue(out PlaceTowerRequest request))
       {
+        // Validate request
+        if (request.XPosition < 0 || game.Stage.XSize <= request.XPosition)
+        {
+          return;
+        }
+
+        if (request.YPosition < 0 || game.Stage.YSize <= request.YPosition)
+        {
+          return;
+        }
+
+        // Create tower
         EcsEntity tower = this.world.NewEntity();
         ref TowerComponent towerComponent = ref tower.Get<TowerComponent>();
         towerComponent.ProjectileSpeed = 1d;
@@ -36,12 +52,11 @@ namespace BackEnd.Game.Systems
         towerComponent.ReloadTime = 1d;
         towerComponent.TowerSpriteNumber = 1;
         ref BoardPositionComponent towerPosition = ref tower.Get<BoardPositionComponent>();
-        towerPosition.X = request.XPosition;
-        towerPosition.Y = request.YPosition;
+        towerPosition.Position = new Stage.Tile() { X = request.XPosition, Y = request.YPosition };
 
+        // Broadcast changes
         game.Broadcaster.TowerPosition((short)tower.GetInternalId(), (byte)request.TowerTypeNumber, (byte)request.XPosition, (byte)request.YPosition);
       }
-
     }
   }
 }

@@ -1,4 +1,6 @@
-﻿// <copyright file="Stage.cs" company="NTNU: SWA group 1 (2021)">
+﻿using System.Reflection.PortableExecutable;
+using System.Security.AccessControl;
+// <copyright file="Stage.cs" company="NTNU: SWA group 1 (2021)">
 // Copyright (c) NTNU: SWA group 1 (2021). All rights reserved.
 // </copyright>
 
@@ -206,17 +208,41 @@ namespace BackEnd.Game
     /// <summary>
     /// reference to a specific point on the game board.
     /// </summary>
-    public class Point
+    public struct Point
     {
       /// <summary>
       /// Gets the X coordinate of this <see cref="Point"/>.
       /// </summary>
-      public double X { get; init; }
+      public double X;
 
       /// <summary>
       /// Gets the Y coordinate of this <see cref="Point"/>.
       /// </summary>
-      public double Y { get; init; }
+      public double Y;
+
+      /// <summary>
+      /// Calculate the Euclidean distance between two points.
+      /// </summary>
+      /// <param name="first">One of the points to calculate distance between.</param>
+      /// <param name="second">One of the points to calculate distance between.</param>
+      /// <returns>The distance between supplied points.</returns>
+      public static double Distance(Point first, Point second)
+      {
+        return Math.Sqrt(SquareDistance(first, second));
+      }
+
+      /// <summary>
+      /// Calculate the square Euclidean distance between two points.
+      /// </summary>
+      /// <param name="first">One of the points to calculate square distance between.</param>
+      /// <param name="second">One of the points to calculate square distance between.</param>
+      /// <returns>The square distance between supplied points.</returns>
+      public static double SquareDistance(Point first, Point second)
+      {
+        double deltaX = first.X - second.X;
+        double deltaY = first.Y - second.Y;
+        return (deltaX * deltaX) + (deltaY * deltaY);
+      }
 
       /// <inheritdoc/>
       public override string ToString()
@@ -228,17 +254,26 @@ namespace BackEnd.Game
     /// <summary>
     /// Reference to a specific tile on the game board.
     /// </summary>
-    public class Tile
+    public struct Tile
     {
       /// <summary>
       /// Gets the X coordinate of this <see cref="Tile"/>.
       /// </summary>
-      public int X { get; init; }
+      public int X;
 
       /// <summary>
       /// Gets the Y coordinate of this <see cref="Tile"/>.
       /// </summary>
-      public int Y { get; init; }
+      public int Y;
+
+      /// <summary>
+      /// TODO
+      /// </summary>
+      /// <param name="tile"></param>
+      public static explicit operator Point(Tile tile)
+      {
+        return new Point() { X = tile.X, Y = tile.Y };
+      }
 
       /// <inheritdoc/>
       public override string ToString()

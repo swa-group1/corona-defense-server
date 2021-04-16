@@ -20,6 +20,11 @@ namespace BackEnd.Game.Components
     public int ProjectileSpriteNumber;
 
     /// <summary>
+    /// Radius of the range of this tower.
+    /// </summary>
+    public double Range;
+
+    /// <summary>
     /// Time the tower uses to reload.
     /// </summary>
     public double ReloadTime;

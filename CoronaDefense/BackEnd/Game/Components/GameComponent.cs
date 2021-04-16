@@ -15,8 +15,18 @@ namespace BackEnd.Game.Components
     public Broadcaster Broadcaster;
 
     /// <summary>
+    /// Stage of this game.
+    /// </summary>
+    public Stage Stage;
+
+    /// <summary>
     /// Value in seconds describing the duration of one tick.
     /// </summary>
     public double TickDuration;
+
+    /// <summary>
+    /// Time passed this round.
+    /// </summary>
+    public double Time;
   }
 }
