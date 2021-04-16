@@ -5,7 +5,7 @@
 namespace BackEnd.Game.Components
 {
   /// <summary>
-  /// Component describing an entitie's speed along the path.
+  /// Component describing the speed of an entity along the path.
   /// </summary>
   internal struct PathSpeedComponent
   {
