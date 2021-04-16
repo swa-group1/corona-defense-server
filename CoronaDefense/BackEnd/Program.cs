@@ -14,14 +14,11 @@ namespace BackEnd
   {
     private static void Main(string[] args)
     {
-      EcsContainer container = new EcsContainer();
-      container.TestRun(30);
+      ConnectionBroker connectionBroker = new ConnectionBroker();
+      Router.Router router = new Router.Router();
+      Orchestrator orchestrator = new Orchestrator(connectionBroker, router);
 
-      // ConnectionBroker connectionBroker = new ConnectionBroker();
-      // Router.Router router = new Router.Router();
-      // Orchestrator orchestrator = new Orchestrator(connectionBroker, router)
-
-      // API.Program.Main(Array.Empty<string>());
+      API.Program.Main(Array.Empty<string>());
     }
   }
 }
