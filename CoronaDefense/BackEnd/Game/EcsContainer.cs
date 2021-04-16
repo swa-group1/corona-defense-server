@@ -17,6 +17,7 @@ namespace BackEnd.Game
 
       this.systems.Add(new GameInitializeSystem(1d / TickNumber));
       this.systems.Add(new PlaceTowerSystem());
+      this.systems.Add(new PathMoveSystem());
       this.systems.Add(new ReloadSystem());
       this.systems.Add(new TowerReloadTimePrintSystem());
 
