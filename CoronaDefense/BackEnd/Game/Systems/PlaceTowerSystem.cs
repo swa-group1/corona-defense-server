@@ -14,6 +14,7 @@ namespace BackEnd.Game.Systems
   /// </summary>
   internal class PlaceTowerSystem : IEcsRunSystem
   {
+    private readonly EcsFilter<EnemyComponent> enemyFilter = null;
     private readonly EcsFilter<GameComponent> gameFilter = null;
     private readonly ConcurrentQueue<PlaceTowerRequest> inputQueue;
     private readonly EcsFilter<BoardPositionComponent> towerFilter = null;
@@ -32,6 +33,13 @@ namespace BackEnd.Game.Systems
     public void Run()
     {
       GameComponent game = this.gameFilter.Get1(0);
+
+      if (0 < this.enemyFilter.GetEntitiesCount())
+      {
+        this.inputQueue.Clear();
+        return;
+      }
+
       while (this.inputQueue.TryDequeue(out PlaceTowerRequest request))
       {
         // Check if tile is valid in stage, eg inside stage and not on blocked tile .
