@@ -21,6 +21,11 @@ namespace BackEnd.Game
     public ConcurrentQueue<PlaceTowerRequest> PlaceTowerRequests { get; } = new ConcurrentQueue<PlaceTowerRequest>();
 
     /// <summary>
+    /// Gets queue of <see cref="LocalRequest"/>s that signal that round should start.
+    /// </summary>
+    public ConcurrentQueue<LocalRequest> StartRoundRequests { get; } = new ConcurrentQueue<LocalRequest>();
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="EcsContainer"/> class.
     /// </summary>
     /// <param name="broadcaster"><see cref="Broadcaster"/> to send game messages to.</param>
@@ -36,6 +41,7 @@ namespace BackEnd.Game
 
       // Input
       _ = this.systems.Add(new PlaceTowerSystem(this.PlaceTowerRequests));
+      _ = this.systems.Add(new StartFightRoundSystem(this.StartRoundRequests));
 
       // Preframe
       _ = this.systems.Add(new TimeSystem());

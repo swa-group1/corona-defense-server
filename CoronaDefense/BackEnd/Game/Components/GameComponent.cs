@@ -15,6 +15,11 @@ namespace BackEnd.Game.Components
     public Broadcaster Broadcaster;
 
     /// <summary>
+    /// Number of round currently in progress.
+    /// </summary>
+    public int RoundNumber;
+
+    /// <summary>
     /// Stage of this game.
     /// </summary>
     public Stage Stage;
