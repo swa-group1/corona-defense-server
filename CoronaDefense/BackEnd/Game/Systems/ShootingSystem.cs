@@ -38,6 +38,16 @@ namespace BackEnd.Game.Systems
       foreach ((int index, double position) in targetPositions)
       {
         Stage.Point targetPosition = game.Stage.GetPointAlongPath(position);
+
+        if (2 * position < game.Stage.PathLength)
+        {
+          if (!game.Stage.IsOnStage(targetPosition))
+          {
+            // First tower found that is before stage. No more targets should be processed.
+            break;
+          }
+        }
+
         if (!this.TryFindShooter(targetPosition, out int towerIndex))
         {
           continue;
