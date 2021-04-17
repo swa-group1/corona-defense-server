@@ -146,7 +146,32 @@ namespace BackEnd.Game
     }
 
     /// <summary>
-    /// Check if length is outside stage on the far-side.
+    /// Check if length along path is outside stage on the near-side.
+    /// </summary>
+    /// <param name="length">Length along path to check.</param>
+    /// <returns><see langword="true"/> if point <paramref name="length"/> along path is before stage.</returns>
+    public bool IsBeforeStage(double length)
+    {
+      if (this.PathLength < 2 * length)
+      {
+        return false;
+      }
+
+      return !this.IsOnStage(this.GetPointAlongPath(length));
+    }
+
+    /// <summary>
+    /// Check if supplied <paramref name="point"/> is on this <see cref="Stage"/>.
+    /// </summary>
+    /// <param name="point"><see cref="Point"/> to check.</param>
+    /// <returns><see langword="true"/> if supplied <paramref name="point"/> is on this <see cref="Stage"/>.</returns>
+    public bool IsOnStage(Point point)
+    {
+      return 0 <= point.X && point.X <= this.XSize && 0 <= point.Y && point.Y <= this.YSize;
+    }
+
+    /// <summary>
+    /// Check if length along path is outside stage on the far-side.
     /// </summary>
     /// <param name="length">Length along path to check.</param>
     /// <returns><see langword="true"/> if point <paramref name="length"/> along path is past stage.</returns>
@@ -157,8 +182,7 @@ namespace BackEnd.Game
         return false;
       }
 
-      Point point = this.GetPointAlongPath(length);
-      return point.X < 0 || this.XSize < point.X || point.Y < 0 || this.YSize < point.Y;
+      return !this.IsOnStage(this.GetPointAlongPath(length));
     }
 
     /// <summary>
