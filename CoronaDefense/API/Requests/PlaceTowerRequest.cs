@@ -10,7 +10,7 @@ namespace API.Requests
   public class PlaceTowerRequest : LocalRequest
   {
     /// <summary>
-    /// The type of tower to place.
+    /// Gets the type of tower to place.
     /// </summary>
     public int TowerTypeNumber { get; init; }
 
@@ -25,4 +25,3 @@ namespace API.Requests
     public int YPosition { get; init; }
   }
 }
-

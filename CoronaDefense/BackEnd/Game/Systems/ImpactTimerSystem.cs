@@ -19,24 +19,25 @@ namespace BackEnd.Game.Systems
     public void Run()
     {
       ref GameComponent game = ref this.gameFilter.Get1(0);
-      
+
       foreach (int doomedIndex in this.doomedFilter)
       {
         // Reduce all timers
-        ref ImpactTimerComponent timers = ref doomedFilter.Get2(doomedIndex);
+        ref ImpactTimerComponent timers = ref this.doomedFilter.Get2(doomedIndex);
 
         for (int timerIndex = 0; timerIndex < timers.ImpactTimers.Count; ++timerIndex)
         {
           timers.ImpactTimers[timerIndex] -= game.TickDuration;
-          if (0 < timers.ImpactTimers[timerIndex])
+          if (timers.ImpactTimers[timerIndex] > 0)
           {
             continue;
           }
 
-          ref HealthComponent health = ref doomedFilter.Get1(doomedIndex);
+          ref HealthComponent health = ref this.doomedFilter.Get1(doomedIndex);
           health.HealthPoints -= 1;
-          
-          if (health.HealthPoints <= 0) {
+
+          if (health.HealthPoints <= 0)
+          {
             // TODO DIE
           }
 

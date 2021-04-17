@@ -16,7 +16,7 @@ namespace BackEnd
   {
     /// <summary>
     /// Gets <see cref="ConnectionBroker"/> that this <see cref="Broadcaster"> should get <see cref="Socket"/>s from.
-    /// </summary>
+    /// </summary>.
     private ConnectionBroker ConnectionBroker { get; }
 
     /// <summary>
@@ -158,7 +158,7 @@ namespace BackEnd
     /// <summary>
     /// Initializes a new instance of the <see cref="Broadcaster"/> class.
     /// </summary>
-    /// <param name="connectionBroker"><see cref="ConnectionBroker"/> that the new <see cref="Broadcaster"> should get <see cref="Socket"/>s from.</param>
+    /// <param name="connectionBroker"><see cref="ConnectionBroker"/> that the new <see cref="Broadcaster"> should get <see cref="Socket"/>s from.</param>.
     public Broadcaster(ConnectionBroker connectionBroker)
     {
       this.ConnectionBroker = connectionBroker;
@@ -179,7 +179,7 @@ namespace BackEnd
     /// <summary>
     /// Disconnect socket associated with supplied <paramref name="accessToken"/>.
     /// </summary>
-    /// <param name="accessToken"/>Access token of connection to close.</param>
+    /// <param name="accessToken">Access token of connection to close.</param>
     internal void DisconnectClient(long accessToken)
     {
       if (!this.Sockets.TryGetValue(accessToken, out Socket clientSocket))
@@ -188,14 +188,14 @@ namespace BackEnd
       }
 
       clientSocket.Close();
-      this.Sockets.Remove(accessToken);
+      _ = this.Sockets.Remove(accessToken);
     }
 
     /// <summary>
     /// Attempt to associate client with specific <paramref name="accessToken"/> to connection with supplied <paramref name="connectionNumebr"/>.
     /// </summary>
     /// <param name="accessToken">Access token to associate with the retrieved <see cref="Socket"/>.</param>
-    /// <param name="connectionNumber">Connection number of connection to claim from <see cref="ConnectionBroker"/></param>
+    /// <param name="connectionNumber">Connection number of connection to claim from <see cref="ConnectionBroker"/>.</param>
     /// <returns><see langword="true"/> if connection was associated with <paramref name="accessToken"/>.</returns>
     internal bool TryAssociateWithConnection(long accessToken, long connectionNumber)
     {

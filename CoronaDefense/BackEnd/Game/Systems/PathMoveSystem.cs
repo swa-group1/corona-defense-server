@@ -18,7 +18,7 @@ namespace BackEnd.Game.Systems
     /// <inheritdoc/>
     public void Run()
     {
-      ref GameComponent gameComponent = ref game.Get1(0);
+      ref GameComponent gameComponent = ref this.game.Get1(0);
 
       foreach (int i in this.movers)
       {

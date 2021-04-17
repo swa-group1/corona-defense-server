@@ -129,11 +129,12 @@ namespace BackEnd
     /// <returns><see langword="true"/> if the connection existed and was successfully claimed.</returns>
     public bool TryClaimConnection(long connectionNumber, out Socket clientSocket)
     {
-      if (!this.ConnectionPool.TryGetValue(connectionNumber, out clientSocket)) {
+      if (!this.ConnectionPool.TryGetValue(connectionNumber, out clientSocket))
+      {
         return false;
       }
 
-      this.ConnectionPool.Remove(connectionNumber);
+      _ = this.ConnectionPool.Remove(connectionNumber);
       return true;
     }
 

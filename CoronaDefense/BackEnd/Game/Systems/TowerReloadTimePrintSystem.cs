@@ -12,9 +12,10 @@ namespace BackEnd.Game.Systems
   {
     private readonly EcsFilter<TowerComponent> towers = null;
 
+    /// <inheritdoc/>
     public void Run()
     {
-      foreach (int i in towers)
+      foreach (int i in this.towers)
       {
         ref TowerComponent towerComponent = ref this.towers.Get1(i);
         Console.WriteLine(towerComponent.TimeUntilReloaded);

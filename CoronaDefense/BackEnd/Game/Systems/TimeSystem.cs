@@ -17,7 +17,7 @@ namespace BackEnd.Game.Systems
     /// <inheritdoc/>
     public void Run()
     {
-      ref GameComponent game = ref gameFilter.Get1(0);
+      ref GameComponent game = ref this.gameFilter.Get1(0);
       game.Time += game.TickDuration;
     }
   }
