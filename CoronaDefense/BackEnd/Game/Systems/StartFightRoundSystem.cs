@@ -50,16 +50,19 @@ namespace BackEnd.Game.Systems
       game.Broadcaster.FightRound((short)game.RoundNumber);
 
       // Add enemies
+      double entryTime = 1d;
       for (int i = 1; i <= 10; i++)
       {
+        entryTime += 0.5d;
+
         EcsEntity enemyEntity = this.world.NewEntity();
         ref PathSpeedComponent enemySpeed = ref enemyEntity.Get<PathSpeedComponent>();
         enemySpeed.Speed = 1d;
         ref PathPositionComponent enemyPosition = ref enemyEntity.Get<PathPositionComponent>();
-        enemyPosition.LengthTraveled = -enemySpeed.Speed * i;
+        enemyPosition.LengthTraveled = -enemySpeed.Speed * entryTime;
         ref EnemyComponent enemy = ref enemyEntity.Get<EnemyComponent>();
-        enemy.PreviousImpactPosition = enemyPosition.LengthTraveled;
-        enemy.PreviousImpactTime = 0d;
+        enemy.PreviousImpactPosition = 0d;
+        enemy.PreviousImpactTime = entryTime;
       }
 
       // Remove duplicate requests
