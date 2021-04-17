@@ -23,28 +23,27 @@ namespace BackEnd.Game
     /// <summary>
     /// Initializes a new instance of the <see cref="EcsContainer"/> class.
     /// </summary>
-    /// <param name="broadcaster"></param>
-    /// <param name="stage"></param>
+    /// <param name="broadcaster"><see cref="Broadcaster"/> to send game messages to.</param>
+    /// <param name="stage"><see cref="Stage"/> to play on.</param>
     public EcsContainer(Broadcaster broadcaster, Stage stage)
     {
       this.world = new EcsWorld();
       this.systems = new EcsSystems(this.world);
 
       // Init
-      this.systems.Add(new GameInitializeSystem(broadcaster, stage, 1d / TickNumber));
+      _ = this.systems.Add(new GameInitializeSystem(broadcaster, stage, 1d / TickNumber));
+      _ = this.systems.Add(new PlayerInitializeSystem());
 
       // Input
-      this.systems.Add(new PlaceTowerSystem(this.PlaceTowerRequests));
+      _ = this.systems.Add(new PlaceTowerSystem(this.PlaceTowerRequests));
 
       // Preframe
-      this.systems.Add(new TimeSystem());
+      _ = this.systems.Add(new TimeSystem());
 
       // Frame
-      this.systems.Add(new PathMoveSystem());
-      this.systems.Add(new ReloadSystem());
-
-      // Debug
-      this.systems.Add(new TowerReloadTimePrintSystem());
+      _ = this.systems.Add(new PathMoveSystem());
+      _ = this.systems.Add(new ReloadSystem());
+      _ = this.systems.Add(new HurtPlayerSystem());
 
       this.systems.Init();
     }

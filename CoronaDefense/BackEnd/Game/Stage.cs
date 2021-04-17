@@ -146,6 +146,22 @@ namespace BackEnd.Game
     }
 
     /// <summary>
+    /// Check if length is outside stage on the far-side.
+    /// </summary>
+    /// <param name="length">Length along path to check.</param>
+    /// <returns><see langword="true"/> if point <paramref name="length"/> along path is past stage.</returns>
+    public bool IsPastStage(double length)
+    {
+      if (2 * length < this.PathLength)
+      {
+        return false;
+      }
+
+      Point point = this.GetPointAlongPath(length);
+      return point.X < 0 || this.XSize < point.X || point.Y < 0 || this.YSize < point.Y;
+    }
+
+    /// <summary>
     /// Check if tile is a valid <see cref="Tile"/> for a tower.
     /// </summary>
     /// <param name="tile"><see cref="Tile"/> to test if is valid for tower.</param>

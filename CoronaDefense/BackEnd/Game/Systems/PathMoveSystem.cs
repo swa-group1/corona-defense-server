@@ -8,7 +8,7 @@ using Leopotam.Ecs;
 namespace BackEnd.Game.Systems
 {
   /// <summary>
-  /// System to reload towers.
+  /// System to move entities with speed along the path.
   /// </summary>
   internal class PathMoveSystem : IEcsRunSystem
   {
@@ -18,14 +18,14 @@ namespace BackEnd.Game.Systems
     /// <inheritdoc/>
     public void Run()
     {
-      ref GameComponent gameComponent = ref this.game.Get1(0);
+      ref GameComponent game = ref this.game.Get1(0);
 
-      foreach (int i in this.movers)
+      foreach (int moverIndex in this.movers)
       {
-        ref PathPositionComponent pathPositionComponent = ref this.movers.Get1(i);
-        ref PathSpeedComponent PathSpeedComponent = ref this.movers.Get2(i);
+        ref PathPositionComponent pathPositionComponent = ref this.movers.Get1(moverIndex);
+        ref PathSpeedComponent pathSpeedComponent = ref this.movers.Get2(moverIndex);
 
-        pathPositionComponent.LengthTraveled += gameComponent.TickDuration*PathSpeedComponent.Speed;
+        pathPositionComponent.LengthTraveled += game.TickDuration * pathSpeedComponent.Speed;
       }
     }
   }
