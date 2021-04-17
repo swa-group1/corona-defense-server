@@ -1,12 +1,12 @@
-﻿using System.Reflection.PortableExecutable;
-using System.Security.AccessControl;
-// <copyright file="Stage.cs" company="NTNU: SWA group 1 (2021)">
+﻿// <copyright file="Stage.cs" company="NTNU: SWA group 1 (2021)">
 // Copyright (c) NTNU: SWA group 1 (2021). All rights reserved.
 // </copyright>
 
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
+using System.Runtime.CompilerServices;
 
 namespace BackEnd.Game
 {
@@ -146,6 +146,33 @@ namespace BackEnd.Game
     }
 
     /// <summary>
+    /// Check if tile is a valid <see cref="Tile"/> for a tower.
+    /// </summary>
+    /// <param name="tile"><see cref="Tile"/> to test if is valid for tower.</param>
+    /// <returns><see langword="true"/> if tower can be placed on supplied <paramref name="tile"/>.</returns>
+    public bool IsValidTowerTile(Tile tile)
+    {
+      // Check if inside stage.
+      if (tile.X < 0 || this.XSize <= tile.X)
+      {
+        return false;
+      }
+
+      if (tile.Y < 0 || this.YSize <= tile.Y)
+      {
+        return false;
+      }
+
+      // Check if not blocked
+      if (this.BlockedTiles.Contains(tile))
+      {
+        return false;
+      }
+
+      return true;
+    }
+
+    /// <summary>
     /// Create a new <see cref="Stage"/> object.
     /// </summary>
     /// <param name="jsonContent">JSON text to parse into <see cref="Stage"/>.</param>
@@ -266,10 +293,40 @@ namespace BackEnd.Game
       /// </summary>
       public int Y;
 
+      /// <inheritdoc/>
+      public override bool Equals(object obj)
+      {
+        if (obj is not Tile tile)
+        {
+          return false;
+        }
+
+        return this.X == tile.X && this.Y == tile.Y;
+      }
+
+      /// <inheritdoc/>
+      public override int GetHashCode()
+      {
+        int hash = 4111;
+        hash = (4441 * hash) + this.X;
+        hash = (4441 * hash) + this.Y;
+        return hash;
+      }
+
+      public static bool operator ==(Tile first, Tile second)
+      {
+        return first.Equals(second);
+      }
+
+      public static bool operator !=(Tile first, Tile second)
+      {
+        return !(first == second);
+      }
+
       /// <summary>
-      /// TODO
+      /// Cast a <see cref="Tile"/> into a <see cref="Point"/> struct.
       /// </summary>
-      /// <param name="tile"></param>
+      /// <param name="tile"><see cref="Tile"/> to convert to <see cref="Point"/>.</param>
       public static explicit operator Point(Tile tile)
       {
         return new Point() { X = tile.X, Y = tile.Y };

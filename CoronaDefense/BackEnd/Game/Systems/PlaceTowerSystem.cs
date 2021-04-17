@@ -16,6 +16,7 @@ namespace BackEnd.Game.Systems
   {
     private readonly EcsFilter<GameComponent> gameFilter = null;
     private readonly ConcurrentQueue<PlaceTowerRequest> inputQueue;
+    private readonly EcsFilter<BoardPositionComponent> towerFilter = null;
     private readonly EcsWorld world = null;
 
     /// <summary>
@@ -33,15 +34,20 @@ namespace BackEnd.Game.Systems
       GameComponent game = this.gameFilter.Get1(0);
       while (this.inputQueue.TryDequeue(out PlaceTowerRequest request))
       {
-        // Validate request
-        if (request.XPosition < 0 || game.Stage.XSize <= request.XPosition)
+        // Check if tile is valid in stage, eg inside stage and not on blocked tile .
+        Stage.Tile requestTile = new Stage.Tile() { X = request.XPosition, Y = request.YPosition };
+        if (!game.Stage.IsValidTowerTile(requestTile))
         {
-          return;
+          continue;
         }
 
-        if (request.YPosition < 0 || game.Stage.YSize <= request.YPosition)
+        // Check if tower already exists in same tile.
+        foreach (int i in this.towerFilter)
         {
-          return;
+          if (this.towerFilter.Get1(i).Position == requestTile)
+          {
+            continue;
+          }
         }
 
         // Create tower
@@ -52,7 +58,7 @@ namespace BackEnd.Game.Systems
         towerComponent.ReloadTime = 1d;
         towerComponent.TowerSpriteNumber = 1;
         ref BoardPositionComponent towerPosition = ref tower.Get<BoardPositionComponent>();
-        towerPosition.Position = new Stage.Tile() { X = request.XPosition, Y = request.YPosition };
+        towerPosition.Position = requestTile;
 
         // Broadcast changes
         game.Broadcaster.TowerPosition((short)tower.GetInternalId(), (byte)request.TowerTypeNumber, (byte)request.XPosition, (byte)request.YPosition);
