@@ -83,6 +83,7 @@ namespace BackEnd.Game
     /// </summary>
     public void ProcessFightRound()
     {
+      this.Running = true;
       while (this.Running)
       {
         this.systems.Run();
