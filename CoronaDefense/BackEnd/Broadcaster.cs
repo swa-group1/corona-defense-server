@@ -163,11 +163,15 @@ namespace BackEnd
     private byte[] TowerAnimationBuffer { get; } = new byte[]
     {
       0x53, // Byte code (UByte)
-      0x04, // Length (UByte)
+      0x08, // Length (UByte)
       0x00, // Tower ID (UShort)
       0x00,
       0x00, // Animation number (UByte)
       0x00, // Rotation (Byte)
+      0x00, // Time (Float)
+      0x00,
+      0x00,
+      0x00,
     };
 
     private byte[] HealthAnimationBuffer { get; } = new byte[]
@@ -490,11 +494,13 @@ namespace BackEnd
     /// <para>A value of 0x00 means the tower should not be animated.</para>
     /// </param>
     /// <param name="rotation">Rotation tower should assume during the animation and afterwards.</param>
-    internal void TowerAnimation(short towerId, byte animation, byte rotation)
+    /// <param name="time">Time when animation starts.</param>
+    internal void TowerAnimation(short towerId, byte animation, byte rotation, float time)
     {
       this.SetShort(this.TowerAnimationBuffer, 2, towerId);
       this.TowerAnimationBuffer[4] = animation;
       this.TowerAnimationBuffer[5] = rotation;
+      this.SetFloat(this.TowerAnimationBuffer, 6, time);
       this.Broadcast(this.TowerAnimationBuffer);
     }
 
