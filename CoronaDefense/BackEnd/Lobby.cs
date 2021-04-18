@@ -218,6 +218,7 @@ namespace BackEnd
       this.LobbyMode = Mode.FightMode;
       this.Broadcaster.FightRound(this.RoundNumber);
 
+      this.EcsContainer.PlaceEnemySystem.PlaceEnemies();
       this.EcsContainer.ProcessFightRound();
       this.RoundNumber++;
 
