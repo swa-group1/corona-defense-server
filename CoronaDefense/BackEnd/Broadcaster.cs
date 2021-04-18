@@ -170,9 +170,17 @@ namespace BackEnd
     /// <param name="buffer">Buffer to send to <see cref="sockets"/>.</param>
     private void Broadcast(byte[] buffer)
     {
-      foreach (Socket socket in this.Sockets.Values)
+      foreach (KeyValuePair<long, Socket> pair in this.Sockets)
       {
-        _ = socket.Send(buffer);
+        try
+        {
+          _ = pair.Value.Send(buffer);
+        }
+        catch (Exception)
+        {
+          pair.Value.Dispose();
+          _ = this.Sockets.Remove(pair.Key);
+        }
       }
     }
 
