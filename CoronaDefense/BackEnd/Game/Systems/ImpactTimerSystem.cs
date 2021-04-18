@@ -37,6 +37,10 @@ namespace BackEnd.Game.Systems
           // Remove timer
           timers.ImpactTimers.RemoveAt(timerIndex);
           --timerIndex;
+          if (timers.ImpactTimers.Count == 0)
+          {
+            this.doomedFilter.GetEntity(doomedIndex).Del<ImpactTimerComponent>();
+          }
 
           // Reduce health
           ref HealthComponent health = ref this.doomedFilter.Get2(doomedIndex);
