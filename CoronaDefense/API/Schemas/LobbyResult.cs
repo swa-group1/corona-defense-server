@@ -10,7 +10,7 @@ namespace API.Schemas
   public class LobbyResult : RequestResult
   {
     /// <summary>
-    /// Lobby requested.
+    /// Gets or sets lobby requested.
     /// </summary>
     public Lobby Lobby { get; set; }
   }

@@ -88,6 +88,7 @@ namespace API
     /// <summary>
     /// Attach handler to the CreateLobby endpoint.
     /// </summary>
+    /// <param name="handler">Handler to attach.</param>
     public void AttachCreateLobbyHandler(IRequestHandler<CreateLobbyRequest, CreateLobbyResult> handler)
     {
       this.CreateLobbyHandler = handler;
@@ -96,6 +97,7 @@ namespace API
     /// <summary>
     /// Attach handler to the HighScoreList endpoint.
     /// </summary>
+    /// <param name="handler">Handler to attach.</param>
     public void AttachHighScoreListHandler(IRequestHandler<HighScoreListResult> handler)
     {
       this.HighScoreListHandler = handler;
@@ -104,6 +106,7 @@ namespace API
     /// <summary>
     /// Attach handler to the JoinLobby endpoint.
     /// </summary>
+    /// <param name="handler">Handler to attach.</param>
     public void AttachJoinLobbyHandler(IRequestHandler<JoinLobbyRequest, JoinLobbyResult> handler)
     {
       this.JoinLobbyHandler = handler;
@@ -112,6 +115,7 @@ namespace API
     /// <summary>
     /// Attach handler to the LeaveLobby endpoint.
     /// </summary>
+    /// <param name="handler">Handler to attach.</param>
     public void AttachLeaveLobbyHandler(IRequestHandler<LocalRequest, RequestResult> handler)
     {
       this.LeaveLobbyHandler = handler;
@@ -120,6 +124,7 @@ namespace API
     /// <summary>
     /// Attach handler to the Lobby endpoint.
     /// </summary>
+    /// <param name="handler">Handler to attach.</param>
     public void AttachLobbyHandler(IRequestHandler<LobbyRequest, LobbyResult> handler)
     {
       this.LobbyHandler = handler;
@@ -128,6 +133,7 @@ namespace API
     /// <summary>
     /// Attach handler to the LobbyList endpoint.
     /// </summary>
+    /// <param name="handler">Handler to attach.</param>
     public void AttachLobbyListHandler(IRequestHandler<LobbyListResult> handler)
     {
       this.LobbyListHandler = handler;
@@ -136,6 +142,7 @@ namespace API
     /// <summary>
     /// Attach handler to the PlaceTower endpoint.
     /// </summary>
+    /// <param name="handler">Handler to attach.</param>
     public void AttachPlaceTowerHandler(IRequestHandler<PlaceTowerRequest, RequestResult> handler)
     {
       this.PlaceTowerHandler = handler;
@@ -144,6 +151,7 @@ namespace API
     /// <summary>
     /// Attach handler to the SellTower endpoint.
     /// </summary>
+    /// <param name="handler">Handler to attach.</param>
     public void AttachSellTowerHHandler(IRequestHandler<SelltowerRequest, RequestResult> handler)
     {
       this.SellTowerHandler = handler;
@@ -152,6 +160,7 @@ namespace API
     /// <summary>
     /// Attach handler to the StartGame endpoint.
     /// </summary>
+    /// <param name="handler">Handler to attach.</param>
     public void AttachStartGameHandler(IRequestHandler<StartGameRequest, StartGameResult> handler)
     {
       this.StartGameHandler = handler;
@@ -160,6 +169,7 @@ namespace API
     /// <summary>
     /// Attach handler to the StartRound endpoint.
     /// </summary>
+    /// <param name="handler">Handler to attach.</param>
     public void AttachStartRoundHandler(IRequestHandler<LocalRequest, RequestResult> handler)
     {
       this.StartRoundHandler = handler;
@@ -168,6 +178,7 @@ namespace API
     /// <summary>
     /// Attach handler to the VerifyVersion endpoint.
     /// </summary>
+    /// <param name="handler">Handler to attach.</param>
     public void AttachVerifyVersionHandler(IRequestHandler<VerifyVersionRequest, VerifyVersionResult> handler)
     {
       this.VerifyVersionHandler = handler;

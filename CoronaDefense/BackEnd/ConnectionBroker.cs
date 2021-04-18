@@ -80,7 +80,7 @@ namespace BackEnd
       }
 
       socket.Close();
-      this.ConnectionPool.Remove(connectionNumber);
+      _ = this.ConnectionPool.Remove(connectionNumber);
       Console.WriteLine($"Connection with number {connectionNumber} was inactive and has been timed out.");
     }
 
@@ -99,7 +99,7 @@ namespace BackEnd
           long connectionNumber;
           do
           {
-            connectionNumber = this.RandomLong;
+            connectionNumber = RandomLong;
           }
           while (this.ConnectionPool.ContainsKey(connectionNumber));
           this.AddConnectionToPool(connectionNumber, clientSocket);
@@ -129,11 +129,12 @@ namespace BackEnd
     /// <returns><see langword="true"/> if the connection existed and was successfully claimed.</returns>
     public bool TryClaimConnection(long connectionNumber, out Socket clientSocket)
     {
-      if (!this.ConnectionPool.TryGetValue(connectionNumber, out clientSocket)) {
+      if (!this.ConnectionPool.TryGetValue(connectionNumber, out clientSocket))
+      {
         return false;
       }
 
-      this.ConnectionPool.Remove(connectionNumber);
+      _ = this.ConnectionPool.Remove(connectionNumber);
       return true;
     }
 

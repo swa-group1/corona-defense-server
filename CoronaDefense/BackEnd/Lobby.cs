@@ -4,6 +4,7 @@
 
 using API.Requests;
 using API.Schemas;
+using BackEnd.Game;
 using BackEnd.Router;
 using System.Collections.Generic;
 using System.Timers;
@@ -16,16 +17,20 @@ namespace BackEnd
   internal class Lobby : ServerRandom, IReceiver
   {
     /// <summary>
+    /// Default time before a <see cref="Lobby"/> should close itself because of inactivity.
+    /// </summary>
+    private const int LobbyTimeOut = 2 * 60 * 1000;
+
+    /// <summary>
     /// Gets the set of access tokens of clients currently connected to this <see cref="Lobby"/>.
     /// </summary>
     private HashSet<long> AccessTokens { get; } = new HashSet<long>();
 
     private Broadcaster Broadcaster { get; }
 
-    /// <summary>
-    /// Default time before a <see cref="Lobby"/> should close itself because of inactivity.
-    /// </summary>
-    private const int LobbyTimeOut = 2 * 60 * 1000;
+    private StartGameRequest.Difficulties Difficulty { get; set; }
+
+    private EcsContainer EcsContainer { get; set; }
 
     /// <summary>
     /// Gets the ID of this <see cref="Lobby"/>.
@@ -33,9 +38,16 @@ namespace BackEnd
     public long Id { get; }
 
     /// <summary>
+    /// Gets or sets the current state of the lobby.
+    /// </summary>
+    private Mode LobbyMode { get; set; } = Mode.LobbyMode;
+
+    /// <summary>
     /// Gets the name of this <see cref="Lobby"/>.
     /// </summary>
     public string Name { get; }
+
+    private List<IObserver> Observers { get; } = new List<IObserver>();
 
     /// <summary>
     /// Gets password of this <see cref="Lobby"/>.
@@ -85,14 +97,14 @@ namespace BackEnd
       }
     }
 
-    private List<IObserver> Observers { get; } = new List<IObserver>();
+    private short RoundNumber { get; set; } = 0;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Lobby"/> class.
     /// </summary>
     /// <param name="name">Name of the new <see cref="Lobby"/>.</param>
     /// <param name="password">Password of the new <see cref="Lobby"/>.</param>
-    /// <param name="connectionBroker"></param>
+    /// <param name="connectionBroker"><see cref="ConnectionBroker"/> that this <see cref="Lobby"/> should get open connections from.</param>
     /// <param name="router">Router the new <see cref="Lobby"/> should connect to.</param>
     public Lobby(string name, string password, ConnectionBroker connectionBroker, Router.Router router)
     {
@@ -122,7 +134,7 @@ namespace BackEnd
       long accessToken;
       do
       {
-        accessToken = this.RandomLong;
+        accessToken = RandomLong;
       }
       while (this.AccessTokens.Contains(accessToken));
 
@@ -137,7 +149,7 @@ namespace BackEnd
         };
       }
 
-      this.AccessTokens.Add(accessToken);
+      _ = this.AccessTokens.Add(accessToken);
       this.playerCount++;
 
       this.Broadcaster.Ping();
@@ -162,7 +174,12 @@ namespace BackEnd
     /// <inheritdoc/>
     public void PlaceTower(PlaceTowerRequest request)
     {
-      throw new System.NotImplementedException();
+      if (this.LobbyMode != Mode.InputMode)
+      {
+        return;
+      }
+
+      this.EcsContainer.PlaceTowerSystem.PlaceTower(request);
     }
 
     /// <inheritdoc/>
@@ -174,13 +191,39 @@ namespace BackEnd
     /// <inheritdoc/>
     public void StartGame(StartGameRequest request)
     {
-      throw new System.NotImplementedException();
+      if (this.LobbyMode != Mode.LobbyMode)
+      {
+        return;
+      }
+
+      this.Difficulty = request.Difficulty;
+      this.LobbyMode = Mode.InputMode;
+      this.RoundNumber = 1;
+
+      this.Broadcaster.GameMode(request.StageNumber);
+      this.Broadcaster.InputRound(this.RoundNumber);
+
+      Stage stage = Stage.Parse(StorageAPI.DownloadStage(request.StageNumber));
+      this.EcsContainer = new EcsContainer(this.Broadcaster, request.Difficulty, stage);
     }
 
     /// <inheritdoc/>
     public void StartRound(LocalRequest request)
     {
-      throw new System.NotImplementedException();
+      if (this.LobbyMode != Mode.InputMode)
+      {
+        return;
+      }
+
+      this.LobbyMode = Mode.FightMode;
+      this.Broadcaster.FightRound(this.RoundNumber);
+
+      this.EcsContainer.PlaceEnemySystem.PlaceEnemies();
+      this.EcsContainer.ProcessFightRound();
+      this.RoundNumber++;
+
+      this.LobbyMode = Mode.InputMode;
+      this.Broadcaster.InputRound(this.RoundNumber);
     }
 
     /// <summary>
@@ -209,6 +252,24 @@ namespace BackEnd
       {
         observer.OnClose(this.Id);
       }
+    }
+
+    private enum Mode
+    {
+      /// <summary>
+      /// During fight mode, a game is in progress and there are enemies on the stage.
+      /// </summary>
+      FightMode,
+
+      /// <summary>
+      /// During input mode, a game is in progress and there are no enemies on the stage. Input is expected.
+      /// </summary>
+      InputMode,
+
+      /// <summary>
+      /// During lobby mode, the game has not yet started.
+      /// </summary>
+      LobbyMode,
     }
 
     /// <summary>

@@ -8,28 +8,13 @@ using System.Collections.Generic;
 
 namespace BackEnd.Game
 {
-  // ReSharper disable ClassNeverInstantiated.Global
-  // ReSharper disable CollectionNeverUpdated.Global
-  // ReSharper disable UnusedAutoPropertyAccessor.Global
-  // ↑ The stage class is created with reflection, so the init setters, Tile class, and IList fields are actually in use.
-
   /// <summary>
   /// Data class for stages.
   /// </summary>
   internal class Stage
   {
     /// <summary>
-    /// Constant with half the number of steps in one tile.
-    /// </summary>
-    private const int HalfOfStepsInTile = 10;
-
-    /// <summary>
-    /// The number of steps in one tile.
-    /// </summary>
-    private static int StepsInTile = 2 * HalfOfStepsInTile;
-
-    /// <summary>
-    /// TODO
+    /// Gets the cumulative lengths after each segment.
     /// </summary>
     private List<double> CumulativePathLengths { get; } = new List<double>();
 
@@ -67,6 +52,17 @@ namespace BackEnd.Game
     /// Gets tiles that towers can not occupy.
     /// </summary>
     public IList<Tile> BlockedTiles { get; init; }
+
+    /// <summary>
+    /// Gets total length of path.
+    /// </summary>
+    public double PathLength
+    {
+      get
+      {
+        return this.CumulativePathLengths[^2];
+      }
+    }
 
     /// <summary>
     /// Backing-field of <see cref="PathPoints"/>.
@@ -125,19 +121,87 @@ namespace BackEnd.Game
 
       // Adding edge-case logic for requesting a point after path.
       this.CumulativePathLengths.Add(double.MaxValue);
-      this.LineSegmentsX.Add(AffineLine.Constant(this.PathPoints[this.PathPoints.Count - 1].X));
-      this.LineSegmentsY.Add(AffineLine.Constant(this.PathPoints[this.PathPoints.Count - 1].Y));
+      this.LineSegmentsX.Add(AffineLine.Constant(this.PathPoints[^1].X));
+      this.LineSegmentsY.Add(AffineLine.Constant(this.PathPoints[^1].Y));
     }
 
+    /// <summary>
+    /// Get the position such that the distance from the start of the path to the position along the path has supplied <paramref name="length"/>.
+    /// </summary>
+    /// <param name="length">Length along path to find position.</param>
+    /// <returns>The point <paramref name="length"/> along path.</returns>
     public Point GetPointAlongPath(double length)
     {
       int insertIndex = this.CumulativePathLengths.BinarySearch(length);
       insertIndex = insertIndex < 0 ? ~insertIndex : insertIndex;
-      return new Point()
+      return new Point() { X = this.LineSegmentsX[insertIndex].Evaluate(length), Y = this.LineSegmentsY[insertIndex].Evaluate(length) };
+    }
+
+    /// <summary>
+    /// Check if length along path is outside stage on the near-side.
+    /// </summary>
+    /// <param name="length">Length along path to check.</param>
+    /// <returns><see langword="true"/> if point <paramref name="length"/> along path is before stage.</returns>
+    public bool IsBeforeStage(double length)
+    {
+      if (this.PathLength < 2 * length)
       {
-        X = this.LineSegmentsX[insertIndex].Evaluate(length),
-        Y = this.LineSegmentsY[insertIndex].Evaluate(length),
-      };
+        return false;
+      }
+
+      return !this.IsOnStage(this.GetPointAlongPath(length));
+    }
+
+    /// <summary>
+    /// Check if supplied <paramref name="point"/> is on this <see cref="Stage"/>.
+    /// </summary>
+    /// <param name="point"><see cref="Point"/> to check.</param>
+    /// <returns><see langword="true"/> if supplied <paramref name="point"/> is on this <see cref="Stage"/>.</returns>
+    public bool IsOnStage(Point point)
+    {
+      return 0 <= point.X && point.X <= this.XSize && 0 <= point.Y && point.Y <= this.YSize;
+    }
+
+    /// <summary>
+    /// Check if length along path is outside stage on the far-side.
+    /// </summary>
+    /// <param name="length">Length along path to check.</param>
+    /// <returns><see langword="true"/> if point <paramref name="length"/> along path is past stage.</returns>
+    public bool IsPastStage(double length)
+    {
+      if (2 * length < this.PathLength)
+      {
+        return false;
+      }
+
+      return !this.IsOnStage(this.GetPointAlongPath(length));
+    }
+
+    /// <summary>
+    /// Check if tile is a valid <see cref="Tile"/> for a tower.
+    /// </summary>
+    /// <param name="tile"><see cref="Tile"/> to test if is valid for tower.</param>
+    /// <returns><see langword="true"/> if tower can be placed on supplied <paramref name="tile"/>.</returns>
+    public bool IsValidTowerTile(Tile tile)
+    {
+      // Check if inside stage.
+      if (tile.X < 0 || this.XSize <= tile.X)
+      {
+        return false;
+      }
+
+      if (tile.Y < 0 || this.YSize <= tile.Y)
+      {
+        return false;
+      }
+
+      // Check if not blocked
+      if (this.BlockedTiles.Contains(tile))
+      {
+        return false;
+      }
+
+      return true;
     }
 
     /// <summary>
@@ -161,86 +225,144 @@ namespace BackEnd.Game
       private double A { get; init; }
 
       /// <summary>
-      /// Gets the contant value of line.
+      /// Gets the constant value of line.
       /// </summary>
       private double B { get; init; }
 
       /// <summary>
-      /// 
+      /// Initializes a new instance of the <see cref="AffineLine"/> class.
       /// </summary>
-      /// <param name="pathLength0"></param>
-      /// <param name="value0"></param>
-      /// <param name="pathLength1"></param>
-      /// <param name="value1"></param>
-
-      // TODO
       private AffineLine()
       {
       }
 
-      // TODO
+      /// <summary>
+      /// Initializes a new instance of the <see cref="AffineLine"/> class. Create the line from two points.
+      /// </summary>
+      /// <param name="pathLength0">Length along complete path of the first point.</param>
+      /// <param name="value0">Value of line at the first point.</param>
+      /// <param name="pathLength1">Length along complete path of the second point.</param>
+      /// <param name="value1">Value of line at the second point.</param>
       public AffineLine(double pathLength0, double value0, double pathLength1, double value1)
       {
         this.A = (value1 - value0) / (pathLength1 - pathLength0);
-        this.B = value0 - this.A * pathLength0; 
+        this.B = value0 - (this.A * pathLength0);
       }
 
-      public static AffineLine Constant(double contant)
+      public static AffineLine Constant(double constant)
       {
-        return new AffineLine()
-        {
-          A = 0,
-          B = contant,
-        };
+        return new AffineLine() { A = 0, B = constant };
       }
 
       /// <summary>
       /// Evaluate the value at a certain point.
-      /// <summary>
-      /// <param name="step">The step value to evaluate.</param>
+      /// </summary>
+      /// <param name="length">The input value to the line viewed as a function.</param>
       public double Evaluate(double length)
       {
-        return this.A * length + this.B;
+        return (this.A * length) + this.B;
       }
     }
 
     /// <summary>
     /// reference to a specific point on the game board.
     /// </summary>
-    public class Point 
+    public struct Point
     {
       /// <summary>
       /// Gets the X coordinate of this <see cref="Point"/>.
       /// </summary>
-      public double X { get; init; }
+      public double X;
 
       /// <summary>
       /// Gets the Y coordinate of this <see cref="Point"/>.
       /// </summary>
-      public double Y { get; init; }
+      public double Y;
 
-       /// <inheritdoc/>
+      /// <summary>
+      /// Calculate the Euclidean distance between two points.
+      /// </summary>
+      /// <param name="first">First point to calculate distance between.</param>
+      /// <param name="second">Second point to calculate distance between.</param>
+      /// <returns>The distance between supplied points.</returns>
+      public static double Distance(Point first, Point second)
+      {
+        return Math.Sqrt(SquareDistance(first, second));
+      }
+
+      /// <summary>
+      /// Calculate the square Euclidean distance between two points.
+      /// </summary>
+      /// <param name="first">First point to calculate distance between.</param>
+      /// <param name="second">Second point to calculate distance between.</param>
+      /// <returns>The square distance between supplied points.</returns>
+      public static double SquareDistance(Point first, Point second)
+      {
+        double deltaX = first.X - second.X;
+        double deltaY = first.Y - second.Y;
+        return (deltaX * deltaX) + (deltaY * deltaY);
+      }
+
+      /// <inheritdoc/>
       public override string ToString()
       {
         return $"Point {{ X: {this.X}, Y: {this.Y} }}";
       }
-
     }
 
     /// <summary>
     /// Reference to a specific tile on the game board.
     /// </summary>
-    public class Tile
+    public struct Tile
     {
       /// <summary>
       /// Gets the X coordinate of this <see cref="Tile"/>.
       /// </summary>
-      public int X { get; init; }
+      public int X;
 
       /// <summary>
       /// Gets the Y coordinate of this <see cref="Tile"/>.
       /// </summary>
-      public int Y { get; init; }
+      public int Y;
+
+      /// <inheritdoc/>
+      public override bool Equals(object obj)
+      {
+        if (obj is not Tile tile)
+        {
+          return false;
+        }
+
+        return this.X == tile.X && this.Y == tile.Y;
+      }
+
+      /// <inheritdoc/>
+      public override int GetHashCode()
+      {
+        int hash = 4111;
+        hash = (4441 * hash) + this.X;
+        hash = (4441 * hash) + this.Y;
+        return hash;
+      }
+
+      public static bool operator ==(Tile first, Tile second)
+      {
+        return first.Equals(second);
+      }
+
+      public static bool operator !=(Tile first, Tile second)
+      {
+        return !(first == second);
+      }
+
+      /// <summary>
+      /// Cast a <see cref="Tile"/> into a <see cref="Point"/> struct.
+      /// </summary>
+      /// <param name="tile"><see cref="Tile"/> to convert to <see cref="Point"/>.</param>
+      public static explicit operator Point(Tile tile)
+      {
+        return new Point() { X = tile.X, Y = tile.Y };
+      }
 
       /// <inheritdoc/>
       public override string ToString()

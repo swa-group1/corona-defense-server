@@ -6,6 +6,14 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <None Remove="stylecop.json" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <AdditionalFiles Include="stylecop.json" />
+    </ItemGroup>
+
+    <ItemGroup>
       <PackageReference Include="Newtonsoft.Json.Schema" Version="3.0.14" />
       <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.333">
         <PrivateAssets>all</PrivateAssets>
@@ -14,6 +22,11 @@
 
     <ItemGroup>
       <ProjectReference Include="..\API\API.csproj" />
+      <ProjectReference Include="..\LeopotamECS\LeopotamECS.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\ECS\ECS.csproj" />
     </ItemGroup>
 
 </Project>

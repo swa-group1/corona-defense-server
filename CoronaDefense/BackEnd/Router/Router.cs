@@ -41,7 +41,7 @@ namespace BackEnd.Router
       long address;
       do
       {
-        address = this.RandomLong;
+        address = RandomLong;
       }
       while (this.receivers.ContainsKey(address));
 

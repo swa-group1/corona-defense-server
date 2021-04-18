@@ -184,7 +184,7 @@ namespace BackEnd
     /// <inheritdoc/>
     public void OnClose(long lobbyId)
     {
-        this.Lobbies.Remove(lobbyId);
+      _ = this.Lobbies.Remove(lobbyId);
     }
   }
 }

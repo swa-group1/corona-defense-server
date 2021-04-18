@@ -10,24 +10,34 @@ namespace API.Requests
   public class StartGameRequest : LocalRequest
   {
     /// <summary>
-    /// Number of stage
+    /// Gets number of stage.
     /// </summary>
     public byte StageNumber { get; init; }
 
     /// <summary>
-    /// The desired difficulty of the game.
+    /// Gets the desired difficulty of the game.
     /// </summary>
     public Difficulties Difficulty { get; init; }
 
     /// <summary>
-    /// Available difficulties
+    /// Available difficulties.
     /// </summary>
     public enum Difficulties
     {
+      /// <summary>
+      /// Easiest difficulty.
+      /// </summary>
       EASY,
+
+      /// <summary>
+      /// Medium difficulty.
+      /// </summary>
       MEDIUM,
+
+      /// <summary>
+      /// Hard difficulty.
+      /// </summary>
       HARD,
     }
   }
 }
-

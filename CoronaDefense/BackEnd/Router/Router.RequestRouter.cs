@@ -43,7 +43,7 @@ namespace BackEnd.Router
       /// </summary>
       /// <param name="receiver"><see cref="IReceiver"/> that request should be forwarded to.</param>
       /// <param name="request">Request that should be executed.</param>
-      /// <returns></returns>
+      /// <returns>Result from receiver.</returns>
       protected abstract TResult ForwardRequest(IReceiver receiver, TRequest request);
 
       /// <inheritdoc/>
@@ -64,8 +64,8 @@ namespace BackEnd.Router
       /// <remarks>
       /// It is recommended to make us of the <see cref="InvalidLobbyIdMessage"/> constant.
       /// </remarks>
-      /// <param name="request"></param>
-      /// <returns></returns>
+      /// <param name="request">Request that has invalid lobby ID.</param>
+      /// <returns>A result that indicates that the <paramref name="request"/> had invalid lobby ID.</returns>
       protected abstract TResult GenerateInvalidLobbyIdResult(TRequest request);
     }
   }
