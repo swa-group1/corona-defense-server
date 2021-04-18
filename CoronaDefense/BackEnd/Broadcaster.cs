@@ -4,7 +4,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Net;
 using System.Net.Sockets;
 
 namespace BackEnd
@@ -26,54 +25,54 @@ namespace BackEnd
 
     private static byte[] PingBuffer { get; } = new byte[]
     {
-      0x10, // Byte code
-      0x02, // Length
-      0x00, // Major version
-      0x00, // Minor version
+      0x10, // Byte code (UByte)
+      0x02, // Length (UByte)
+      0x00, // Major version (UByte)
+      0x01, // Minor version (UByte)
     };
 
     private byte[] FightRoundBuffer { get; } = new byte[]
     {
-      0x20, // Byte code
-      0x02, // Length
-      0x00, // Round number
+      0x20, // Byte code (UByte)
+      0x02, // Length (UByte)
+      0x00, // Round number (UShort)
       0x00,
     };
 
     private byte[] GameModeBuffer { get; } = new byte[]
     {
-      0x21, // Byte code
-      0x01, // Length
-      0x00, // Stage number
+      0x21, // Byte code (UByte)
+      0x01, // Length (UByte)
+      0x00, // Stage number (UByte)
     };
 
     private byte[] InputRoundBuffer { get; } = new byte[]
     {
-      0x22, // Byte code
-      0x02, // Length
-      0x00, // Round number
+      0x22, // Byte code (UByte)
+      0x02, // Length (UByte)
+      0x00, // Round number (UShort)
       0x00,
     };
 
     private static byte[] LobbyModeBuffer { get; } = new byte[]
     {
-      0x23, // Byte code
-      0x00, // Length
+      0x23, // Byte code (UByte)
+      0x00, // Length (UByte)
     };
 
     private byte[] HealthUpdateBuffer { get; } = new byte[]
     {
-      0x30, // Byte code
-      0x02, // Length
-      0x00, // New value
+      0x30, // Byte code (UByte)
+      0x02, // Length (UByte)
+      0x00, // New value (UShort)
       0x00,
     };
 
     private byte[] MoneyUpdateBuffer { get; } = new byte[]
     {
-      0x31, // Byte code
-      0x04, // Length
-      0x00, // New value
+      0x31, // Byte code (UByte)
+      0x04, // Length (UByte)
+      0x00, // New value (UInt)
       0x00,
       0x00,
       0x00,
@@ -81,78 +80,120 @@ namespace BackEnd
 
     private byte[] PlayerCountUpdateBuffer { get; } = new byte[]
     {
-      0x32, // Byte code
-      0x01, // Length
-      0x00, // Player count
+      0x32, // Byte code (UByte)
+      0x01, // Length (UByte)
+      0x00, // Player count (UByte)
     };
 
     private byte[] TowerPositionBuffer { get; } = new byte[]
     {
-      0x33, // Byte code
-      0x05, // Length
-      0x00, // Tower ID
+      0x33, // Byte code (UByte)
+      0x05, // Length (UByte)
+      0x00, // Tower ID (UShort)
       0x00,
-      0x00, // Type number
-      0x00, // X position
-      0x00, // Y position
+      0x00, // Type number (UByte)
+      0x00, // X position (UByte)
+      0x00, // Y position (UByte)
     };
 
     private byte[] TowerRemovedBuffer { get; } = new byte[]
     {
-      0x40, // Byte code
-      0x02, // Length
-      0x00, // Tower ID
+      0x40, // Byte code (UByte)
+      0x02, // Length (UByte)
+      0x00, // Tower ID (UShort)
       0x00,
     };
 
     private byte[] AnimationConfirmationBuffer { get; } = new byte[]
     {
-      0x50, // Byte code
-      0x02, // Length
-      0x00, // Time
+      0x50, // Byte code (UByte)
+      0x04, // Length (UByte)
+      0x00, // Time (Float)
+      0x00,
+      0x00,
       0x00,
     };
 
     private byte[] BoardToPathAnimationBuffer { get; } = new byte[]
     {
-      0x51, // Byte code
-      0x0A, // Length
-      0x00, // Sprite number
-      0x00, // Start position x
-      0x00, // Start position y
-      0x00, // End position
+      0x51, // Byte code (UByte)
+      0x10, // Length (UByte)
+      0x00, // Sprite number (UByte)
+      0x00, // Start position x (UByte)
+      0x00, // Start position y (UByte)
+      0x00, // End position (Float)
       0x00,
-      0x00, // Start time
       0x00,
-      0x00, // End time
       0x00,
-      0x00, // Result animation
+      0x00, // Start time (Float)
+      0x00,
+      0x00,
+      0x00,
+      0x00, // End time (Float)
+      0x00,
+      0x00,
+      0x00,
+      0x00, // Result animation (UByte)
     };
 
     private byte[] PathToPathAnimationBuffer { get; } = new byte[]
     {
-      0x52, // Byte code
-      0x0A, // Length
-      0x00, // Sprite number
-      0x00, // Start position
+      0x52, // Byte code (UByte)
+      0x12, // Length (UByte)
+      0x00, // Sprite number (UByte)
+      0x00, // Start position (Float)
       0x00,
-      0x00, // End position
       0x00,
-      0x00, // Start time
       0x00,
-      0x00, // End time
+      0x00, // End position (Float)
       0x00,
-      0x00, // Result animation
+      0x00,
+      0x00,
+      0x00, // Start time (Float)
+      0x00,
+      0x00,
+      0x00,
+      0x00, // End time (Float)
+      0x00,
+      0x00,
+      0x00,
+      0x00, // Result animation (UByte)
     };
 
     private byte[] TowerAnimationBuffer { get; } = new byte[]
     {
-      0x53, // Byte code
-      0x04, // Length
-      0x00, // Tower ID
+      0x53, // Byte code (UByte)
+      0x04, // Length (UByte)
+      0x00, // Tower ID (UShort)
       0x00,
-      0x00, // Animation number
-      0x00, // Rotation
+      0x00, // Animation number (UByte)
+      0x00, // Rotation (Byte)
+    };
+
+    private byte[] HealthAnimationBuffer { get; } = new byte[]
+    {
+      0x54, // Byte code (UByte)
+      0x06, // Length (UByte)
+      0x00, // New Value (UShort)
+      0x00,
+      0x00, // Time (Float)
+      0x00,
+      0x00,
+      0x00,
+    };
+
+    private byte[] MoneyAnimationBuffer { get; } = new byte[]
+    {
+      0x55, // Byte code (UByte)
+      0x08, // Length (UByte)
+      0x00, // New Value (UInt)
+      0x00,
+      0x00,
+      0x00,
+      0x00, // Time (Float)
+      0x00,
+      0x00,
+      0x00,
     };
 
     /// <summary>
@@ -200,6 +241,54 @@ namespace BackEnd
     }
 
     /// <summary>
+    /// Write a <see cref="float"> to supplied <paramref name="buffer"/> starting at a specific index.
+    /// </summary>
+    /// <param name="buffer">Buffer to write to.</param>
+    /// <param name="startIndex">Index of first byte in buffer to write to.</param>
+    /// <param name="data">Data to write.</param>
+    private void SetFloat(byte[] buffer, int startIndex, float data)
+    {
+      byte[] bytes = BitConverter.GetBytes(data);
+      bytes.CopyTo(buffer, startIndex);
+    }
+
+    /// <summary>
+    /// Write a <see cref="int"> to supplied <paramref name="buffer"/> starting at a specific index.
+    /// </summary>
+    /// <param name="buffer">Buffer to write to.</param>
+    /// <param name="startIndex">Index of first byte in buffer to write to.</param>
+    /// <param name="data">Data to write.</param>
+    private void SetInt(byte[] buffer, int startIndex, int data)
+    {
+      byte[] bytes = BitConverter.GetBytes(data);
+
+      if (BitConverter.IsLittleEndian)
+      {
+        Array.Reverse(bytes);
+      }
+
+      bytes.CopyTo(buffer, startIndex);
+    }
+
+    /// <summary>
+    /// Write a <see cref="short"> to supplied <paramref name="buffer"/> starting at a specific index.
+    /// </summary>
+    /// <param name="buffer">Buffer to write to.</param>
+    /// <param name="startIndex">Index of first byte in buffer to write to.</param>
+    /// <param name="data">Data to write.</param>
+    private void SetShort(byte[] buffer, int startIndex, short data)
+    {
+      byte[] bytes = BitConverter.GetBytes(data);
+
+      if (BitConverter.IsLittleEndian)
+      {
+        Array.Reverse(bytes);
+      }
+
+      bytes.CopyTo(buffer, startIndex);
+    }
+
+    /// <summary>
     /// Attempt to associate client with specific <paramref name="accessToken"/> to connection with supplied <paramref name="connectionNumebr"/>.
     /// </summary>
     /// <param name="accessToken">Access token to associate with the retrieved <see cref="Socket"/>.</param>
@@ -230,9 +319,7 @@ namespace BackEnd
     /// <param name="roundNumber">Number of current round.</param>
     internal void FightRound(short roundNumber)
     {
-      this.FightRoundBuffer[3] = (byte)roundNumber;
-      roundNumber >>= 8;
-      this.FightRoundBuffer[2] = (byte)roundNumber;
+      this.SetShort(this.FightRoundBuffer, 2, roundNumber);
       this.Broadcast(this.FightRoundBuffer);
     }
 
@@ -252,9 +339,7 @@ namespace BackEnd
     /// <param name="roundNumber">Number of current round.</param>
     internal void InputRound(short roundNumber)
     {
-      this.InputRoundBuffer[3] = (byte)roundNumber;
-      roundNumber >>= 8;
-      this.InputRoundBuffer[2] = (byte)roundNumber;
+      this.SetShort(this.InputRoundBuffer, 2, roundNumber);
       this.Broadcast(this.InputRoundBuffer);
     }
 
@@ -272,9 +357,7 @@ namespace BackEnd
     /// <param name="newValue">The new value of the player health.</param>
     internal void HealthUpdate(short newValue)
     {
-      this.HealthUpdateBuffer[3] = (byte)newValue;
-      newValue >>= 8;
-      this.HealthUpdateBuffer[2] = (byte)newValue;
+      this.SetShort(this.HealthUpdateBuffer, 2, newValue);
       this.Broadcast(this.HealthUpdateBuffer);
     }
 
@@ -284,13 +367,7 @@ namespace BackEnd
     /// <param name="newValue">The new value of the players money.</param>
     internal void MoneyUpdate(int newValue)
     {
-      this.InputRoundBuffer[5] = (byte)newValue;
-      newValue >>= 8;
-      this.InputRoundBuffer[4] = (byte)newValue;
-      newValue >>= 8;
-      this.InputRoundBuffer[3] = (byte)newValue;
-      newValue >>= 8;
-      this.InputRoundBuffer[2] = (byte)newValue;
+      this.SetInt(this.InputRoundBuffer, 2, newValue);
       this.Broadcast(this.MoneyUpdateBuffer);
     }
 
@@ -313,9 +390,7 @@ namespace BackEnd
     /// <param name="y">Y position of tower.</param>
     internal void TowerPosition(short id, byte type, byte x, byte y)
     {
-      this.TowerPositionBuffer[3] = (byte)id;
-      id >>= 8;
-      this.TowerPositionBuffer[2] = (byte)id;
+      this.SetShort(this.TowerPositionBuffer, 2, id);
       this.TowerPositionBuffer[4] = type;
       this.TowerPositionBuffer[5] = x;
       this.TowerPositionBuffer[6] = y;
@@ -328,9 +403,7 @@ namespace BackEnd
     /// <param name="towerId">The ID of the tower that has been removed.</param>
     internal void TowerRemoved(short towerId)
     {
-      this.TowerRemovedBuffer[3] = (byte)towerId;
-      towerId >>= 8;
-      this.TowerRemovedBuffer[2] = (byte)towerId;
+      this.SetShort(this.TowerRemovedBuffer, 2, towerId);
       this.Broadcast(this.TowerRemovedBuffer);
     }
 
@@ -341,9 +414,7 @@ namespace BackEnd
     /// <param name="tickNumber">The tick up to which all animations have been sent.</param>
     internal void AnimationConfirmation(short tickNumber)
     {
-      this.AnimationConfirmationBuffer[3] = (byte)tickNumber;
-      tickNumber >>= 8;
-      this.AnimationConfirmationBuffer[2] = (byte)tickNumber;
+      this.SetShort(this.AnimationConfirmationBuffer, 2, tickNumber);
       this.Broadcast(this.AnimationConfirmationBuffer);
     }
 
@@ -364,25 +435,19 @@ namespace BackEnd
       byte spriteNumber,
       byte startX,
       byte startY,
-      short endPosition,
-      short startTime,
-      short endTime,
+      float endPosition,
+      float startTime,
+      float endTime,
       byte resultAnimation
     )
     {
       this.BoardToPathAnimationBuffer[2] = spriteNumber;
       this.BoardToPathAnimationBuffer[3] = startX;
       this.BoardToPathAnimationBuffer[4] = startY;
-      this.BoardToPathAnimationBuffer[6] = (byte)endPosition;
-      endPosition >>= 8;
-      this.BoardToPathAnimationBuffer[5] = (byte)endPosition;
-      this.BoardToPathAnimationBuffer[8] = (byte)startTime;
-      startTime >>= 8;
-      this.BoardToPathAnimationBuffer[7] = (byte)startTime;
-      this.BoardToPathAnimationBuffer[10] = (byte)endTime;
-      endTime >>= 8;
-      this.BoardToPathAnimationBuffer[9] = (byte)endTime;
-      this.BoardToPathAnimationBuffer[11] = resultAnimation;
+      this.SetFloat(this.BoardToPathAnimationBuffer, 5, endPosition);
+      this.SetFloat(this.BoardToPathAnimationBuffer, 9, startTime);
+      this.SetFloat(this.BoardToPathAnimationBuffer, 13, endTime);
+      this.BoardToPathAnimationBuffer[17] = resultAnimation;
       this.Broadcast(this.BoardToPathAnimationBuffer);
     }
 
@@ -400,27 +465,19 @@ namespace BackEnd
     /// </param>
     internal void PathToPathAnimation(
       byte spriteNumber,
-      short startPosition,
-      short endPosition,
-      short startTime,
-      short endTime,
+      float startPosition,
+      float endPosition,
+      float startTime,
+      float endTime,
       byte resultAnimation
     )
     {
       this.PathToPathAnimationBuffer[2] = spriteNumber;
-      this.PathToPathAnimationBuffer[4] = (byte)startPosition;
-      startPosition >>= 8;
-      this.PathToPathAnimationBuffer[3] = (byte)startPosition;
-      this.PathToPathAnimationBuffer[6] = (byte)endPosition;
-      endPosition >>= 8;
-      this.PathToPathAnimationBuffer[5] = (byte)endPosition;
-      this.PathToPathAnimationBuffer[8] = (byte)startTime;
-      startTime >>= 8;
-      this.PathToPathAnimationBuffer[7] = (byte)startTime;
-      this.PathToPathAnimationBuffer[10] = (byte)endTime;
-      endTime >>= 8;
-      this.PathToPathAnimationBuffer[9] = (byte)endTime;
-      this.PathToPathAnimationBuffer[11] = resultAnimation;
+      this.SetFloat(this.PathToPathAnimationBuffer, 3, startPosition);
+      this.SetFloat(this.PathToPathAnimationBuffer, 7, endPosition);
+      this.SetFloat(this.PathToPathAnimationBuffer, 11, startTime);
+      this.SetFloat(this.PathToPathAnimationBuffer, 15, endTime);
+      this.PathToPathAnimationBuffer[19] = resultAnimation;
       this.Broadcast(this.PathToPathAnimationBuffer);
     }
 
@@ -435,10 +492,34 @@ namespace BackEnd
     /// <param name="rotation">Rotation tower should assume during the animation and afterwards.</param>
     internal void TowerAnimation(short towerId, byte animation, byte rotation)
     {
-      this.TowerAnimationBuffer[3] = (byte)towerId;
-      towerId >>= 8;
-      this.TowerAnimationBuffer[2] = (byte)towerId;
+      this.SetShort(this.TowerAnimationBuffer, 2, towerId);
+      this.TowerAnimationBuffer[4] = animation;
+      this.TowerAnimationBuffer[5] = rotation;
       this.Broadcast(this.TowerAnimationBuffer);
+    }
+
+    /// <summary>
+    /// Broadcast that health should change at a specific time.
+    /// </summary>
+    /// <param name="newValue">New health value.</param>
+    /// <param name="time">The time the new vallue should be applied.</param>
+    internal void HealthAnimation(short newValue, float time)
+    {
+      this.SetShort(this.HealthAnimationBuffer, 2, newValue);
+      this.SetFloat(this.HealthAnimationBuffer, 4, time);
+      this.Broadcast(this.HealthAnimationBuffer);
+    }
+
+    /// <summary>
+    /// Broadcast that money should change at a specific time.
+    /// </summary>
+    /// <param name="newValue">New money value.</param>
+    /// <param name="time">The time the new vallue should be applied.</param>
+    internal void MoneyAnimation(int newValue, float time)
+    {
+      this.SetInt(this.MoneyAnimationBuffer, 2, newValue);
+      this.SetFloat(this.MoneyAnimationBuffer, 6, time);
+      this.Broadcast(this.MoneyAnimationBuffer);
     }
   }
 }

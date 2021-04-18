@@ -45,10 +45,10 @@ namespace BackEnd.Game.Systems
           ref PathPositionComponent doomedPosition = ref this.doomedFilter.Get4(doomedIndex);
           game.Broadcaster.PathToPathAnimation(
             0x01,
-            (short)(enemy.PreviousImpactPosition * 20),
-            (short)(doomedPosition.LengthTraveled * 20),
-            (short)(enemy.PreviousImpactTime * 20),
-            (short)(game.Time * 20),
+            (float)enemy.PreviousImpactPosition,
+            (float)doomedPosition.LengthTraveled,
+            (float)enemy.PreviousImpactTime,
+            (float)game.Time,
             0x00
           );
 
