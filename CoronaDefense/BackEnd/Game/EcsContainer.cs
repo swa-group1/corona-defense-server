@@ -68,12 +68,17 @@ namespace BackEnd.Game
       _ = this.systems.Add(new TimeSystem());
 
       // Frame
-      _ = this.systems.Add(new PathMoveSystem());
+      _ = this.systems.Add(new ShootingSystem());
+      _ = this.systems.Add(new ImpactTimerSystem());
       _ = this.systems.Add(new ReloadSystem());
+      _ = this.systems.Add(new PathMoveSystem());
       _ = this.systems.Add(new HurtPlayerSystem());
 
       // Post-frame
       _ = this.systems.Add(new EndFightRoundSystem(this));
+
+      // Debug
+      // _ = this.systems.Add(new PrintPathPositionSystem());
 
       this.systems.Init();
     }
