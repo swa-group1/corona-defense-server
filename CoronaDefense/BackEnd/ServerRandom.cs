@@ -19,7 +19,7 @@ namespace BackEnd
     /// <summary>
     /// Gets a random <see cref="long"/>.
     /// </summary>
-    protected static long RandomLong
+    public static long RandomLong
     {
       get
       {

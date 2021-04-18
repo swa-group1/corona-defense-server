@@ -253,6 +253,12 @@ namespace BackEnd
     private void SetFloat(byte[] buffer, int startIndex, float data)
     {
       byte[] bytes = BitConverter.GetBytes(data);
+
+      if (BitConverter.IsLittleEndian)
+      {
+        Array.Reverse(bytes);
+      }
+
       bytes.CopyTo(buffer, startIndex);
     }
 

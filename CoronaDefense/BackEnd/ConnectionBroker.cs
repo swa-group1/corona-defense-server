@@ -14,7 +14,7 @@ namespace BackEnd
   /// <summary>
   /// Object that accepts internet socket connections.
   /// </summary>
-  internal class ConnectionBroker : ServerRandom, IDisposable
+  internal class ConnectionBroker : IDisposable
   {
     /// <summary>
     /// Duration in milliseconds before a connection is timed out because it has not joined a <see cref="Lobby"/> yet.
@@ -99,7 +99,7 @@ namespace BackEnd
           long connectionNumber;
           do
           {
-            connectionNumber = RandomLong;
+            connectionNumber = ServerRandom.RandomLong;
           }
           while (this.ConnectionPool.ContainsKey(connectionNumber));
           this.AddConnectionToPool(connectionNumber, clientSocket);
