@@ -69,6 +69,7 @@ namespace BackEnd.Game.Systems
           if (health.HealthPoints <= 0)
           {
             this.doomedFilter.GetEntity(doomedIndex).Destroy();
+            break;
           }
         }
       }
