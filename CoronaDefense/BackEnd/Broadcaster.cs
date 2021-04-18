@@ -377,7 +377,7 @@ namespace BackEnd
     /// <param name="newValue">The new value of the players money.</param>
     internal void MoneyUpdate(int newValue)
     {
-      this.SetInt(this.InputRoundBuffer, 2, newValue);
+      this.SetInt(this.MoneyUpdateBuffer, 2, newValue);
       this.Broadcast(this.MoneyUpdateBuffer);
     }
 
