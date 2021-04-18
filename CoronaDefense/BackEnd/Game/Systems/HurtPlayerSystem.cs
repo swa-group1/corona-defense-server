@@ -34,6 +34,7 @@ namespace BackEnd.Game.Systems
         ref HealthComponent enemyHealth = ref this.enemies.Get2(enemyIndex);
         ref PlayerComponent player = ref this.playerFilter.Get1(0);
         player.Health -= enemyHealth.HealthPoints;
+        game.Broadcaster.HealthAnimation((short)player.Health, (float)game.Time);
 
         // Send animation
         ref EnemyComponent enemyComponent = ref this.enemies.Get1(enemyIndex);
