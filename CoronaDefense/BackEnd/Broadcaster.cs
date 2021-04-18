@@ -20,7 +20,7 @@ namespace BackEnd
     private ConnectionBroker ConnectionBroker { get; }
 
     /// <summary>
-    /// Dictionary connecting access tokens to sockets.
+    /// Gets dictionary connecting access tokens to sockets.
     /// </summary>
     private Dictionary<long, Socket> Sockets { get; } = new Dictionary<long, Socket>();
 
@@ -172,7 +172,7 @@ namespace BackEnd
     {
       foreach (Socket socket in this.Sockets.Values)
       {
-        socket.Send(buffer);
+        _ = socket.Send(buffer);
       }
     }
 

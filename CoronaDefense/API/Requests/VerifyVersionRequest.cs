@@ -1,4 +1,4 @@
-// <copyright file="StartRoundRequest.cs" company="NTNU: SWA group 1 (2021)">
+// <copyright file="VerifyVersionRequest.cs" company="NTNU: SWA group 1 (2021)">
 // Copyright (c) NTNU: SWA group 1 (2021). All rights reserved.
 // </copyright>
 
@@ -10,9 +10,8 @@ namespace API.Requests
   public class VerifyVersionRequest
   {
     /// <summary>
-    /// Clients version.
+    /// Gets clients version.
     /// </summary>
     public string Version { get; init; }
   }
 }
-

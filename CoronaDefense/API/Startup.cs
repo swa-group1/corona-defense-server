@@ -30,8 +30,8 @@ namespace API
     /// <param name="services">Collection of services to modify.</param>
     public void ConfigureServices(IServiceCollection services)
     {
-      services.AddControllers();
-      services.AddSwaggerGen(
+      _ = services.AddControllers();
+      _ = services.AddSwaggerGen(
         delegate (SwaggerGenOptions c)
         {
           c.SwaggerDoc("v1", new OpenApiInfo { Title = "CoronaDefense_API", Version = "v1.2" });

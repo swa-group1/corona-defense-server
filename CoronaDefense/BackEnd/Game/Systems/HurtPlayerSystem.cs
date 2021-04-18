@@ -1,4 +1,4 @@
-// <copyright file="PathMoveSystem.cs" company="NTNU: SWA group 1 (2021)">
+// <copyright file="HurtPlayerSystem.cs" company="NTNU: SWA group 1 (2021)">
 // Copyright (c) NTNU: SWA group 1 (2021). All rights reserved.
 // </copyright>
 

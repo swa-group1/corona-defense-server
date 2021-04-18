@@ -29,7 +29,7 @@ namespace BackEnd.Game.Systems
         if (tower.TimeUntilReloaded <= 0)
         {
           // Add ReloadedTag
-          entity.Get<ReloadedTag>();
+          _ = entity.Get<ReloadedTag>();
         }
       }
     }

@@ -7,10 +7,13 @@ using System.Collections.Generic;
 namespace BackEnd.Game.Components
 {
   /// <summary>
-  /// 
+  /// Component containing timers for when this entity will collide with projectiles.
   /// </summary>
   internal struct ImpactTimerComponent
   {
+    /// <summary>
+    /// List of timers for when this entity will collide with projectiles.
+    /// </summary>
     public List<double> ImpactTimers;
   }
 }

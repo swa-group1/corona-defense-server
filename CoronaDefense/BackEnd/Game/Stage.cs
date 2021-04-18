@@ -5,17 +5,9 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Data.Common;
-using System.Runtime.CompilerServices;
 
 namespace BackEnd.Game
 {
-  // ReSharper disable ClassNeverInstantiated.Global
-  // ReSharper disable CollectionNeverUpdated.Global
-  // ReSharper disable FieldCanBeMadeReadOnly.Local
-  // ReSharper disable UnusedAutoPropertyAccessor.Global
-  // ↑ The stage class is created with reflection, so the init setters, Tile class, and IList fields are actually in use.
-
   /// <summary>
   /// Data class for stages.
   /// </summary>
@@ -290,8 +282,8 @@ namespace BackEnd.Game
       /// <summary>
       /// Calculate the Euclidean distance between two points.
       /// </summary>
-      /// <param name="first">One of the points to calculate distance between.</param>
-      /// <param name="second">One of the points to calculate distance between.</param>
+      /// <param name="first">First point to calculate distance between.</param>
+      /// <param name="second">Second point to calculate distance between.</param>
       /// <returns>The distance between supplied points.</returns>
       public static double Distance(Point first, Point second)
       {
@@ -301,8 +293,8 @@ namespace BackEnd.Game
       /// <summary>
       /// Calculate the square Euclidean distance between two points.
       /// </summary>
-      /// <param name="first">One of the points to calculate square distance between.</param>
-      /// <param name="second">One of the points to calculate square distance between.</param>
+      /// <param name="first">First point to calculate distance between.</param>
+      /// <param name="second">Second point to calculate distance between.</param>
       /// <returns>The square distance between supplied points.</returns>
       public static double SquareDistance(Point first, Point second)
       {

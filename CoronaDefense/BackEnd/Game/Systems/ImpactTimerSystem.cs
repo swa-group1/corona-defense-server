@@ -8,7 +8,7 @@ using Leopotam.Ecs;
 namespace BackEnd.Game.Systems
 {
   /// <summary>
-  /// 
+  /// System that processes impact timers and impact.
   /// </summary>
   internal class ImpactTimerSystem : IEcsRunSystem
   {

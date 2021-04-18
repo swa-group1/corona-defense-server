@@ -2,6 +2,8 @@
 // Copyright (c) NTNU: SWA group 1 (2021). All rights reserved.
 // </copyright>
 
+using API.Requests;
+
 namespace BackEnd.Game.Components
 {
   /// <summary>
@@ -15,9 +17,9 @@ namespace BackEnd.Game.Components
     public Broadcaster Broadcaster;
 
     /// <summary>
-    /// Number of round currently in progress.
+    /// Difficulty of this game.
     /// </summary>
-    public int RoundNumber;
+    public StartGameRequest.Difficulties Difficulty;
 
     /// <summary>
     /// Stage of this game.
