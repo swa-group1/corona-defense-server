@@ -49,6 +49,7 @@ namespace BackEnd.Game.Systems
       ref TowerComponent towerComponent = ref tower.Get<TowerComponent>();
       towerComponent.ProjectileSpeed = 1d;
       towerComponent.ProjectileSpriteNumber = 1;
+      towerComponent.Range = 5d;
       towerComponent.ReloadTime = 1d;
       towerComponent.TowerSpriteNumber = 1;
       ref BoardPositionComponent towerPosition = ref tower.Get<BoardPositionComponent>();
