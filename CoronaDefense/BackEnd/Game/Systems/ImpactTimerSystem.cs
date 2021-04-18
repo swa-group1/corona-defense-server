@@ -14,6 +14,7 @@ namespace BackEnd.Game.Systems
   {
     private readonly EcsFilter<GameComponent> gameFilter = null;
     private readonly EcsFilter<EnemyComponent, HealthComponent, ImpactTimerComponent, PathPositionComponent> doomedFilter = null;
+    private readonly EcsFilter<PlayerComponent> playerFilter = null;
 
     /// <inheritdoc/>
     public void Run()
@@ -50,6 +51,14 @@ namespace BackEnd.Game.Systems
             (float)enemy.PreviousImpactTime,
             (float)game.Time,
             0x00
+          );
+
+          // Money
+          ref PlayerComponent player = ref this.playerFilter.Get1(0);
+          player.Balance += 1;
+          game.Broadcaster.MoneyAnimation(
+            player.Balance,
+            (float)game.Time
           );
 
           // Remove doomed when no health points left
