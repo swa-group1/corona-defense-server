@@ -14,7 +14,7 @@ namespace BackEnd
   /// <summary>
   /// Model of a game-instance. Contains all the state for one running instance of the game.
   /// </summary>
-  internal class Lobby : ServerRandom, IReceiver
+  internal class Lobby : IReceiver
   {
     /// <summary>
     /// Default time before a <see cref="Lobby"/> should close itself because of inactivity.
@@ -134,7 +134,7 @@ namespace BackEnd
       long accessToken;
       do
       {
-        accessToken = RandomLong;
+        accessToken = ServerRandom.RandomLong;
       }
       while (this.AccessTokens.Contains(accessToken));
 
