@@ -25,7 +25,8 @@ namespace BackEnd.Game.Systems
     /// <param name="request">Request to process.</param>
     public void PlaceTower(PlaceTowerRequest request)
     {
-      GameComponent game = this.gameFilter.Get1(0);
+      ref GameComponent game = ref this.gameFilter.Get1(0);
+      ref PlayerComponent player = ref this.playerFilter.Get1(0);
 
       // Check if tile is valid in stage, eg inside stage and not on blocked tile .
       Stage.Tile requestTile = new Stage.Tile() { X = request.XPosition, Y = request.YPosition };
@@ -53,8 +54,12 @@ namespace BackEnd.Game.Systems
       ref BoardPositionComponent towerPosition = ref tower.Get<BoardPositionComponent>();
       towerPosition.Position = requestTile;
 
+      // Reduce balance
+      player.Balance -= 50 * request.TowerTypeNumber;
+
       // Broadcast changes
       game.Broadcaster.TowerPosition((short)tower.GetInternalId(), (byte)request.TowerTypeNumber, (byte)request.XPosition, (byte)request.YPosition);
+      game.Broadcaster.MoneyUpdate(player.Balance);
     }
   }
 }
