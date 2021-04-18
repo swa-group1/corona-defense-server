@@ -411,10 +411,10 @@ namespace BackEnd
     /// <para>Broadcast a confirmation that the server has notified the players about all animations that take place before a certain time.</para>
     /// <para>The clients are therefore safe to render the game up to that point in time.</para>
     /// </summary>
-    /// <param name="tickNumber">The tick up to which all animations have been sent.</param>
-    internal void AnimationConfirmation(short tickNumber)
+    /// <param name="time">The tick up to which all animations have been sent.</param>
+    internal void AnimationConfirmation(float time)
     {
-      this.SetShort(this.AnimationConfirmationBuffer, 2, tickNumber);
+      this.SetFloat(this.AnimationConfirmationBuffer, 2, time);
       this.Broadcast(this.AnimationConfirmationBuffer);
     }
 
