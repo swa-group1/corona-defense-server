@@ -12,65 +12,49 @@ namespace BackEnd.Game.Systems
   /// <summary>
   /// System to place towers in game on request.
   /// </summary>
-  internal class PlaceTowerSystem : IEcsRunSystem
+  internal class PlaceTowerSystem : IEcsSystem
   {
-    private readonly EcsFilter<EnemyComponent> enemyFilter = null;
     private readonly EcsFilter<GameComponent> gameFilter = null;
-    private readonly ConcurrentQueue<PlaceTowerRequest> inputQueue;
+    private readonly EcsFilter<PlayerComponent> playerFilter = null;
     private readonly EcsFilter<BoardPositionComponent> towerFilter = null;
     private readonly EcsWorld world = null;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="PlaceTowerSystem"/> class.
+    /// Process supplied <see cref="PlaceTowerRequest"/>.
     /// </summary>
-    /// <param name="inputQueue">Queue to take input requests from.</param>
-    public PlaceTowerSystem(ConcurrentQueue<PlaceTowerRequest> inputQueue)
-    {
-      this.inputQueue = inputQueue;
-    }
-
-    /// <inheritdoc/>
-    public void Run()
+    /// <param name="request">Request to process.</param>
+    public void PlaceTower(PlaceTowerRequest request)
     {
       GameComponent game = this.gameFilter.Get1(0);
 
-      if (0 < this.enemyFilter.GetEntitiesCount())
+      // Check if tile is valid in stage, eg inside stage and not on blocked tile .
+      Stage.Tile requestTile = new Stage.Tile() { X = request.XPosition, Y = request.YPosition };
+      if (!game.Stage.IsValidTowerTile(requestTile))
       {
-        this.inputQueue.Clear();
         return;
       }
 
-      while (this.inputQueue.TryDequeue(out PlaceTowerRequest request))
+      // Check if tower already exists in same tile.
+      foreach (int i in this.towerFilter)
       {
-        // Check if tile is valid in stage, eg inside stage and not on blocked tile .
-        Stage.Tile requestTile = new Stage.Tile() { X = request.XPosition, Y = request.YPosition };
-        if (!game.Stage.IsValidTowerTile(requestTile))
+        if (this.towerFilter.Get1(i).Position == requestTile)
         {
-          continue;
+          return;
         }
-
-        // Check if tower already exists in same tile.
-        foreach (int i in this.towerFilter)
-        {
-          if (this.towerFilter.Get1(i).Position == requestTile)
-          {
-            continue;
-          }
-        }
-
-        // Create tower
-        EcsEntity tower = this.world.NewEntity();
-        ref TowerComponent towerComponent = ref tower.Get<TowerComponent>();
-        towerComponent.ProjectileSpeed = 1d;
-        towerComponent.ProjectileSpriteNumber = 1;
-        towerComponent.ReloadTime = 1d;
-        towerComponent.TowerSpriteNumber = 1;
-        ref BoardPositionComponent towerPosition = ref tower.Get<BoardPositionComponent>();
-        towerPosition.Position = requestTile;
-
-        // Broadcast changes
-        game.Broadcaster.TowerPosition((short)tower.GetInternalId(), (byte)request.TowerTypeNumber, (byte)request.XPosition, (byte)request.YPosition);
       }
+
+      // Create tower
+      EcsEntity tower = this.world.NewEntity();
+      ref TowerComponent towerComponent = ref tower.Get<TowerComponent>();
+      towerComponent.ProjectileSpeed = 1d;
+      towerComponent.ProjectileSpriteNumber = 1;
+      towerComponent.ReloadTime = 1d;
+      towerComponent.TowerSpriteNumber = 1;
+      ref BoardPositionComponent towerPosition = ref tower.Get<BoardPositionComponent>();
+      towerPosition.Position = requestTile;
+
+      // Broadcast changes
+      game.Broadcaster.TowerPosition((short)tower.GetInternalId(), (byte)request.TowerTypeNumber, (byte)request.XPosition, (byte)request.YPosition);
     }
   }
 }

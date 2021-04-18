@@ -1,7 +1,12 @@
+// <copyright file="EcsContainer.cs" company="NTNU: SWA group 1 (2021)">
+// Copyright (c) NTNU: SWA group 1 (2021). All rights reserved.
+// </copyright>
+
+using API.Controllers;
 using API.Requests;
+using BackEnd.Game.Components;
 using BackEnd.Game.Systems;
 using Leopotam.Ecs;
-using System.Collections.Concurrent;
 
 namespace BackEnd.Game
 {
@@ -16,34 +21,50 @@ namespace BackEnd.Game
     private readonly EcsSystems systems;
 
     /// <summary>
-    /// Gets queue of <see cref="PlaceTowerRequest"/>s intended for this <see cref="EcsContainer"/>.
+    /// Gets system used to spawn enemies at the start of each round.
     /// </summary>
-    public ConcurrentQueue<PlaceTowerRequest> PlaceTowerRequests { get; } = new ConcurrentQueue<PlaceTowerRequest>();
+    public PlaceEnemySystem PlaceEnemySystem { get; }
 
     /// <summary>
-    /// Gets queue of <see cref="LocalRequest"/>s that signal that round should start.
+    /// Gets system used to place towers on the board.
     /// </summary>
-    public ConcurrentQueue<LocalRequest> StartRoundRequests { get; } = new ConcurrentQueue<LocalRequest>();
+    public PlaceTowerSystem PlaceTowerSystem { get; }
+
+    /// <summary>
+    /// Sets a value indicating whether this <see cref="EcsContainer"/> should continue processing a fight round.
+    /// </summary>
+    public bool Running { private get; set; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="EcsContainer"/> class.
     /// </summary>
     /// <param name="broadcaster"><see cref="Broadcaster"/> to send game messages to.</param>
+    /// <param name="difficulty">Difficulty of this game instance.</param>
     /// <param name="stage"><see cref="Stage"/> to play on.</param>
-    public EcsContainer(Broadcaster broadcaster, Stage stage)
+    public EcsContainer(Broadcaster broadcaster, StartGameRequest.Difficulties difficulty, Stage stage)
     {
       this.world = new EcsWorld();
       this.systems = new EcsSystems(this.world);
 
+      GameComponent gameSettings = new GameComponent()
+      {
+        Broadcaster = broadcaster,
+        Difficulty = difficulty,
+        Stage = stage,
+        TickDuration = 1d / TickNumber,
+      };
+
       // Init
-      _ = this.systems.Add(new GameInitializeSystem(broadcaster, stage, 1d / TickNumber));
+      _ = this.systems.Add(new GameInitializeSystem(gameSettings));
       _ = this.systems.Add(new PlayerInitializeSystem());
 
       // Input
-      _ = this.systems.Add(new PlaceTowerSystem(this.PlaceTowerRequests));
-      _ = this.systems.Add(new StartFightRoundSystem(this.StartRoundRequests));
+      this.PlaceEnemySystem = new PlaceEnemySystem();
+      _ = this.systems.Add(this.PlaceEnemySystem);
+      this.PlaceTowerSystem = new PlaceTowerSystem();
+      _ = this.systems.Add(this.PlaceTowerSystem);
 
-      // Preframe
+      // Pre-frame
       _ = this.systems.Add(new TimeSystem());
 
       // Frame
@@ -51,7 +72,21 @@ namespace BackEnd.Game
       _ = this.systems.Add(new ReloadSystem());
       _ = this.systems.Add(new HurtPlayerSystem());
 
+      // Post-frame
+      _ = this.systems.Add(new EndFightRoundSystem(this));
+
       this.systems.Init();
+    }
+
+    /// <summary>
+    /// Process until all enemies are gone. It is assumed that towers and enemies are already in place.
+    /// </summary>
+    public void ProcessFightRound()
+    {
+      while (this.Running)
+      {
+        this.systems.Run();
+      }
     }
   }
 }
