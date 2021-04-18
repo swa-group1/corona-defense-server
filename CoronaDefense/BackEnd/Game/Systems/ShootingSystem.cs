@@ -94,13 +94,13 @@ namespace BackEnd.Game.Systems
 
         // Queue animation for projectile
         game.Broadcaster.BoardToPathAnimation(
-          (byte)1,
+          0x01,
           (byte)towerPosition.Position.X,
           (byte)towerPosition.Position.Y,
-          (short)(impactPosition * 20),
-          (short)(game.Time * 20),
-          (short)((game.Time + timeUntilImpact) * 20),
-          (byte)0
+          (float)impactPosition,
+          (float)game.Time,
+          (float)(game.Time + timeUntilImpact),
+          0x00
         );
       }
     }
@@ -136,7 +136,7 @@ namespace BackEnd.Game.Systems
       {
         Stage.Point projectedTargetPoint = game.Stage.GetPointAlongPath(targetPosition + distance);
         double projectileDistance = Stage.Point.Distance(projectedTargetPoint, towerPoint);
-        impactTime = distance / projectileSpeed; // Update the time with the duration of projectile flight given old distance.
+        impactTime = projectileDistance / projectileSpeed; // Update the time with the duration of projectile flight given old distance.
         double newDistance = impactTime * targetSpeed;
 
         // Check if within tolerance
