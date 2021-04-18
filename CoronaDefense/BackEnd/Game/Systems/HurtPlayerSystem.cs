@@ -39,10 +39,10 @@ namespace BackEnd.Game.Systems
         ref EnemyComponent enemyComponent = ref this.enemies.Get1(enemyIndex);
         game.Broadcaster.PathToPathAnimation(
             0x01,
-            (short)(enemyComponent.PreviousImpactPosition * 20),
-            (short)(pathPositionComponent.LengthTraveled * 20),
-            (short)(enemyComponent.PreviousImpactTime * 20),
-            (short)(game.Time * 20),
+            (float)enemyComponent.PreviousImpactPosition,
+            (float)pathPositionComponent.LengthTraveled,
+            (float)enemyComponent.PreviousImpactTime,
+            (float)game.Time,
             0x01
         );
 
