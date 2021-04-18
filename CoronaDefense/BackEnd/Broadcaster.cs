@@ -247,7 +247,7 @@ namespace BackEnd
       this.InputRoundBuffer[3] = (byte)roundNumber;
       roundNumber >>= 8;
       this.InputRoundBuffer[2] = (byte)roundNumber;
-      this.Broadcast(this.FightRoundBuffer);
+      this.Broadcast(this.InputRoundBuffer);
     }
 
     /// <summary>
