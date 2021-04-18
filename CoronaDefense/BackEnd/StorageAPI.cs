@@ -23,6 +23,26 @@ namespace BackEnd
     private const string GetParameters = "alt=media";
 
     /// <summary>
+    /// Download the newest JSON file for enemy definitions.
+    /// </summary>
+    /// <returns>The content of the file.</returns>
+    public static string DownloadEnemies()
+    {
+      using WebClient client = new WebClient();
+      return client.DownloadString($"{FirebaseStorageUrl}enemies.json?{GetParameters}");
+    }
+
+    /// <summary>
+    /// Download the newest JSON file for round definitions.
+    /// </summary>
+    /// <returns>The content of the file.</returns>
+    public static string DownloadRounds()
+    {
+      using WebClient client = new WebClient();
+      return client.DownloadString($"{FirebaseStorageUrl}rounds.json?{GetParameters}");
+    }
+
+    /// <summary>
     /// Download stage with supplied <paramref name="stageNumber"/>.
     /// </summary>
     /// <param name="stageNumber">Number of stage to load.</param>
@@ -47,6 +67,16 @@ namespace BackEnd
     {
       using WebClient client = new WebClient();
       return client.DownloadString($"{FirebaseStorageUrl}stage_schema.json?{GetParameters}");
+    }
+
+    /// <summary>
+    /// Download the newest JSON file for tower types.
+    /// </summary>
+    /// <returns>The content of the file.</returns>
+    public static string DownloadTowers()
+    {
+      using WebClient client = new WebClient();
+      return client.DownloadString($"{FirebaseStorageUrl}towers.json?{GetParameters}");
     }
   }
 }
