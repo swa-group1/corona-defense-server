@@ -6,6 +6,7 @@ using BackEnd.Game.Components;
 using Leopotam.Ecs;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace BackEnd.Game.Systems
 {
@@ -34,6 +35,9 @@ namespace BackEnd.Game.Systems
 
       targetPositions.Sort((a, b) => { return b.Position.CompareTo(a.Position); }); // Sort descending
 
+      HashSet<int> readyTowers = new HashSet<int>(Enumerable.Range(0, this.towers.GetEntitiesCount()));
+      List<EcsEntity> towersNeedReloading = new List<EcsEntity>();
+
       // For each target, find tower that can hit it.
       foreach ((int index, double position) in targetPositions)
       {
@@ -48,7 +52,7 @@ namespace BackEnd.Game.Systems
           }
         }
 
-        if (!this.TryFindShooter(targetPosition, out int towerIndex))
+        if (!this.TryFindShooter(targetPosition, readyTowers, out int towerIndex))
         {
           continue;
         }
@@ -66,11 +70,6 @@ namespace BackEnd.Game.Systems
           out double impactPosition,
           out double timeUntilImpact
         );
-
-        // Start reload time
-        ref EcsEntity towerEntity = ref this.towers.GetEntity(towerIndex);
-        towerComponent.TimeUntilReloaded = towerComponent.ReloadTime;
-        towerEntity.Del<ReloadedTag>();
 
         // Enemy damage
         ref EcsEntity targetEntity = ref this.targetFilter.GetEntity(index);
@@ -94,7 +93,7 @@ namespace BackEnd.Game.Systems
 
         // Queue animation for projectile
         game.Broadcaster.BoardToPathAnimation(
-          0x01,
+          (byte)towerComponent.ProjectileSpriteNumber,
           (byte)towerPosition.Position.X,
           (byte)towerPosition.Position.Y,
           (float)impactPosition,
@@ -102,6 +101,15 @@ namespace BackEnd.Game.Systems
           (float)(game.Time + timeUntilImpact),
           0x00
         );
+
+        towerComponent.TimeUntilReloaded = towerComponent.ReloadTime;
+        towersNeedReloading.Add(this.towers.GetEntity(towerIndex));
+        _ = readyTowers.Remove(towerIndex);
+      }
+
+      foreach (EcsEntity towerNeedReload in towersNeedReloading)
+      {
+        towerNeedReload.Del<ReloadedTag>();
       }
     }
 
@@ -153,9 +161,9 @@ namespace BackEnd.Game.Systems
       impactPosition = targetPosition + distance;
     }
 
-    private bool TryFindShooter(Stage.Point position, out int towerIndex)
+    private bool TryFindShooter(Stage.Point position, ICollection<int> towerCandidates, out int towerIndex)
     {
-      foreach (int i in this.towers)
+      foreach (int i in towerCandidates)
       {
         BoardPositionComponent towerPosition = this.towers.Get1(i);
         TowerComponent tower = this.towers.Get2(i);
