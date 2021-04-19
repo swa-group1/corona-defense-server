@@ -6,6 +6,7 @@ using API.Requests;
 using API.Schemas;
 using BackEnd.Game;
 using BackEnd.Router;
+using System;
 using System.Collections.Generic;
 using System.Timers;
 
@@ -14,7 +15,7 @@ namespace BackEnd
   /// <summary>
   /// Model of a game-instance. Contains all the state for one running instance of the game.
   /// </summary>
-  internal class Lobby : IReceiver
+  internal class Lobby : IDisposable, IReceiver
   {
     /// <summary>
     /// Default time before a <see cref="Lobby"/> should close itself because of inactivity.
@@ -27,6 +28,8 @@ namespace BackEnd
     private HashSet<long> AccessTokens { get; } = new HashSet<long>();
 
     private Broadcaster Broadcaster { get; }
+
+    private bool Disposed { get; set; } = false;
 
     private StartGameRequest.Difficulties Difficulty { get; set; }
 
@@ -46,6 +49,11 @@ namespace BackEnd
     /// Gets the name of this <see cref="Lobby"/>.
     /// </summary>
     public string Name { get; }
+
+    /// <summary>
+    /// Gets or sets the number of rounds.
+    /// </summary>
+    private int NumberOfRounds { get; set; }
 
     private List<IObserver> Observers { get; } = new List<IObserver>();
 
@@ -97,7 +105,7 @@ namespace BackEnd
       }
     }
 
-    private short RoundNumber { get; set; } = 0;
+    private short RoundNumber { get; set; } = 1;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Lobby"/> class.
@@ -185,7 +193,7 @@ namespace BackEnd
     /// <inheritdoc/>
     public void SellTower(SelltowerRequest request)
     {
-      throw new System.NotImplementedException();
+      throw new NotImplementedException();
     }
 
     /// <inheritdoc/>
@@ -203,8 +211,19 @@ namespace BackEnd
       this.Broadcaster.GameMode(request.StageNumber);
       this.Broadcaster.InputRound(this.RoundNumber);
 
+      EnemyDefinitions enemies = EnemyDefinitions.Parse(StorageAPI.DownloadEnemies());
+      RoundDefinitions rounds = RoundDefinitions.Parse(StorageAPI.DownloadRounds());
       Stage stage = Stage.Parse(StorageAPI.DownloadStage(request.StageNumber));
-      this.EcsContainer = new EcsContainer(this.Broadcaster, request.Difficulty, stage);
+      TowerDefinitions towers = TowerDefinitions.Parse(StorageAPI.DownloadTowers());
+      this.NumberOfRounds = rounds.Rounds.Count;
+      this.EcsContainer = new EcsContainer(
+        this.Broadcaster,
+        request.Difficulty,
+        enemies,
+        rounds,
+        stage,
+        towers
+      );
     }
 
     /// <inheritdoc/>
@@ -220,10 +239,25 @@ namespace BackEnd
 
       this.EcsContainer.PlaceEnemySystem.PlaceEnemies();
       this.EcsContainer.ProcessFightRound();
-      this.RoundNumber++;
+      if (this.EcsContainer.HasPlayerDied)
+      {
+        this.Broadcaster.EndGame(false, 0, 0);
+      }
+      else if (this.RoundNumber == this.NumberOfRounds)
+      {
+        this.Broadcaster.EndGame(true, 0, 0);
+      }
+      else
+      {
+        this.RoundNumber++;
 
-      this.LobbyMode = Mode.InputMode;
-      this.Broadcaster.InputRound(this.RoundNumber);
+        this.LobbyMode = Mode.InputMode;
+        this.Broadcaster.InputRound(this.RoundNumber);
+        return;
+      }
+
+      this.LobbyMode = Mode.GameOver;
+      this.Dispose();
     }
 
     /// <summary>
@@ -240,18 +274,24 @@ namespace BackEnd
     /// </summary>
     private void OnNoPlayerTimerElapsed(object sender, ElapsedEventArgs e)
     {
-      this.Close();
+      this.Dispose();
     }
 
-    /// <summary>
-    /// Request that this <see cref="Lobby"/> closes itself.
-    /// </summary>
-    public void Close()
+    /// <inheritdoc/>
+    public void Dispose()
     {
+      if (this.Disposed)
+      {
+        return;
+      }
+
       foreach (IObserver observer in this.Observers)
       {
         observer.OnClose(this.Id);
       }
+
+      this.Broadcaster.Dispose();
+      this.EcsContainer.Dispose();
     }
 
     private enum Mode
@@ -260,6 +300,11 @@ namespace BackEnd
       /// During fight mode, a game is in progress and there are enemies on the stage.
       /// </summary>
       FightMode,
+
+      /// <summary>
+      /// Game is over.
+      /// </summary>
+      GameOver,
 
       /// <summary>
       /// During input mode, a game is in progress and there are no enemies on the stage. Input is expected.

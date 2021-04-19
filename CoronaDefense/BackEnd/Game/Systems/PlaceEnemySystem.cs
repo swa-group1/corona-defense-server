@@ -21,16 +21,17 @@ namespace BackEnd.Game.Systems
     /// <summary>
     /// Initializes a new instance of the <see cref="PlaceEnemySystem"/> class.
     /// </summary>
-    public PlaceEnemySystem()
+    /// <param name="enemyDefinitions">Enemy definitions to utilize.</param>
+    /// <param name="roundDefinitions">Round definitions to utilize.</param>
+    public PlaceEnemySystem(EnemyDefinitions enemyDefinitions, RoundDefinitions roundDefinitions)
     {
-      EnemyDefinitions enemies = EnemyDefinitions.Parse(StorageAPI.DownloadEnemies());
       this.enemyTypes = new Dictionary<string, EnemyDefinitions.EnemyType>();
-      foreach (EnemyDefinitions.EnemyType enemyType in enemies.EnemyTypes)
+      foreach (EnemyDefinitions.EnemyType enemyType in enemyDefinitions.EnemyTypes)
       {
         this.enemyTypes.Add(enemyType.Name, enemyType);
       }
 
-      this.rounds = RoundDefinitions.Parse(StorageAPI.DownloadRounds());
+      this.rounds = roundDefinitions;
     }
 
     /// <summary>

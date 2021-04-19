@@ -11,7 +11,7 @@ namespace BackEnd
   /// <summary>
   /// Broadcaster for a <see cref="Lobby"/>. Functionality to send game events to all connected clients.
   /// </summary>
-  internal class Broadcaster
+  internal class Broadcaster : IDisposable
   {
     /// <summary>
     /// Gets <see cref="ConnectionBroker"/> that this <see cref="Broadcaster"> should get <see cref="Socket"/>s from.
@@ -254,6 +254,15 @@ namespace BackEnd
 
       clientSocket.Close();
       _ = this.Sockets.Remove(accessToken);
+    }
+
+    /// <inheritdoc/>
+    public void Dispose()
+    {
+      foreach (long accessTokens in this.Sockets.Keys)
+      {
+        this.DisconnectClient(accessTokens);
+      }
     }
 
     /// <summary>

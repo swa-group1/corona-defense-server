@@ -24,9 +24,8 @@ namespace BackEnd.Game.Systems
     /// Initializes a new instance of the <see cref="PlaceTowerSystem"/> class.
     /// </summary>
     /// <param name="towerDefinitions">List of available tower definitions.</param>
-    public PlaceTowerSystem()
+    public PlaceTowerSystem(TowerDefinitions towerDefinitions)
     {
-      TowerDefinitions towerDefinitions = TowerDefinitions.Parse(StorageAPI.DownloadTowers());
       this.towers = new Dictionary<int, TowerDefinitions.Tower>();
       foreach (TowerDefinitions.Tower tower in towerDefinitions.Towers)
       {
