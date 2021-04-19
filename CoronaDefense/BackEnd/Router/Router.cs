@@ -10,6 +10,9 @@ namespace BackEnd.Router
   /// <summary>
   /// Router that route requests from an <see cref="API"/> to <see cref="IReceiver"/>s.
   /// </summary>
+  /// <remarks>
+  /// This object is part of the Traffic / Router Layer – Layer 2.
+  /// </remarks>
   internal partial class Router : ServerRandom
   {
     /// <summary>

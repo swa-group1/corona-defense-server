@@ -10,6 +10,9 @@ namespace BackEnd.Router
   /// <summary>
   /// Standard <see cref="Router.RequestRouter{TRequest,TResult}"/> for requests that are of a type that is a subclass of <see cref="LocalRequest"/> and with output that is a subclass of <see cref="RequestResult"/>.
   /// </summary>
+  /// <remarks>
+  /// This object is part of the Traffic / Router Layer – Layer 2.
+  /// </remarks>
   /// <typeparam name="TRequest">Local request type to route.</typeparam>
   /// <typeparam name="TResult">Type of result of request.</typeparam>
   internal abstract class LocalRequestRouter<TRequest, TResult> : RequestResultRouter<TRequest, TResult>

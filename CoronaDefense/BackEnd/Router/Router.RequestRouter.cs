@@ -11,6 +11,9 @@ namespace BackEnd.Router
     /// <summary>
     /// Object that routes requests of a certain type for a <see cref="Router"/>.
     /// </summary>
+    /// <remarks>
+    /// This object is part of the Traffic / Router Layer – Layer 2.
+    /// </remarks>
     /// <typeparam name="TRequest">Type of request to route.</typeparam>
     /// <typeparam name="TResult">Type of output endpoint expects.</typeparam>
     internal abstract class RequestRouter<TRequest, TResult> : IRequestHandler<TRequest, TResult>

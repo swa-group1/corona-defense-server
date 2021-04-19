@@ -10,6 +10,9 @@ namespace BackEnd.Router
   /// <summary>
   /// <see cref="BackEnd.Router.Router.RequestRouter{TRequest,TResult}"/> for requests to join a lobby.
   /// </summary>
+  /// <remarks>
+  /// This object is part of the Traffic / Router Layer – Layer 2.
+  /// </remarks>
   internal class JoinLobbyRouter : Router.RequestRouter<JoinLobbyRequest, JoinLobbyResult>
   {
     /// <summary>

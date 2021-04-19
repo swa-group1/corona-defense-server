@@ -10,6 +10,9 @@ namespace BackEnd.Router
   /// <summary>
   /// <see cref="LocalRequestRouter{TRequest,TResult}"/> for requests to leave a lobby.
   /// </summary>
+  /// <remarks>
+  /// This object is part of the Traffic / Router Layer – Layer 2.
+  /// </remarks>
   internal class LeaveLobbyRouter : LocalRequestRouter<LocalRequest, RequestResult>
   {
     /// <summary>

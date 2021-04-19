@@ -10,6 +10,9 @@ namespace BackEnd.Router
   /// <summary>
   /// <see cref="LocalRequestRouter"/> for requests to place a tower.
   /// </summary>
+  /// <remarks>
+  /// This object is part of the Traffic / Router Layer – Layer 2.
+  /// </remarks>
   internal class PlaceTowerRouter : LocalRequestRouter<PlaceTowerRequest, RequestResult>
   {
     /// <summary>
