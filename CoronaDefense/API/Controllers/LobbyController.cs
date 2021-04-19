@@ -2,13 +2,13 @@
 // Copyright (c) NTNU: SWA group 1 (2021). All rights reserved.
 // </copyright>
 
-using API.Requests;
-using API.Schemas;
+using BackEnd.Communication.API.Requests;
+using BackEnd.Communication.API.Schemas;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.ComponentModel.DataAnnotations;
 
-namespace API.Controllers
+namespace BackEnd.Communication.API.Controllers
 {
   /// <summary>
   /// Controller for getting a lobby with supplied ID.
@@ -37,7 +37,7 @@ namespace API.Controllers
       return API.Instance.LobbyHandler.ProcessRequest(
         new LobbyRequest()
         {
-            Id = id,
+          Id = id,
         }
       );
     }

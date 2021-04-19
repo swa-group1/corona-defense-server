@@ -9,11 +9,14 @@ using System.Net.Sockets;
 using System.Threading.Tasks;
 using System.Timers;
 
-namespace BackEnd
+namespace BackEnd.Communication
 {
   /// <summary>
   /// Object that accepts internet socket connections.
   /// </summary>
+  /// <remarks>
+  /// This object is part of the Communication Layer – Layer 1.
+  /// </remarks>
   internal class ConnectionBroker : IDisposable
   {
     /// <summary>

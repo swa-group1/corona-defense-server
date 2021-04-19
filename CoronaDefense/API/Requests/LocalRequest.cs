@@ -2,7 +2,7 @@
 // Copyright (c) NTNU: SWA group 1 (2021). All rights reserved.
 // </copyright>
 
-namespace API.Requests
+namespace BackEnd.Communication.API.Requests
 {
   /// <summary>
   /// A request that concerns one game instance.

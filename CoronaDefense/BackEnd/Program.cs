@@ -2,7 +2,7 @@
 // Copyright (c) NTNU: SWA group 1 (2021). All rights reserved.
 // </copyright>
 
-using BackEnd.Game;
+using BackEnd.Communication;
 using System;
 
 namespace BackEnd
@@ -18,7 +18,7 @@ namespace BackEnd
       Router.Router router = new Router.Router();
       Orchestrator orchestrator = new Orchestrator(connectionBroker, router);
 
-      API.Program.Main(Array.Empty<string>());
+      Communication.API.Program.Main(Array.Empty<string>());
     }
   }
 }

@@ -2,7 +2,8 @@
 // Copyright (c) NTNU: SWA group 1 (2021). All rights reserved.
 // </copyright>
 
-using API.Requests;
+using BackEnd.Communication;
+using BackEnd.Communication.API.Requests;
 
 namespace BackEnd.Game.Components
 {

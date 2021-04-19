@@ -4,7 +4,7 @@
 
 using System.ComponentModel.DataAnnotations;
 
-namespace API.Schemas
+namespace BackEnd.Communication.API.Schemas
 {
   /// <summary>
   /// A generic result message for a request.

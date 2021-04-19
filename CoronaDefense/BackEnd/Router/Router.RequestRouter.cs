@@ -2,7 +2,7 @@
 // Copyright (c) NTNU: SWA group 1 (2021). All rights reserved.
 // </copyright>
 
-using API;
+using BackEnd.Communication.API;
 
 namespace BackEnd.Router
 {

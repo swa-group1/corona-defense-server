@@ -4,7 +4,7 @@
 
 using System.ComponentModel.DataAnnotations;
 
-namespace API.Schemas
+namespace BackEnd.Communication.API.Schemas
 {
   /// <summary>
   /// Results from a request to verify a client version number.

@@ -2,13 +2,11 @@
 // Copyright (c) NTNU: SWA group 1 (2021). All rights reserved.
 // </copyright>
 
-using API.Requests;
-using API.Schemas;
+using BackEnd.Communication.API.Schemas;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System.Collections.Generic;
 
-namespace API.Controllers
+namespace BackEnd.Communication.API.Controllers
 {
   /// <summary>
   /// Controller for getting a list of available lobbies.

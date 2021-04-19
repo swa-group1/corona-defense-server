@@ -4,7 +4,7 @@
 
 using System.ComponentModel.DataAnnotations;
 
-namespace API.Schemas
+namespace BackEnd.Communication.API.Schemas
 {
   /// <summary>
   /// Token used to authenticate requests made for a specific lobby.

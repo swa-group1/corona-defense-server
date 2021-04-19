@@ -2,7 +2,7 @@
 // Copyright (c) NTNU: SWA group 1 (2021). All rights reserved.
 // </copyright>
 
-namespace API.Schemas
+namespace BackEnd.Communication.API.Schemas
 {
   /// <summary>
   /// Result of a request to get information about a lobby.

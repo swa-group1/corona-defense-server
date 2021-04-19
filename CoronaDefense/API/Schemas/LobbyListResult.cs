@@ -5,7 +5,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace API.Schemas
+namespace BackEnd.Communication.API.Schemas
 {
   /// <summary>
   /// List of the available lobbies.

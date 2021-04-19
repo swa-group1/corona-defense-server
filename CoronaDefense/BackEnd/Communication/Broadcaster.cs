@@ -6,11 +6,14 @@ using System;
 using System.Collections.Generic;
 using System.Net.Sockets;
 
-namespace BackEnd
+namespace BackEnd.Communication
 {
   /// <summary>
   /// Broadcaster for a <see cref="Lobby"/>. Functionality to send game events to all connected clients.
   /// </summary>
+  /// <remarks>
+  /// This object is part of the Communication Layer – Layer 1.
+  /// </remarks>
   internal class Broadcaster : IDisposable
   {
     /// <summary>

@@ -2,7 +2,7 @@
 // Copyright (c) NTNU: SWA group 1 (2021). All rights reserved.
 // </copyright>
 
-using API.Requests;
+using BackEnd.Communication.API.Requests;
 using BackEnd.Game.Components;
 using Leopotam.Ecs;
 using System.Collections.Generic;

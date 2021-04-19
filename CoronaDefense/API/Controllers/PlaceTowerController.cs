@@ -2,13 +2,13 @@
 // Copyright (c) NTNU: SWA group 1 (2021). All rights reserved.
 // </copyright>
 
-using API.Requests;
-using API.Schemas;
+using BackEnd.Communication.API.Requests;
+using BackEnd.Communication.API.Schemas;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.ComponentModel.DataAnnotations;
 
-namespace API.Controllers
+namespace BackEnd.Communication.API.Controllers
 {
   /// <summary>
   /// Controller for starting a around in a lobby.
@@ -32,7 +32,7 @@ namespace API.Controllers
     }
 
     [HttpPatch]
-    public RequestResult Patch([Required] long lobbyId, [Required] long accessToken, [Required]int towerTypeNumber, [Required] int x, [Required] int y)
+    public RequestResult Patch([Required] long lobbyId, [Required] long accessToken, [Required] int towerTypeNumber, [Required] int x, [Required] int y)
     {
       return API.Instance.PlaceTowerHandler.ProcessRequest(
         new PlaceTowerRequest()

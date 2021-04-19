@@ -4,8 +4,6 @@
 
 using BackEnd.Game.Components;
 using Leopotam.Ecs;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace BackEnd.Game.Systems
 {

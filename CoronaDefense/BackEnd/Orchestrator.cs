@@ -2,10 +2,10 @@
 // Copyright (c) NTNU: SWA group 1 (2021). All rights reserved.
 // </copyright>
 
-using API;
-using API.Requests;
-using API.Schemas;
-using System;
+using BackEnd.Communication;
+using BackEnd.Communication.API;
+using BackEnd.Communication.API.Requests;
+using BackEnd.Communication.API.Schemas;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -55,11 +55,11 @@ namespace BackEnd
       this.ConnectionBroker = connectionBroker;
       this.Router = router;
 
-      API.API.Instance.AttachCreateLobbyHandler(this);
-      API.API.Instance.AttachHighScoreListHandler(this);
-      API.API.Instance.AttachLobbyHandler(this);
-      API.API.Instance.AttachLobbyListHandler(this);
-      API.API.Instance.AttachVerifyVersionHandler(this);
+      API.Instance.AttachCreateLobbyHandler(this);
+      API.Instance.AttachHighScoreListHandler(this);
+      API.Instance.AttachLobbyHandler(this);
+      API.Instance.AttachLobbyListHandler(this);
+      API.Instance.AttachVerifyVersionHandler(this);
     }
 
     /// <summary>
@@ -124,7 +124,7 @@ namespace BackEnd
 
       return new LobbyResult()
       {
-        Lobby = new API.Schemas.Lobby()
+        Lobby = new Communication.API.Schemas.Lobby()
         {
           Id = lobby.Id,
           Name = lobby.Name,
@@ -142,7 +142,7 @@ namespace BackEnd
       return new LobbyListResult()
       {
         Lobbies = this.Lobbies.Values
-          .Select(delegate(Lobby lobby) { return new API.Schemas.Lobby() { Id = lobby.Id, Name = lobby.Name, PlayerCount = lobby.PlayerCount, }; })
+          .Select(delegate(Lobby lobby) { return new Communication.API.Schemas.Lobby() { Id = lobby.Id, Name = lobby.Name, PlayerCount = lobby.PlayerCount, }; })
           .ToList(),
       };
     }

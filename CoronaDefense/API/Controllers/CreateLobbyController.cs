@@ -2,12 +2,12 @@
 // Copyright (c) NTNU: SWA group 1 (2021). All rights reserved.
 // </copyright>
 
-using API.Schemas;
+using BackEnd.Communication.API.Schemas;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.ComponentModel.DataAnnotations;
 
-namespace API.Controllers
+namespace BackEnd.Communication.API.Controllers
 {
   /// <summary>
   /// Controller for creating a new lobby.

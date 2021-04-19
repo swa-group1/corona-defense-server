@@ -2,11 +2,11 @@
 // Copyright (c) NTNU: SWA group 1 (2021). All rights reserved.
 // </copyright>
 
-using API.Requests;
-using API.Schemas;
+using BackEnd.Communication.API.Requests;
+using BackEnd.Communication.API.Schemas;
 using System;
 
-namespace API
+namespace BackEnd.Communication.API
 {
   /// <summary>
   /// Receives requests from clients through a REST-api and exposes such events to attached <see cref="IRequestHandler{TRequest,TResult}"/>s.

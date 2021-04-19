@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
-namespace API
+namespace BackEnd.Communication.API
 {
   /// <summary>
   /// Entry point of API program.
@@ -16,7 +16,7 @@ namespace API
     {
       Host.CreateDefaultBuilder(args)
         .ConfigureWebHostDefaults(
-          delegate(IWebHostBuilder webBuilder)
+          delegate (IWebHostBuilder webBuilder)
           {
             webBuilder.UseStartup<Startup>();
           }

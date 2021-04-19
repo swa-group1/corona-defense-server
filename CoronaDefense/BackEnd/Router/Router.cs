@@ -2,13 +2,13 @@
 // Copyright (c) NTNU: SWA group 1 (2021). All rights reserved.
 // </copyright>
 
-using System;
+using BackEnd.Communication.API;
 using System.Collections.Generic;
 
 namespace BackEnd.Router
 {
   /// <summary>
-  /// Router that route requests from an <see cref="API.API"/> to <see cref="IReceiver"/>s.
+  /// Router that route requests from an <see cref="API"/> to <see cref="IReceiver"/>s.
   /// </summary>
   internal partial class Router : ServerRandom
   {
@@ -22,12 +22,12 @@ namespace BackEnd.Router
     /// </summary>
     internal Router()
     {
-      API.API.Instance.AttachJoinLobbyHandler(new JoinLobbyRouter(this));
-      API.API.Instance.AttachLeaveLobbyHandler(new LeaveLobbyRouter(this));
-      API.API.Instance.AttachPlaceTowerHandler(new PlaceTowerRouter(this));
-      API.API.Instance.AttachSellTowerHHandler(new SellTowerRouter(this));
-      API.API.Instance.AttachStartGameHandler(new StartGameRouter(this));
-      API.API.Instance.AttachStartRoundHandler(new StartRoundRouter(this));
+      API.Instance.AttachJoinLobbyHandler(new JoinLobbyRouter(this));
+      API.Instance.AttachLeaveLobbyHandler(new LeaveLobbyRouter(this));
+      API.Instance.AttachPlaceTowerHandler(new PlaceTowerRouter(this));
+      API.Instance.AttachSellTowerHHandler(new SellTowerRouter(this));
+      API.Instance.AttachStartGameHandler(new StartGameRouter(this));
+      API.Instance.AttachStartRoundHandler(new StartRoundRouter(this));
     }
 
     /// <summary>
