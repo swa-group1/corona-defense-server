@@ -15,6 +15,9 @@ namespace BackEnd
   /// <summary>
   /// A class describing a back-end orchestrator that handles global client-requests that do not concern a specific <see cref="Lobby"/>s. This includes creating new <see cref="Lobby"/>s.
   /// </summary>
+  /// <remarks>
+  /// This object is part of the Orchestrator Layer – Layer 4.
+  /// </remarks>
   internal class Orchestrator :
     IRequestHandler<CreateLobbyRequest, CreateLobbyResult>,
     IRequestHandler<HighScoreListResult>,
