@@ -291,6 +291,8 @@ namespace BackEnd
         return;
       }
 
+      this.Disposed = true;
+
       foreach (IObserver observer in this.Observers)
       {
         observer.OnClose(this.Id);
