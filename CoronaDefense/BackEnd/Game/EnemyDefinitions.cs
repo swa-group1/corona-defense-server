@@ -10,6 +10,9 @@ namespace BackEnd.Game
   /// <summary>
   /// List of enemy types.
   /// </summary>
+  /// <remarks>
+  /// This object is part of the Game Layer – Layer 3.
+  /// </remarks>
   internal class EnemyDefinitions
   {
     /// <summary>

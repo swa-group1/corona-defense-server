@@ -2,6 +2,7 @@
 // Copyright (c) NTNU: SWA group 1 (2021). All rights reserved.
 // </copyright>
 
+using BackEnd.Game;
 using System;
 using System.Collections.Generic;
 using System.Net;

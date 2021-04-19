@@ -6,6 +6,7 @@ using BackEnd.Communication;
 using BackEnd.Communication.API;
 using BackEnd.Communication.API.Requests;
 using BackEnd.Communication.API.Schemas;
+using BackEnd.Game;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -20,7 +21,7 @@ namespace BackEnd
     IRequestHandler<LobbyRequest, LobbyResult>,
     IRequestHandler<LobbyListResult>,
     IRequestHandler<VerifyVersionRequest, VerifyVersionResult>,
-    Lobby.IObserver
+    Game.Lobby.IObserver
   {
     /// <summary>
     /// Gets the <see cref="ConnectionBroker"/> that lobbies created by this <see cref="Orchestrator"/> should request sockets from.
@@ -30,7 +31,7 @@ namespace BackEnd
     /// <summary>
     /// Gets lobbies on this server, associated with their addresses.
     /// </summary>
-    private Dictionary<long, Lobby> Lobbies { get; } = new Dictionary<long, Lobby>();
+    private Dictionary<long, Game.Lobby> Lobbies { get; } = new Dictionary<long, Game.Lobby>();
 
     /// <summary>
     /// Gets router to connect new lobbies to.
@@ -69,7 +70,7 @@ namespace BackEnd
     /// <returns>The <see cref="CreateLobbyResult"/>.</returns>
     CreateLobbyResult IRequestHandler<CreateLobbyRequest, CreateLobbyResult>.ProcessRequest(CreateLobbyRequest request)
     {
-      Lobby lobby = new Lobby(request.Name, request.Password, this.ConnectionBroker, this.Router);
+      Game.Lobby lobby = new Game.Lobby(request.Name, request.Password, this.ConnectionBroker, this.Router);
       this.Lobbies.Add(lobby.Id, lobby);
       lobby.AddObserver(this);
 
@@ -113,7 +114,7 @@ namespace BackEnd
     /// <returns>The <see cref="LobbyResult"/>.</returns>
     LobbyResult IRequestHandler<LobbyRequest, LobbyResult>.ProcessRequest(LobbyRequest request)
     {
-      if (!this.Lobbies.TryGetValue(request.Id, out Lobby lobby))
+      if (!this.Lobbies.TryGetValue(request.Id, out Game.Lobby lobby))
       {
         return new LobbyResult()
         {
@@ -142,7 +143,7 @@ namespace BackEnd
       return new LobbyListResult()
       {
         Lobbies = this.Lobbies.Values
-          .Select(delegate(Lobby lobby) { return new Communication.API.Schemas.Lobby() { Id = lobby.Id, Name = lobby.Name, PlayerCount = lobby.PlayerCount, }; })
+          .Select(delegate(Game.Lobby lobby) { return new Communication.API.Schemas.Lobby() { Id = lobby.Id, Name = lobby.Name, PlayerCount = lobby.PlayerCount, }; })
           .ToList(),
       };
     }

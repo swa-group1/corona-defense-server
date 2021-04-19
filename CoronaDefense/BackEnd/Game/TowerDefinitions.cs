@@ -1,4 +1,4 @@
-﻿// <copyright file="Towers.cs" company="NTNU: SWA group 1 (2021)">
+﻿// <copyright file="TowerDefinitions.cs" company="NTNU: SWA group 1 (2021)">
 // Copyright (c) NTNU: SWA group 1 (2021). All rights reserved.
 // </copyright>
 
@@ -10,6 +10,9 @@ namespace BackEnd.Game
   /// <summary>
   /// Collection of definitions for tower types.
   /// </summary>
+  /// <remarks>
+  /// This object is part of the Game Layer – Layer 3.
+  /// </remarks>
   internal class TowerDefinitions
   {
     /// <summary>

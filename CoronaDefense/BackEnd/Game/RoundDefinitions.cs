@@ -10,6 +10,9 @@ namespace BackEnd.Game
   /// <summary>
   /// Descriptions for which enemies to spawn each round and when.
   /// </summary>
+  /// <remarks>
+  /// This object is part of the Game Layer – Layer 3.
+  /// </remarks>
   internal class RoundDefinitions
   {
     /// <summary>

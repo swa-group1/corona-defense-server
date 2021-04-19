@@ -11,6 +11,9 @@ namespace BackEnd.Game
   /// <summary>
   /// Data class for stages.
   /// </summary>
+  /// <remarks>
+  /// This object is part of the Game Layer – Layer 3.
+  /// </remarks>
   internal class Stage
   {
     /// <summary>
