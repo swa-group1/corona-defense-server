@@ -5,7 +5,7 @@
 using API.Requests;
 using BackEnd.Game.Components;
 using Leopotam.Ecs;
-using System.Collections.Concurrent;
+using System.Collections.Generic;
 
 namespace BackEnd.Game.Systems
 {
@@ -17,7 +17,22 @@ namespace BackEnd.Game.Systems
     private readonly EcsFilter<GameComponent> gameFilter = null;
     private readonly EcsFilter<PlayerComponent> playerFilter = null;
     private readonly EcsFilter<BoardPositionComponent> towerFilter = null;
+    private readonly Dictionary<int, TowerDefinitions.Tower> towers;
     private readonly EcsWorld world = null;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="PlaceTowerSystem"/> class.
+    /// </summary>
+    /// <param name="towerDefinitions">List of available tower definitions.</param>
+    public PlaceTowerSystem()
+    {
+      TowerDefinitions towerDefinitions = TowerDefinitions.Parse(StorageAPI.DownloadTowers());
+      this.towers = new Dictionary<int, TowerDefinitions.Tower>();
+      foreach (TowerDefinitions.Tower tower in towerDefinitions.Towers)
+      {
+        this.towers.Add(tower.TypeNumber, tower);
+      }
+    }
 
     /// <summary>
     /// Process supplied <see cref="PlaceTowerRequest"/>.
@@ -25,6 +40,11 @@ namespace BackEnd.Game.Systems
     /// <param name="request">Request to process.</param>
     public void PlaceTower(PlaceTowerRequest request)
     {
+      if (!this.towers.TryGetValue(request.TowerTypeNumber, out TowerDefinitions.Tower towerDefinition))
+      {
+        return;
+      }
+
       ref GameComponent game = ref this.gameFilter.Get1(0);
       ref PlayerComponent player = ref this.playerFilter.Get1(0);
 
@@ -44,19 +64,25 @@ namespace BackEnd.Game.Systems
         }
       }
 
+      // Credit check
+      if (player.Balance < towerDefinition.MediumCost)
+      {
+        return;
+      }
+
       // Create tower
-      EcsEntity tower = this.world.NewEntity();
+      EcsEntity tower = this.world.NewEntity(); 
       ref TowerComponent towerComponent = ref tower.Get<TowerComponent>();
-      towerComponent.ProjectileSpeed = 1d;
-      towerComponent.ProjectileSpriteNumber = 1;
-      towerComponent.Range = 5d;
-      towerComponent.ReloadTime = 1d;
-      towerComponent.TowerSpriteNumber = 1;
+      towerComponent.ProjectileSpeed = towerDefinition.ProjectileSpeed;
+      towerComponent.ProjectileSpriteNumber = towerDefinition.ProjectileSpriteNumber;
+      towerComponent.Range = towerDefinition.Range;
+      towerComponent.ReloadTime = towerDefinition.ReloadTime;
+      towerComponent.TowerSpriteNumber = towerDefinition.TowerSpriteNumber;
       ref BoardPositionComponent towerPosition = ref tower.Get<BoardPositionComponent>();
       towerPosition.Position = requestTile;
 
       // Reduce balance
-      player.Balance -= 50 * request.TowerTypeNumber;
+      player.Balance -= towerDefinition.MediumCost;
 
       // Broadcast changes
       game.Broadcaster.TowerPosition((short)tower.GetInternalId(), (byte)request.TowerTypeNumber, (byte)request.XPosition, (byte)request.YPosition);
