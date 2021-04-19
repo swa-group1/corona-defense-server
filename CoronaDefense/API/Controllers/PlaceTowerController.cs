@@ -13,6 +13,9 @@ namespace API.Controllers
   /// <summary>
   /// Controller for starting a around in a lobby.
   /// </summary>
+  /// <remarks>
+  /// This object is part of the Communication Layer – Layer 1.
+  /// </remarks>
   [ApiController]
   [Route("[controller]")]
   public class PlaceTowerController : ControllerBase

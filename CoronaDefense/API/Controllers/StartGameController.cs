@@ -1,4 +1,4 @@
-// <copyright file="StartRoundController.cs" company="NTNU: SWA group 1 (2021)">
+// <copyright file="StartGameController.cs" company="NTNU: SWA group 1 (2021)">
 // Copyright (c) NTNU: SWA group 1 (2021). All rights reserved.
 // </copyright>
 
@@ -13,6 +13,9 @@ namespace API.Controllers
   /// <summary>
   /// Controller for starting a around in a lobby.
   /// </summary>
+  /// <remarks>
+  /// This object is part of the Communication Layer – Layer 1.
+  /// </remarks>
   [ApiController]
   [Route("[controller]")]
   public class StartGameController : ControllerBase

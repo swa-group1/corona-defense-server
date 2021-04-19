@@ -12,6 +12,9 @@ namespace API.Controllers
   /// <summary>
   /// Controller for creating a new lobby.
   /// </summary>
+  /// <remarks>
+  /// This object is part of the Communication Layer – Layer 1.
+  /// </remarks>
   [ApiController]
   [Route("[controller]")]
   public class CreateLobbyController : ControllerBase

@@ -13,6 +13,9 @@ namespace API.Controllers
   /// <summary>
   /// Controller for verifying if client version is compatible with the server version.
   /// </summary>
+  /// <remarks>
+  /// This object is part of the Communication Layer – Layer 1.
+  /// </remarks>
   [ApiController]
   [Route("[controller]")]
   public class VerifyVersionController : ControllerBase

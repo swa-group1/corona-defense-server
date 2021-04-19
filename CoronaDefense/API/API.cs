@@ -11,6 +11,9 @@ namespace API
   /// <summary>
   /// Receives requests from clients through a REST-api and exposes such events to attached <see cref="IRequestHandler{TRequest,TResult}"/>s.
   /// </summary>
+  /// <remarks>
+  /// This object is part of the Communication Layer – Layer 1.
+  /// </remarks>
   public class API
   {
     /// <summary>
