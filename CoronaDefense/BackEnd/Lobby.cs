@@ -109,6 +109,11 @@ namespace BackEnd
     private short RoundNumber { get; set; } = 1;
 
     /// <summary>
+    /// Router that this <see cref="Lobby"/> is attached to.
+    /// </summary>
+    private Router.Router Router { get; }
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="Lobby"/> class.
     /// </summary>
     /// <param name="name">Name of the new <see cref="Lobby"/>.</param>
@@ -117,18 +122,27 @@ namespace BackEnd
     /// <param name="router">Router the new <see cref="Lobby"/> should connect to.</param>
     public Lobby(string name, string password, ConnectionBroker connectionBroker, Router.Router router)
     {
+
+      this.Broadcaster = new Broadcaster(connectionBroker);
       this.Id = router.Register(this);
       this.Name = name;
       this.Password = password;
-
       this.PlayerCount = 0;
-
-      this.Broadcaster = new Broadcaster(connectionBroker);
+      this.Router = router;
     }
 
     /// <inheritdoc/>
     public JoinLobbyResult JoinLobby(JoinLobbyRequest request)
     {
+      if (this.LobbyMode == Mode.GameOver)
+      {
+        return new JoinLobbyResult()
+        {
+          Success = false,
+          Details = "Lobby has been closed.",
+        };
+      }
+
       if (request.Password != this.Password)
       {
         return new JoinLobbyResult()
@@ -173,6 +187,11 @@ namespace BackEnd
     /// <inheritdoc/>
     public void LeaveLobby(LocalRequest request)
     {
+      if (this.LobbyMode == Mode.GameOver)
+      {
+        return;
+      }
+
       if (this.AccessTokens.Remove(request.AccessToken))
       {
         this.Broadcaster.DisconnectClient(request.AccessToken);
@@ -298,7 +317,12 @@ namespace BackEnd
         observer.OnClose(this.Id);
       }
 
+      this.Router.Remove(this.Id);
+
+      this.AccessTokens.Clear();
       this.Broadcaster.Dispose();
+      this.PlayerCount = 0;
+
       this.EcsContainer.Dispose();
     }
 

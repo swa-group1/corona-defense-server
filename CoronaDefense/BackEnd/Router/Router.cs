@@ -52,5 +52,14 @@ namespace BackEnd.Router
       this.receivers[address] = receiver;
       return address;
     }
+
+    /// <summary>
+    /// Remove <see cref="IReceiver"/> with supplied <paramref name="address"/>.
+    /// </summary>
+    /// <param name="address">Address attached to the <see cref="IReceiver"/> that should be removed.</param>
+    public void Remove(long address)
+    {
+      _ = this.receivers.Remove(address);
+    }
   }
 }
