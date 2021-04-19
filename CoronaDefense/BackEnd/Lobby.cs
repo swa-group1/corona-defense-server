@@ -158,7 +158,7 @@ namespace BackEnd
       }
 
       _ = this.AccessTokens.Add(accessToken);
-      this.playerCount++;
+      this.PlayerCount++;
 
       this.Broadcaster.Ping();
 
