@@ -40,11 +40,13 @@ namespace BackEnd.Game.Systems
       ref PlayerComponent player = ref this.playerFilter.Get1(0);
       player.Balance += MoneyPerRound;
 
-      // Running
       this.container.Running = false;
 
       // Reset time
-      this.gameFilter.Get1(0).Time = 0d;
+      ref GameComponent game = ref this.gameFilter.Get1(0);
+      game.Time += 5 * game.TickDuration;
+      game.Broadcaster.AnimationConfirmation((float)game.Time);
+      game.Time = 0d;
     }
   }
 }
