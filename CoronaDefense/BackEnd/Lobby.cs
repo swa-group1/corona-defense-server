@@ -194,7 +194,12 @@ namespace BackEnd
     /// <inheritdoc/>
     public void SellTower(SelltowerRequest request)
     {
-      throw new NotImplementedException();
+      if (this.LobbyMode != Mode.InputMode)
+      {
+        return;
+      }
+
+      this.EcsContainer.SellTowerSystem.SellTower(request);
     }
 
     /// <inheritdoc/>

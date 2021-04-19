@@ -42,6 +42,11 @@ namespace BackEnd.Game
     public PlaceTowerSystem PlaceTowerSystem { get; }
 
     /// <summary>
+    /// Gets system used to sell towers.
+    /// </summary>
+    public SellTowerSystem SellTowerSystem { get; }
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="EcsContainer"/> class.
     /// </summary>
     /// <param name="broadcaster"><see cref="Broadcaster"/> to send game messages to.</param>
@@ -94,6 +99,8 @@ namespace BackEnd.Game
       _ = this.systems.Add(this.PlaceEnemySystem);
       this.PlaceTowerSystem = new PlaceTowerSystem(towers);
       _ = this.systems.Add(this.PlaceTowerSystem);
+      this.SellTowerSystem = new SellTowerSystem();
+      _ = this.systems.Add(this.SellTowerSystem);
 
       // Pre-frame
       _ = this.systems.Add(new TimeSystem());
