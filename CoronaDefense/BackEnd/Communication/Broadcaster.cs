@@ -31,7 +31,7 @@ namespace BackEnd.Communication
       0x10, // Byte code (UByte)
       0x02, // Length (UByte)
       0x00, // Major version (UByte)
-      0x01, // Minor version (UByte)
+      0x02, // Minor version (UByte)
     };
 
     private byte[] FightRoundBuffer { get; } = new byte[]
