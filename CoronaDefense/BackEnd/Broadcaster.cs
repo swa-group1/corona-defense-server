@@ -60,6 +60,18 @@ namespace BackEnd
       0x00, // Length (UByte)
     };
 
+    private byte[] EndGameBuffer { get; } = new byte[]
+    {
+      0x24, // Byte code (UByte)
+      0x06, // Length (UByte)
+      0x00, // Victory (Byte)
+      0x00, // Highscore list (Byte)
+      0x00, // Score (UInt)
+      0x00,
+      0x00,
+      0x00,
+    };
+
     private byte[] HealthUpdateBuffer { get; } = new byte[]
     {
       0x30, // Byte code (UByte)
@@ -359,6 +371,20 @@ namespace BackEnd
     internal void LobbyMode()
     {
       this.Broadcast(LobbyModeBuffer);
+    }
+
+    /// <summary>
+    /// Broadcast that the game is over.
+    /// </summary>
+    /// <param name="victory"><see langword="true"/> if the player won, <see langword=""/>.</param>
+    /// <param name="highscoreEntry">Number from 1 to 10 if the score was added to the highscore list, 0 otherwise.</param>
+    /// <param name="score">Score achieved.</param>
+    internal void EndGame(bool victory, int highscoreEntry, int score)
+    {
+      this.EndGameBuffer[2] = BitConverter.GetBytes(victory)[0];
+      this.EndGameBuffer[3] = (byte)highscoreEntry;
+      this.SetInt(this.EndGameBuffer, 4, score);
+      this.Broadcast(this.EndGameBuffer);
     }
 
     /// <summary>
