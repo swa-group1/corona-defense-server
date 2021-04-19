@@ -6,7 +6,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace API
+namespace BackEnd.Communication.API
 {
   /// <summary>
   /// Class for starting the API.
@@ -53,7 +53,7 @@ namespace API
         app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "CoronaDefense_API v1"));
       }
 
-      app.UseHttpsRedirection();
+      // app.UseHttpsRedirection();
 
       app.UseRouting();
 
