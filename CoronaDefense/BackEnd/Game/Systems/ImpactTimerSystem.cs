@@ -4,6 +4,8 @@
 
 using BackEnd.Game.Components;
 using Leopotam.Ecs;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace BackEnd.Game.Systems
 {
@@ -25,6 +27,7 @@ namespace BackEnd.Game.Systems
       {
         // Reduce all timers
         ref ImpactTimerComponent timers = ref this.doomedFilter.Get3(doomedIndex);
+        bool destroyed = false;
 
         for (int timerIndex = 0; timerIndex < timers.ImpactTimers.Count; ++timerIndex)
         {
@@ -32,14 +35,6 @@ namespace BackEnd.Game.Systems
           if (timers.ImpactTimers[timerIndex] > 0)
           {
             continue;
-          }
-
-          // Remove timer
-          timers.ImpactTimers.RemoveAt(timerIndex);
-          --timerIndex;
-          if (timers.ImpactTimers.Count == 0)
-          {
-            this.doomedFilter.GetEntity(doomedIndex).Del<ImpactTimerComponent>();
           }
 
           // Reduce health
@@ -65,12 +60,23 @@ namespace BackEnd.Game.Systems
             (float)game.Time
           );
 
+          // Remove timer
+          timers.ImpactTimers.RemoveAt(timerIndex);
+          --timerIndex;
+
           // Remove doomed when no health points left
           if (health.HealthPoints <= 0)
           {
+            destroyed = true;
             this.doomedFilter.GetEntity(doomedIndex).Destroy();
             break;
           }
+        }
+
+        // Remove timer component if entity still exists and no timers are left
+        if (!destroyed && timers.ImpactTimers.Count == 0)
+        {
+          this.doomedFilter.GetEntity(doomedIndex).Del<ImpactTimerComponent>();
         }
       }
     }
