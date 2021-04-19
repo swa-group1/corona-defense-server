@@ -4,6 +4,7 @@
 
 using BackEnd.Game.Components;
 using Leopotam.Ecs;
+using System.Collections.Generic;
 
 namespace BackEnd.Game.Systems
 {
@@ -12,7 +13,25 @@ namespace BackEnd.Game.Systems
   /// </summary>
   internal class PlaceEnemySystem : IEcsSystem
   {
+    private readonly Dictionary<string, EnemyDefinitions.EnemyType> enemyTypes;
+    private int nextRound = 0;
+    private readonly RoundDefinitions rounds;
     private readonly EcsWorld world = null;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="PlaceEnemySystem"/> class.
+    /// </summary>
+    public PlaceEnemySystem()
+    {
+      EnemyDefinitions enemies = EnemyDefinitions.Parse(StorageAPI.DownloadEnemies());
+      this.enemyTypes = new Dictionary<string, EnemyDefinitions.EnemyType>();
+      foreach (EnemyDefinitions.EnemyType enemyType in enemies.EnemyTypes)
+      {
+        this.enemyTypes.Add(enemyType.Name, enemyType);
+      }
+
+      this.rounds = RoundDefinitions.Parse(StorageAPI.DownloadRounds());
+    }
 
     /// <summary>
     /// Place enemies.
@@ -20,22 +39,48 @@ namespace BackEnd.Game.Systems
     public void PlaceEnemies()
     {
       double entryTime = 1d;
+
+      IList<RoundDefinitions.RoundSection> sections = this.rounds.Rounds[this.nextRound];
+      this.nextRound++;
+      foreach (RoundDefinitions.RoundSection section in sections)
+      {
+        for (int i = 0; i < section.Count; i++)
+        {
+          entryTime += section.DeltaTime;
+
+          if (section.EnemyType == "None")
+          {
+            break;
+          }
+
+          if (!this.enemyTypes.TryGetValue(section.EnemyType, out EnemyDefinitions.EnemyType enemyType))
+          {
+            break;
+          }
+
+          EcsEntity enemyEntity = this.world.NewEntity();
+          ref EnemyComponent enemy = ref enemyEntity.Get<EnemyComponent>();
+          enemy.PreviousImpactPosition = 0d;
+          enemy.PreviousImpactTime = entryTime;
+
+          ref HealthComponent enemyHealth = ref enemyEntity.Get<HealthComponent>();
+          enemyHealth.HealthPoints = enemyType.Health;
+
+          ref PathSpeedComponent enemySpeed = ref enemyEntity.Get<PathSpeedComponent>();
+          enemySpeed.Speed = enemyType.Speed;
+
+          ref PathPositionComponent enemyPosition = ref enemyEntity.Get<PathPositionComponent>();
+          enemyPosition.LengthTraveled = -enemySpeed.Speed * entryTime;
+
+          ref ProjectedHealthComponent enemyProjectedHealth = ref enemyEntity.Get<ProjectedHealthComponent>();
+          enemyProjectedHealth.ProjectedHealthPoints = enemyHealth.HealthPoints;
+        }
+      }
+
       for (int i = 1; i <= 10; i++)
       {
         entryTime += 0.5d;
 
-        EcsEntity enemyEntity = this.world.NewEntity();
-        ref EnemyComponent enemy = ref enemyEntity.Get<EnemyComponent>();
-        enemy.PreviousImpactPosition = 0d;
-        enemy.PreviousImpactTime = entryTime;
-        ref HealthComponent enemyHealth = ref enemyEntity.Get<HealthComponent>();
-        enemyHealth.HealthPoints = 1;
-        ref PathSpeedComponent enemySpeed = ref enemyEntity.Get<PathSpeedComponent>();
-        enemySpeed.Speed = 1d;
-        ref PathPositionComponent enemyPosition = ref enemyEntity.Get<PathPositionComponent>();
-        enemyPosition.LengthTraveled = -enemySpeed.Speed * entryTime;
-        ref ProjectedHealthComponent enemyProjectedHealth = ref enemyEntity.Get<ProjectedHealthComponent>();
-        enemyProjectedHealth.ProjectedHealthPoints = 1;
       }
     }
   }
