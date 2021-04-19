@@ -10,6 +10,11 @@ namespace BackEnd.Game.Components
   internal struct TowerComponent
   {
     /// <summary>
+    /// Normalized cost for this tower.
+    /// </summary>
+    public int MediumCost;
+
+    /// <summary>
     /// Distance travelled by projectiles per second.
     /// </summary>
     public double ProjectileSpeed;

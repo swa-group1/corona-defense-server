@@ -63,15 +63,18 @@ namespace BackEnd.Game.Systems
         }
       }
 
+      int actualPrice = (int)(towerDefinition.MediumCost * game.TowerCostFactor);
+
       // Credit check
-      if (player.Balance < towerDefinition.MediumCost)
+      if (player.Balance < actualPrice)
       {
         return;
       }
 
       // Create tower
-      EcsEntity tower = this.world.NewEntity(); 
+      EcsEntity tower = this.world.NewEntity();
       ref TowerComponent towerComponent = ref tower.Get<TowerComponent>();
+      towerComponent.MediumCost = towerDefinition.MediumCost;
       towerComponent.ProjectileSpeed = towerDefinition.ProjectileSpeed;
       towerComponent.ProjectileSpriteNumber = towerDefinition.ProjectileSpriteNumber;
       towerComponent.Range = towerDefinition.Range;
@@ -81,7 +84,7 @@ namespace BackEnd.Game.Systems
       towerPosition.Position = requestTile;
 
       // Reduce balance
-      player.Balance -= towerDefinition.MediumCost;
+      player.Balance -= actualPrice;
 
       // Broadcast changes
       game.Broadcaster.TowerPosition((short)tower.GetInternalId(), (byte)request.TowerTypeNumber, (byte)request.XPosition, (byte)request.YPosition);

@@ -65,10 +65,25 @@ namespace BackEnd.Game
       GameComponent gameSettings = new GameComponent()
       {
         Broadcaster = broadcaster,
-        Difficulty = difficulty,
         Stage = stage,
         TickDuration = 1d / TickNumber,
+        Time = 0d,
       };
+      switch (difficulty)
+      {
+        case StartGameRequest.Difficulties.EASY:
+          gameSettings.TowerCostFactor = 0.8d;
+          gameSettings.TowerSaleFactor = 0.9d;
+          break;
+        case StartGameRequest.Difficulties.MEDIUM:
+          gameSettings.TowerCostFactor = 1.0d;
+          gameSettings.TowerSaleFactor = 0.8d;
+          break;
+        case StartGameRequest.Difficulties.HARD:
+          gameSettings.TowerCostFactor = 1.2d;
+          gameSettings.TowerSaleFactor = 0.6d;
+          break;
+      }
 
       // Init
       _ = this.systems.Add(new GameInitializeSystem(gameSettings));
@@ -94,7 +109,6 @@ namespace BackEnd.Game
       _ = this.systems.Add(new EndRoundSystem(this));
 
       // Debug
-      // _ = this.systems.Add(new PrintPathPositionSystem());
 
       _ = this.systems.ProcessInjects();
       this.systems.Init();

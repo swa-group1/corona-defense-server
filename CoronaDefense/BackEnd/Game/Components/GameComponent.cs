@@ -18,11 +18,6 @@ namespace BackEnd.Game.Components
     public Broadcaster Broadcaster;
 
     /// <summary>
-    /// Difficulty of this game.
-    /// </summary>
-    public StartGameRequest.Difficulties Difficulty;
-
-    /// <summary>
     /// Stage of this game.
     /// </summary>
     public Stage Stage;
@@ -36,5 +31,15 @@ namespace BackEnd.Game.Components
     /// Time passed this round.
     /// </summary>
     public double Time;
+
+    /// <summary>
+    /// Factor that tower costs should be multiplied by.
+    /// </summary>
+    public double TowerCostFactor;
+
+    /// <summary>
+    /// Factor that money reimbursed from selling towers should be multiplied with.
+    /// </summary>
+    public double TowerSaleFactor;
   }
 }
