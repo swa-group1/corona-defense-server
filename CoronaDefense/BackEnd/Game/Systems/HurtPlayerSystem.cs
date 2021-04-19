@@ -12,8 +12,8 @@ namespace BackEnd.Game.Systems
   /// </summary>
   internal class HurtPlayerSystem : IEcsRunSystem
   {
-    private readonly EcsFilter<GameComponent> game = null;
     private readonly EcsFilter<EnemyComponent, HealthComponent, PathPositionComponent> enemies = null;
+    private readonly EcsFilter<GameComponent> game = null;
     private readonly EcsFilter<PlayerComponent> playerFilter = null;
 
     /// <inheritdoc/>
