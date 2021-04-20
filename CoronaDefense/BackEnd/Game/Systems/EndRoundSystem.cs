@@ -15,7 +15,7 @@ namespace BackEnd.Game.Systems
     private const int MoneyPerRound = 250;
 
     private readonly EcsContainer container;
-    private readonly EcsFilter<EnemyComponent> enemyFilter = null;
+    private readonly EcsFilter<EnemyComponent, PathPositionComponent> enemyFilter = null;
     private readonly EcsFilter<GameComponent> gameFilter = null;
     private readonly EcsFilter<PlayerComponent> playerFilter = null;
     private readonly EcsFilter<TowerComponent> towerFilter = null;
@@ -39,6 +39,21 @@ namespace BackEnd.Game.Systems
       {
         // Player died
         this.container.HasPlayerDied = true;
+
+        // Broadcast last animation for all remaining enemies
+        foreach (int i in this.enemyFilter)
+        {
+          ref EnemyComponent enemy = ref this.enemyFilter.Get1(i);
+          ref PathPositionComponent enemyPosition = ref this.enemyFilter.Get2(i);
+          game.Broadcaster.PathToPathAnimation(
+            (byte)enemy.SpriteNumber,
+            (float)enemy.PreviousImpactPosition,
+            (float)enemyPosition.LengthTraveled,
+            (float)enemy.PreviousImpactTime,
+            (float)game.Time,
+            0x01
+          );
+        }
       }
       else if (this.enemyFilter.GetEntitiesCount() == 0)
       {
@@ -54,10 +69,11 @@ namespace BackEnd.Game.Systems
       this.container.Running = false;
 
       // Reset time
-      game.Time += 5 * game.TickDuration;
+      game.Time += game.TickDuration;
       game.Broadcaster.AnimationConfirmation((float)game.Time);
       game.Time = 0d;
 
+      // Calculate score
       this.container.Score = 0;
       this.container.Score += player.Balance;
       this.container.Score += 5 * player.Health;
