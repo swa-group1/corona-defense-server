@@ -18,6 +18,7 @@ namespace BackEnd.Game.Systems
     private readonly EcsFilter<EnemyComponent> enemyFilter = null;
     private readonly EcsFilter<GameComponent> gameFilter = null;
     private readonly EcsFilter<PlayerComponent> playerFilter = null;
+    private readonly EcsFilter<TowerComponent> towerFilter = null;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="EndRoundSystem"/> class.
@@ -56,6 +57,16 @@ namespace BackEnd.Game.Systems
       game.Time += 5 * game.TickDuration;
       game.Broadcaster.AnimationConfirmation((float)game.Time);
       game.Time = 0d;
+
+      this.container.Score = 0;
+      this.container.Score += player.Balance;
+      this.container.Score += 5 * player.Health;
+      this.container.Score += player.PopCount;
+      foreach (int i in this.towerFilter)
+      {
+        ref TowerComponent tower = ref this.towerFilter.Get1(i);
+        this.container.Score += (int)(tower.MediumCost * game.TowerCostFactor * game.TowerSaleFactor);
+      }
     }
   }
 }

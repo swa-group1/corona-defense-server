@@ -53,6 +53,7 @@ namespace BackEnd.Game.Systems
           // Money
           ref PlayerComponent player = ref this.playerFilter.Get1(0);
           player.Balance += 1;
+          player.PopCount += 1;
           game.Broadcaster.MoneyAnimation(
             player.Balance,
             (float)game.Time

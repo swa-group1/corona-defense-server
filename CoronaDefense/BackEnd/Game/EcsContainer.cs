@@ -42,6 +42,11 @@ namespace BackEnd.Game
     public PlaceTowerSystem PlaceTowerSystem { get; }
 
     /// <summary>
+    /// Gets or sets final score set when the game is over.
+    /// </summary>
+    public int Score { get; set; }
+
+    /// <summary>
     /// Gets system used to sell towers.
     /// </summary>
     public SellTowerSystem SellTowerSystem { get; }

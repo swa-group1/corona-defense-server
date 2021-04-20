@@ -282,11 +282,11 @@ namespace BackEnd.Game
       this.EcsContainer.ProcessFightRound();
       if (this.EcsContainer.HasPlayerDied)
       {
-        this.Broadcaster.EndGame(false, 0, 0);
+        this.Broadcaster.EndGame(false, 0, this.EcsContainer.Score);
       }
       else if (this.RoundNumber == this.NumberOfRounds)
       {
-        this.Broadcaster.EndGame(true, 0, 0);
+        this.Broadcaster.EndGame(true, 0, this.EcsContainer.Score);
       }
       else
       {

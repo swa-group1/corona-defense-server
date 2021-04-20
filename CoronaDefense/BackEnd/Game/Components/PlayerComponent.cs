@@ -18,5 +18,10 @@ namespace BackEnd.Game.Components
     /// Value describing how much health the player has left.
     /// </sunmmary>
     public int Health;
+
+    /// <summary>
+    /// Score attained from killing enemies.
+    /// </summary>
+    public int PopCount;
   }
 }
