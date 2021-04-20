@@ -50,6 +50,10 @@ namespace BackEnd.Game.Systems
             0x00
           );
 
+          // Update enemy
+          enemy.PreviousImpactPosition = doomedPosition.LengthTraveled;
+          enemy.PreviousImpactTime = game.Time;
+
           // Money
           ref PlayerComponent player = ref this.playerFilter.Get1(0);
           player.Balance += 1;
