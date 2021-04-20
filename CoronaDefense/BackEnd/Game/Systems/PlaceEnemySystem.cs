@@ -63,6 +63,7 @@ namespace BackEnd.Game.Systems
           ref EnemyComponent enemy = ref enemyEntity.Get<EnemyComponent>();
           enemy.PreviousImpactPosition = 0d;
           enemy.PreviousImpactTime = entryTime;
+          enemy.SpriteNumber = enemyType.SpriteSet.FirstSprite;
 
           ref HealthComponent enemyHealth = ref enemyEntity.Get<HealthComponent>();
           enemyHealth.HealthPoints = enemyType.Health;

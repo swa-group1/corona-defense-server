@@ -39,12 +39,12 @@ namespace BackEnd.Game.Systems
         // Send animation
         ref EnemyComponent enemyComponent = ref this.enemies.Get1(enemyIndex);
         game.Broadcaster.PathToPathAnimation(
-            0x01,
+            (byte)enemyComponent.SpriteNumber,
             (float)enemyComponent.PreviousImpactPosition,
             (float)pathPositionComponent.LengthTraveled,
             (float)enemyComponent.PreviousImpactTime,
             (float)game.Time,
-            0x01
+            0x00
         );
 
         // Remove enemy

@@ -39,10 +39,11 @@ namespace BackEnd.Game.Systems
           ref HealthComponent health = ref this.doomedFilter.Get2(doomedIndex);
           health.HealthPoints -= 1;
 
+          // Send enemy animaion
           ref EnemyComponent enemy = ref this.doomedFilter.Get1(doomedIndex);
           ref PathPositionComponent doomedPosition = ref this.doomedFilter.Get4(doomedIndex);
           game.Broadcaster.PathToPathAnimation(
-            0x01,
+            (byte)enemy.SpriteNumber,
             (float)enemy.PreviousImpactPosition,
             (float)doomedPosition.LengthTraveled,
             (float)enemy.PreviousImpactTime,
@@ -53,6 +54,7 @@ namespace BackEnd.Game.Systems
           // Update enemy
           enemy.PreviousImpactPosition = doomedPosition.LengthTraveled;
           enemy.PreviousImpactTime = game.Time;
+          enemy.SpriteNumber += 1;
 
           // Money
           ref PlayerComponent player = ref this.playerFilter.Get1(0);
