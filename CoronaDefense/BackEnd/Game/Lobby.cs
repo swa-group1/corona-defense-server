@@ -32,6 +32,11 @@ namespace BackEnd.Game
 
     private Broadcaster Broadcaster { get; }
 
+    /// <summary>
+    /// Gets or sets a value indicating whether there are currently clients that are yet to receive the full game state because they joined during a fight round.
+    /// </summary>
+    private bool DelayedUpdate { get; set; } = false;
+
     private bool Disposed { get; set; } = false;
 
     private StartGameRequest.Difficulties Difficulty { get; set; }
@@ -179,6 +184,15 @@ namespace BackEnd.Game
 
       this.Broadcaster.Ping();
 
+      if (this.LobbyMode == Mode.InputMode)
+      {
+        this.EcsContainer.UpdateClientSystem.UpdateClients();
+      }
+      else if (this.LobbyMode == Mode.FightMode)
+      {
+        this.DelayedUpdate = true;
+      }
+
       return new JoinLobbyResult()
       {
         AccessToken = accessToken,
@@ -280,6 +294,13 @@ namespace BackEnd.Game
 
         this.LobbyMode = Mode.InputMode;
         this.Broadcaster.InputRound(this.RoundNumber);
+
+        if (this.DelayedUpdate)
+        {
+          this.EcsContainer.UpdateClientSystem.UpdateClients();
+          this.DelayedUpdate = false;
+        }
+
         return;
       }
 

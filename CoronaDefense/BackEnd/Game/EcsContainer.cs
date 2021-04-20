@@ -47,6 +47,11 @@ namespace BackEnd.Game
     public SellTowerSystem SellTowerSystem { get; }
 
     /// <summary>
+    /// Gets system used to update new clients on the game state.
+    /// </summary>
+    public UpdateClientSystem UpdateClientSystem { get; }
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="EcsContainer"/> class.
     /// </summary>
     /// <param name="broadcaster"><see cref="Broadcaster"/> to send game messages to.</param>
@@ -101,6 +106,8 @@ namespace BackEnd.Game
       _ = this.systems.Add(this.PlaceTowerSystem);
       this.SellTowerSystem = new SellTowerSystem();
       _ = this.systems.Add(this.SellTowerSystem);
+      this.UpdateClientSystem = new UpdateClientSystem();
+      _ = this.systems.Add(this.UpdateClientSystem);
 
       // Pre-frame
       _ = this.systems.Add(new TimeSystem());

@@ -43,5 +43,10 @@ namespace BackEnd.Game.Components
     /// Number of tower sprite.
     /// </summary>
     public int TowerSpriteNumber;
+
+    /// <summary>
+    /// Number of tower type.
+    /// </summary>
+    public int TowerType;
   }
 }

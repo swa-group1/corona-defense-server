@@ -80,6 +80,7 @@ namespace BackEnd.Game.Systems
       towerComponent.Range = towerDefinition.Range;
       towerComponent.ReloadTime = towerDefinition.ReloadTime;
       towerComponent.TowerSpriteNumber = towerDefinition.TowerSpriteNumber;
+      towerComponent.TowerType = towerDefinition.TypeNumber;
       ref BoardPositionComponent towerPosition = ref tower.Get<BoardPositionComponent>();
       towerPosition.Position = requestTile;
 
