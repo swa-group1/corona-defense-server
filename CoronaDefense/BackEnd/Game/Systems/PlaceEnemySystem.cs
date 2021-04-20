@@ -77,12 +77,6 @@ namespace BackEnd.Game.Systems
           enemyProjectedHealth.ProjectedHealthPoints = enemyHealth.HealthPoints;
         }
       }
-
-      for (int i = 1; i <= 10; i++)
-      {
-        entryTime += 0.5d;
-
-      }
     }
   }
 }
