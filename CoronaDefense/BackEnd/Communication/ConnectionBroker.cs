@@ -45,7 +45,7 @@ namespace BackEnd.Communication
     /// </summary>
     public ConnectionBroker()
     {
-      IPEndPoint endPoint = new IPEndPoint(IPAddress.IPv6Any, PortNumber);
+      IPEndPoint endPoint = new IPEndPoint(IPAddress.Any, PortNumber);
 
       this.PublicSocket = new Socket(endPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
       this.PublicSocket.Bind(endPoint);
