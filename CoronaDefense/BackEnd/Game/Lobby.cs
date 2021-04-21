@@ -265,6 +265,7 @@ namespace BackEnd.Game
         stage,
         towers
       );
+      this.EcsContainer.UpdateClientSystem.UpdateClients();
     }
 
     /// <inheritdoc/>
