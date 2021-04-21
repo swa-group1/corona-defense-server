@@ -1,3 +1,7 @@
+// <copyright file="Program.cs" company="NTNU: SWA group 1 (2021)">
+// Copyright (c) NTNU: SWA group 1 (2021). All rights reserved.
+// </copyright>
+
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
@@ -18,7 +22,8 @@ namespace BackEnd.Communication.API
         .ConfigureWebHostDefaults(
           delegate (IWebHostBuilder webBuilder)
           {
-            webBuilder.UseStartup<Startup>();
+            _ = webBuilder.UseStartup<Startup>();
+            _ = webBuilder.UseUrls("https://*:5001", "http://*:5000");
           }
         ).Build().Run();
     }
