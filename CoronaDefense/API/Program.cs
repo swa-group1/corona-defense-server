@@ -23,7 +23,7 @@ namespace BackEnd.Communication.API
           delegate (IWebHostBuilder webBuilder)
           {
             _ = webBuilder.UseStartup<Startup>();
-            _ = webBuilder.UseUrls("https://*:5001", "http://*:5000");
+            _ = webBuilder.UseUrls("http://*:5000");
           }
         ).Build().Run();
     }
