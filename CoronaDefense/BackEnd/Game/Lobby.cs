@@ -23,7 +23,7 @@ namespace BackEnd.Game
     /// <summary>
     /// Default time before a <see cref="Lobby"/> should close itself because of inactivity.
     /// </summary>
-    private const int LobbyTimeOut = 2 * 60 * 1000;
+    private const int LobbyTimeOut = 5 * 60 * 1000;
 
     /// <summary>
     /// Gets the set of access tokens of clients currently connected to this <see cref="Lobby"/>.
@@ -49,6 +49,11 @@ namespace BackEnd.Game
     public long Id { get; }
 
     /// <summary>
+    /// Gets or sets timer used to time out lobbies after inactivity.
+    /// </summary>
+    private Timer InactivityTimer { get; set; }
+
+    /// <summary>
     /// Gets or sets the current state of the lobby.
     /// </summary>
     private Mode LobbyMode { get; set; } = Mode.LobbyMode;
@@ -71,47 +76,9 @@ namespace BackEnd.Game
     private string Password { get; }
 
     /// <summary>
-    /// Backing-field for <see cref="PlayerCount"/>.
-    /// </summary>
-    private int playerCount;
-
-    /// <summary>
-    /// If <see cref="playerCount"/> is currently 0, the <see cref="Timer"/> counting towards.
-    /// </summary>
-    private Timer playerCountZeroTimer = null;
-
-    /// <summary>
     /// Gets the number of players, or clients, currently connected to this <see cref="Lobby"/>.
     /// </summary>
-    public int PlayerCount
-    {
-      get
-      {
-        return this.playerCount;
-      }
-
-      private set
-      {
-        this.playerCount = value;
-
-        if (value == 0)
-        {
-          Timer timer = new Timer()
-          {
-            AutoReset = false,
-            Interval = LobbyTimeOut,
-          };
-          timer.Elapsed += this.OnNoPlayerTimerElapsed;
-          timer.Start();
-          this.playerCountZeroTimer = timer;
-        }
-        else
-        {
-          this.playerCountZeroTimer?.Stop();
-          this.playerCountZeroTimer = null;
-        }
-      }
-    }
+    public int PlayerCount { get; set; } = 0;
 
     private short RoundNumber { get; set; } = 1;
 
@@ -129,18 +96,20 @@ namespace BackEnd.Game
     /// <param name="router">Router the new <see cref="Lobby"/> should connect to.</param>
     public Lobby(string name, string password, ConnectionBroker connectionBroker, Router.Router router)
     {
-
       this.Broadcaster = new Broadcaster(connectionBroker);
       this.Id = router.Register(this);
       this.Name = name;
       this.Password = password;
-      this.PlayerCount = 0;
       this.Router = router;
+
+      this.ResetInactivityTimer();
     }
 
     /// <inheritdoc/>
     public JoinLobbyResult JoinLobby(JoinLobbyRequest request)
     {
+      this.ResetInactivityTimer();
+
       if (this.LobbyMode == Mode.GameOver)
       {
         return new JoinLobbyResult()
@@ -203,6 +172,8 @@ namespace BackEnd.Game
     /// <inheritdoc/>
     public void LeaveLobby(LocalRequest request)
     {
+      this.ResetInactivityTimer();
+
       if (this.LobbyMode == Mode.GameOver)
       {
         return;
@@ -218,6 +189,8 @@ namespace BackEnd.Game
     /// <inheritdoc/>
     public void PlaceTower(PlaceTowerRequest request)
     {
+      this.ResetInactivityTimer();
+
       if (this.LobbyMode != Mode.InputMode)
       {
         return;
@@ -229,6 +202,8 @@ namespace BackEnd.Game
     /// <inheritdoc/>
     public void SellTower(SelltowerRequest request)
     {
+      this.ResetInactivityTimer();
+
       if (this.LobbyMode != Mode.InputMode)
       {
         return;
@@ -237,9 +212,24 @@ namespace BackEnd.Game
       this.EcsContainer.SellTowerSystem.SellTower(request);
     }
 
+    private void ResetInactivityTimer()
+    {
+      this.StopInactivityTimer();
+      Timer timer = new Timer()
+      {
+        AutoReset = false,
+        Interval = LobbyTimeOut,
+      };
+      timer.Elapsed += this.OnNoPlayerTimerElapsed;
+      timer.Start();
+      this.InactivityTimer = timer;
+    }
+
     /// <inheritdoc/>
     public void StartGame(StartGameRequest request)
     {
+      this.ResetInactivityTimer();
+
       if (this.LobbyMode != Mode.LobbyMode)
       {
         return;
@@ -271,6 +261,8 @@ namespace BackEnd.Game
     /// <inheritdoc/>
     public void StartRound(LocalRequest request)
     {
+      this.ResetInactivityTimer();
+
       if (this.LobbyMode != Mode.InputMode)
       {
         return;
@@ -302,11 +294,19 @@ namespace BackEnd.Game
           this.DelayedUpdate = false;
         }
 
+        this.ResetInactivityTimer();
+
         return;
       }
 
       this.LobbyMode = Mode.GameOver;
       this.Dispose();
+    }
+
+    private void StopInactivityTimer()
+    {
+      this.InactivityTimer?.Stop();
+      this.InactivityTimer = null;
     }
 
     /// <summary>
@@ -347,7 +347,7 @@ namespace BackEnd.Game
       this.Broadcaster.Dispose();
       this.PlayerCount = 0;
 
-      this.EcsContainer.Dispose();
+      this.EcsContainer?.Dispose();
     }
 
     private enum Mode
