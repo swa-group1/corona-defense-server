@@ -5,6 +5,7 @@
 using BackEnd.Communication;
 using BackEnd.Communication.API.Requests;
 using BackEnd.Communication.API.Schemas;
+using BackEnd.Orchestrator;
 using BackEnd.Router;
 using System;
 using System.Collections.Generic;
@@ -78,14 +79,19 @@ namespace BackEnd.Game
     /// <summary>
     /// Gets the number of players, or clients, currently connected to this <see cref="Lobby"/>.
     /// </summary>
-    public int PlayerCount { get; set; } = 0;
+    public int PlayerCount { get; private set; } = 0;
 
     private short RoundNumber { get; set; } = 1;
 
     /// <summary>
-    /// Router that this <see cref="Lobby"/> is attached to.
+    /// Gets router that this <see cref="Lobby"/> is attached to.
     /// </summary>
     private Router.Router Router { get; }
+
+    /// <summary>
+    /// Gets padlock used to limit the processing of requests in a lobby to one at a time.
+    /// </summary>
+    private object Padlock { get; } = new object();
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Lobby"/> class.
@@ -108,108 +114,141 @@ namespace BackEnd.Game
     /// <inheritdoc/>
     public JoinLobbyResult JoinLobby(JoinLobbyRequest request)
     {
-      this.ResetInactivityTimer();
-
-      if (this.LobbyMode == Mode.GameOver)
+      try
       {
-        return new JoinLobbyResult()
+        lock (this.Padlock)
         {
-          Success = false,
-          Details = "Lobby has been closed.",
-        };
+          if (this.LobbyMode == Mode.GameOver)
+          {
+            return new JoinLobbyResult()
+            {
+              Success = false,
+              Details = "Lobby has been closed.",
+            };
+          }
+
+          if (request.Password != this.Password)
+          {
+            return new JoinLobbyResult()
+            {
+              Success = false,
+              Details = "Password was not correct.",
+
+              LobbyId = this.Id,
+            };
+          }
+
+          // Find access token
+          long accessToken;
+          do
+          {
+            accessToken = ServerRandom.RandomLong;
+          }
+          while (this.AccessTokens.Contains(accessToken));
+
+          if (!this.Broadcaster.TryAssociateWithConnection(accessToken, request.ConnectionNumber))
+          {
+            return new JoinLobbyResult()
+            {
+              Success = false,
+              Details = "Connection number was not found to map to a valid open connection to the server.",
+
+              LobbyId = this.Id,
+            };
+          }
+
+          _ = this.AccessTokens.Add(accessToken);
+          this.PlayerCount++;
+
+          this.Broadcaster.Ping();
+
+          if (this.LobbyMode == Mode.InputMode)
+          {
+            this.EcsContainer.UpdateClientSystem.UpdateClients();
+          }
+          else if (this.LobbyMode == Mode.FightMode)
+          {
+            this.DelayedUpdate = true;
+          }
+
+          return new JoinLobbyResult()
+          {
+            AccessToken = accessToken,
+            LobbyId = this.Id,
+          };
+        }
       }
-
-      if (request.Password != this.Password)
+      finally
       {
-        return new JoinLobbyResult()
-        {
-          Success = false,
-          Details = "Password was not correct.",
-
-          LobbyId = this.Id,
-        };
+        this.ResetInactivityTimer();
       }
-
-      long accessToken;
-      do
-      {
-        accessToken = ServerRandom.RandomLong;
-      }
-      while (this.AccessTokens.Contains(accessToken));
-
-      if (!this.Broadcaster.TryAssociateWithConnection(accessToken, request.ConnectionNumber))
-      {
-        return new JoinLobbyResult()
-        {
-          Success = false,
-          Details = "Connection number was not found to map to a valid open connection to the server.",
-
-          LobbyId = this.Id,
-        };
-      }
-
-      _ = this.AccessTokens.Add(accessToken);
-      this.PlayerCount++;
-
-      this.Broadcaster.Ping();
-
-      if (this.LobbyMode == Mode.InputMode)
-      {
-        this.EcsContainer.UpdateClientSystem.UpdateClients();
-      }
-      else if (this.LobbyMode == Mode.FightMode)
-      {
-        this.DelayedUpdate = true;
-      }
-
-      return new JoinLobbyResult()
-      {
-        AccessToken = accessToken,
-        LobbyId = this.Id,
-      };
     }
 
     /// <inheritdoc/>
     public void LeaveLobby(LocalRequest request)
     {
-      this.ResetInactivityTimer();
-
-      if (this.LobbyMode == Mode.GameOver)
+      try
       {
-        return;
+        lock (this.Padlock)
+        {
+          if (this.LobbyMode == Mode.GameOver)
+          {
+            return;
+          }
+
+          if (this.AccessTokens.Remove(request.AccessToken))
+          {
+            this.Broadcaster.DisconnectClient(request.AccessToken);
+            this.PlayerCount--;
+          }
+        }
       }
-
-      if (this.AccessTokens.Remove(request.AccessToken))
+      finally
       {
-        this.Broadcaster.DisconnectClient(request.AccessToken);
-        this.PlayerCount--;
+        this.ResetInactivityTimer();
       }
     }
 
     /// <inheritdoc/>
     public void PlaceTower(PlaceTowerRequest request)
     {
-      this.ResetInactivityTimer();
-
-      if (this.LobbyMode != Mode.InputMode)
+      try
       {
-        return;
-      }
+        lock (this.Padlock)
+        {
+          if (this.LobbyMode != Mode.InputMode)
+          {
+            return;
+          }
 
-      this.EcsContainer.PlaceTowerSystem.PlaceTower(request);
+          this.EcsContainer.PlaceTowerSystem.PlaceTower(request);
+        }
+      }
+      finally
+      {
+        this.ResetInactivityTimer();
+      }
     }
 
     /// <inheritdoc/>
     public void SellTower(SelltowerRequest request)
     {
-      this.ResetInactivityTimer();
-
-      if (this.LobbyMode != Mode.InputMode)
+      try
       {
-        return;
-      }
+        lock (this.Padlock)
+        {
+          if (this.LobbyMode != Mode.InputMode)
+          {
+            return;
+          }
 
-      this.EcsContainer.SellTowerSystem.SellTower(request);
+          this.EcsContainer.SellTowerSystem.SellTower(request);
+        }
+      }
+      finally
+      {
+        this.ResetInactivityTimer();
+      }
     }
 
     private void ResetInactivityTimer()
@@ -228,79 +267,111 @@ namespace BackEnd.Game
     /// <inheritdoc/>
     public void StartGame(StartGameRequest request)
     {
-      this.ResetInactivityTimer();
-
-      if (this.LobbyMode != Mode.LobbyMode)
+      try
       {
-        return;
+        lock (this.Padlock)
+        {
+          if (this.LobbyMode != Mode.LobbyMode)
+          {
+            return;
+          }
+
+          this.Difficulty = request.Difficulty;
+          this.LobbyMode = Mode.InputMode;
+          this.RoundNumber = 1;
+
+          this.Broadcaster.GameMode(request.StageNumber);
+          this.Broadcaster.InputRound(this.RoundNumber);
+
+          EnemyDefinitions enemies = EnemyDefinitions.Parse(StorageAPI.DownloadEnemies());
+          RoundDefinitions rounds = RoundDefinitions.Parse(StorageAPI.DownloadRounds());
+          Stage stage = Stage.Parse(StorageAPI.DownloadStage(request.StageNumber));
+          TowerDefinitions towers = TowerDefinitions.Parse(StorageAPI.DownloadTowers());
+          this.NumberOfRounds = rounds.Rounds.Count;
+          this.EcsContainer = new EcsContainer(
+            this.Broadcaster,
+            request.Difficulty,
+            enemies,
+            rounds,
+            stage,
+            towers
+          );
+          this.EcsContainer.UpdateClientSystem.UpdateClients();
+        }
       }
-
-      this.Difficulty = request.Difficulty;
-      this.LobbyMode = Mode.InputMode;
-      this.RoundNumber = 1;
-
-      this.Broadcaster.GameMode(request.StageNumber);
-      this.Broadcaster.InputRound(this.RoundNumber);
-
-      EnemyDefinitions enemies = EnemyDefinitions.Parse(StorageAPI.DownloadEnemies());
-      RoundDefinitions rounds = RoundDefinitions.Parse(StorageAPI.DownloadRounds());
-      Stage stage = Stage.Parse(StorageAPI.DownloadStage(request.StageNumber));
-      TowerDefinitions towers = TowerDefinitions.Parse(StorageAPI.DownloadTowers());
-      this.NumberOfRounds = rounds.Rounds.Count;
-      this.EcsContainer = new EcsContainer(
-        this.Broadcaster,
-        request.Difficulty,
-        enemies,
-        rounds,
-        stage,
-        towers
-      );
-      this.EcsContainer.UpdateClientSystem.UpdateClients();
+      finally
+      {
+        this.ResetInactivityTimer();
+      }
     }
 
     /// <inheritdoc/>
     public void StartRound(LocalRequest request)
     {
-      this.ResetInactivityTimer();
-
-      if (this.LobbyMode != Mode.InputMode)
+      lock (this.Padlock)
       {
-        return;
-      }
-
-      this.LobbyMode = Mode.FightMode;
-      this.Broadcaster.FightRound(this.RoundNumber);
-
-      this.EcsContainer.PlaceEnemySystem.PlaceEnemies();
-      this.EcsContainer.ProcessFightRound();
-      if (this.EcsContainer.HasPlayerDied)
-      {
-        this.Broadcaster.EndGame(false, 0, this.EcsContainer.Score);
-      }
-      else if (this.RoundNumber == this.NumberOfRounds)
-      {
-        this.Broadcaster.EndGame(true, 0, this.EcsContainer.Score);
-      }
-      else
-      {
-        this.RoundNumber++;
-
-        this.LobbyMode = Mode.InputMode;
-        this.Broadcaster.InputRound(this.RoundNumber);
-
-        if (this.DelayedUpdate)
-        {
-          this.EcsContainer.UpdateClientSystem.UpdateClients();
-          this.DelayedUpdate = false;
-        }
-
         this.ResetInactivityTimer();
 
-        return;
-      }
+        if (this.LobbyMode != Mode.InputMode)
+        {
+          return;
+        }
 
-      this.LobbyMode = Mode.GameOver;
-      this.Dispose();
+        // Inform lobby and clients about the starting fight round
+        this.LobbyMode = Mode.FightMode;
+        this.Broadcaster.FightRound(this.RoundNumber);
+
+        // Place enemies and process the fight round
+        this.EcsContainer.PlaceEnemySystem.PlaceEnemies();
+        this.EcsContainer.ProcessFightRound();
+
+        // Process aftermath
+        if (this.EcsContainer.HasPlayerDied)
+        {
+          // Player lost all health points
+          this.Broadcaster.EndGame(false, 0, this.EcsContainer.Score);
+
+          // Default to end game logic below
+        }
+        else if (this.RoundNumber == this.NumberOfRounds)
+        {
+          // Player survived all rounds
+          int placement;
+          if (this.Difficulty == StartGameRequest.Difficulties.HARD)
+          {
+            placement = HighscoreListManager.Instance.RegisterScore(this.Name, this.EcsContainer.Score);
+          }
+          else
+          {
+            placement = 0;
+          }
+
+          this.Broadcaster.EndGame(true, placement, this.EcsContainer.Score);
+
+          // Default to end game logic below
+        }
+        else
+        {
+          // Player is not dead nor is all rounds done
+          this.RoundNumber++;
+
+          this.LobbyMode = Mode.InputMode;
+          this.Broadcaster.InputRound(this.RoundNumber);
+
+          // Update clients who joined during the round on game state.
+          if (this.DelayedUpdate)
+          {
+            this.EcsContainer.UpdateClientSystem.UpdateClients();
+            this.DelayedUpdate = false;
+          }
+
+          // Skip end game logic below
+          return;
+        }
+
+        this.LobbyMode = Mode.GameOver;
+        this.Dispose();
+      }
     }
 
     private void StopInactivityTimer()
@@ -319,7 +390,7 @@ namespace BackEnd.Game
     }
 
     /// <summary>
-    /// Request that this <see cref="Lobby"/> closes itself.
+    /// This <see cref="Lobby"/> should close itself when inactivity timer runs out.
     /// </summary>
     private void OnNoPlayerTimerElapsed(object sender, ElapsedEventArgs e)
     {

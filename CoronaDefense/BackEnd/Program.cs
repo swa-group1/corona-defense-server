@@ -3,6 +3,7 @@
 // </copyright>
 
 using BackEnd.Communication;
+using BackEnd.Orchestrator;
 using System;
 
 namespace BackEnd
@@ -16,7 +17,7 @@ namespace BackEnd
     {
       ConnectionBroker connectionBroker = new ConnectionBroker();
       Router.Router router = new Router.Router();
-      Orchestrator orchestrator = new Orchestrator(connectionBroker, router);
+      Orchestrator.Orchestrator orchestrator = new Orchestrator.Orchestrator(connectionBroker, router);
 
       Communication.API.Program.Main(Array.Empty<string>());
     }
