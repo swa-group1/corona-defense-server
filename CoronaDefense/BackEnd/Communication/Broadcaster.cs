@@ -270,7 +270,7 @@ namespace BackEnd.Communication
     }
 
     /// <summary>
-    /// Write a <see cref="float"> to supplied <paramref name="buffer"/> starting at a specific index.
+    /// Write a <see cref="float"/> to supplied <paramref name="buffer"/> starting at a specific index.
     /// </summary>
     /// <param name="buffer">Buffer to write to.</param>
     /// <param name="startIndex">Index of first byte in buffer to write to.</param>
@@ -288,7 +288,7 @@ namespace BackEnd.Communication
     }
 
     /// <summary>
-    /// Write a <see cref="int"> to supplied <paramref name="buffer"/> starting at a specific index.
+    /// Write a <see cref="int"/> to supplied <paramref name="buffer"/> starting at a specific index.
     /// </summary>
     /// <param name="buffer">Buffer to write to.</param>
     /// <param name="startIndex">Index of first byte in buffer to write to.</param>
@@ -306,7 +306,7 @@ namespace BackEnd.Communication
     }
 
     /// <summary>
-    /// Write a <see cref="short"> to supplied <paramref name="buffer"/> starting at a specific index.
+    /// Write a <see cref="short"/> to supplied <paramref name="buffer"/> starting at a specific index.
     /// </summary>
     /// <param name="buffer">Buffer to write to.</param>
     /// <param name="startIndex">Index of first byte in buffer to write to.</param>
