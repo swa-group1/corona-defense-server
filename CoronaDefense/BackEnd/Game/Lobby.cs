@@ -326,27 +326,18 @@ namespace BackEnd.Game
         this.EcsContainer.ProcessFightRound();
 
         // Process aftermath
+        bool didWin;
         if (this.EcsContainer.HasPlayerDied)
         {
           // Player lost all health points
-          this.Broadcaster.EndGame(false, 0, this.EcsContainer.Score);
+          didWin = false;
 
           // Default to end game logic below
         }
         else if (this.RoundNumber == this.NumberOfRounds)
         {
           // Player survived all rounds
-          int placement;
-          if (this.Difficulty == StartGameRequest.Difficulties.HARD)
-          {
-            placement = HighscoreListManager.Instance.RegisterScore(this.Name, this.EcsContainer.Score);
-          }
-          else
-          {
-            placement = 0;
-          }
-
-          this.Broadcaster.EndGame(true, placement, this.EcsContainer.Score);
+          didWin = true;
 
           // Default to end game logic below
         }
@@ -368,6 +359,18 @@ namespace BackEnd.Game
           // Skip end game logic below
           return;
         }
+
+        int placement;
+        if (this.Difficulty == StartGameRequest.Difficulties.HARD)
+        {
+          placement = HighscoreListManager.Instance.RegisterScore(this.Name, this.EcsContainer.Score);
+        }
+        else
+        {
+          placement = 0;
+        }
+
+        this.Broadcaster.EndGame(didWin, placement, this.EcsContainer.Score);
 
         this.LobbyMode = Mode.GameOver;
         this.Dispose();
