@@ -12,7 +12,7 @@ namespace BackEnd.Game.Systems
   /// </summary>
   internal class EndRoundSystem : IEcsRunSystem
   {
-    private const int MoneyPerRound = 250;
+    private const int MoneyPerRound = 150;
 
     private readonly EcsContainer container;
     private readonly EcsFilter<EnemyComponent, PathPositionComponent> enemyFilter = null;
