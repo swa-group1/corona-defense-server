@@ -13,7 +13,7 @@ namespace BackEnd.Game.Systems
   /// </summary>
   internal class PlaceEnemySystem : IEcsSystem
   {
-    private readonly Dictionary<string, EnemyDefinitions.EnemyType> enemyTypes;
+    private readonly EcsFilter<GameComponent> gameFilter = null;
     private int nextRound = 0;
     private readonly RoundDefinitions rounds;
     private readonly EcsWorld world = null;
@@ -21,16 +21,9 @@ namespace BackEnd.Game.Systems
     /// <summary>
     /// Initializes a new instance of the <see cref="PlaceEnemySystem"/> class.
     /// </summary>
-    /// <param name="enemyDefinitions">Enemy definitions to utilize.</param>
     /// <param name="roundDefinitions">Round definitions to utilize.</param>
-    public PlaceEnemySystem(EnemyDefinitions enemyDefinitions, RoundDefinitions roundDefinitions)
+    public PlaceEnemySystem(RoundDefinitions roundDefinitions)
     {
-      this.enemyTypes = new Dictionary<string, EnemyDefinitions.EnemyType>();
-      foreach (EnemyDefinitions.EnemyType enemyType in enemyDefinitions.EnemyTypes)
-      {
-        this.enemyTypes.Add(enemyType.Name, enemyType);
-      }
-
       this.rounds = roundDefinitions;
     }
 
@@ -39,6 +32,8 @@ namespace BackEnd.Game.Systems
     /// </summary>
     public void PlaceEnemies()
     {
+      GameComponent game = this.gameFilter.Get1(0);
+
       double entryTime = 1d;
 
       IList<RoundDefinitions.RoundSection> sections = this.rounds.Rounds[this.nextRound];
@@ -54,19 +49,20 @@ namespace BackEnd.Game.Systems
             break;
           }
 
-          if (!this.enemyTypes.TryGetValue(section.EnemyType, out EnemyDefinitions.EnemyType enemyType))
+          if (!game.EnemyTypeMap.TryGetValue(section.EnemyType, out EnemyType enemyType))
           {
             break;
           }
 
           EcsEntity enemyEntity = this.world.NewEntity();
           ref EnemyComponent enemy = ref enemyEntity.Get<EnemyComponent>();
-          enemy.PreviousImpactPosition = 0d;
-          enemy.PreviousImpactTime = entryTime;
-          enemy.SpriteNumber = enemyType.SpriteSet.FirstSprite;
+          enemy.NextType = enemyType.NextType;
+          enemy.PlayerDamage = enemyType.Health;
+          enemy.SpriteNumber = enemyType.SpriteNumber;
 
-          ref HealthComponent enemyHealth = ref enemyEntity.Get<HealthComponent>();
-          enemyHealth.HealthPoints = enemyType.Health;
+          ref ImpactComponent impactComponent = ref enemyEntity.Get<ImpactComponent>();
+          impactComponent.PreviousImpactPosition = 0d;
+          impactComponent.PreviousImpactTime = entryTime;
 
           ref PathSpeedComponent enemySpeed = ref enemyEntity.Get<PathSpeedComponent>();
           enemySpeed.Speed = enemyType.Speed;
@@ -75,7 +71,7 @@ namespace BackEnd.Game.Systems
           enemyPosition.LengthTraveled = -enemySpeed.Speed * entryTime;
 
           ref ProjectedHealthComponent enemyProjectedHealth = ref enemyEntity.Get<ProjectedHealthComponent>();
-          enemyProjectedHealth.ProjectedHealthPoints = enemyHealth.HealthPoints;
+          enemyProjectedHealth.ProjectedHealthPoints = enemyType.Health;
         }
       }
     }

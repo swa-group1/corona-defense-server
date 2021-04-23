@@ -10,14 +10,14 @@ namespace BackEnd.Game.Components
   internal struct EnemyComponent
   {
     /// <summary>
-    /// Length along path were enemy was last hit.
+    /// When this enemy takes damage, which type does it transform into.
     /// </summary>
-    public double PreviousImpactPosition;
+    public string NextType;
 
     /// <summary>
-    /// Time from start of round when enemy was last hit.
+    /// When this enemy reaches the player, how much damage should the player sustain.
     /// </summary>
-    public double PreviousImpactTime;
+    public int PlayerDamage;
 
     /// <summary>
     /// Number of sprite of this enemy currently.

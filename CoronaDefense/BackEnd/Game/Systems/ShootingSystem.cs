@@ -19,7 +19,7 @@ namespace BackEnd.Game.Systems
 
     private readonly EcsFilter<GameComponent> gameFilter = null;
     private readonly EcsFilter<BoardPositionComponent, TowerComponent, ReloadedTag> towers = null;
-    private readonly EcsFilter<PathPositionComponent, PathSpeedComponent, HealthComponent, ProjectedHealthComponent> targetFilter = null;
+    private readonly EcsFilter<PathPositionComponent, PathSpeedComponent, ProjectedHealthComponent> targetFilter = null;
 
     /// <inheritdoc/>
     public void Run()
@@ -82,7 +82,7 @@ namespace BackEnd.Game.Systems
           targetEntity.Get<ImpactTimerComponent>().ImpactTimers = new List<double>() { timeUntilImpact };
         }
 
-        ref ProjectedHealthComponent projectedHealth = ref this.targetFilter.Get4(index);
+        ref ProjectedHealthComponent projectedHealth = ref this.targetFilter.Get3(index);
         projectedHealth.ProjectedHealthPoints -= 1;
         if (projectedHealth.ProjectedHealthPoints <= 0)
         {

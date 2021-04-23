@@ -8,6 +8,7 @@ using BackEnd.Game.Components;
 using BackEnd.Game.Systems;
 using Leopotam.Ecs;
 using System;
+using System.Collections.Generic;
 
 namespace BackEnd.Game
 {
@@ -77,9 +78,16 @@ namespace BackEnd.Game
       this.world = new EcsWorld();
       this.systems = new EcsSystems(this.world);
 
+      Dictionary<string, EnemyType> enemyTypeMap = new Dictionary<string, EnemyType>();
+      foreach (EnemyType enemyType in enemies.EnemyTypes)
+      {
+        enemyTypeMap.Add(enemyType.Name, enemyType);
+      }
+
       GameComponent gameSettings = new GameComponent()
       {
         Broadcaster = broadcaster,
+        EnemyTypeMap = enemyTypeMap,
         Stage = stage,
         TickDuration = 1d / TickNumber,
         Time = 0d,
@@ -105,7 +113,7 @@ namespace BackEnd.Game
       _ = this.systems.Add(new PlayerInitializeSystem());
 
       // Input
-      this.PlaceEnemySystem = new PlaceEnemySystem(enemies, rounds);
+      this.PlaceEnemySystem = new PlaceEnemySystem(rounds);
       _ = this.systems.Add(this.PlaceEnemySystem);
       this.PlaceTowerSystem = new PlaceTowerSystem(towers);
       _ = this.systems.Add(this.PlaceTowerSystem);

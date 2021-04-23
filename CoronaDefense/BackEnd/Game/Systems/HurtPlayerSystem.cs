@@ -13,7 +13,7 @@ namespace BackEnd.Game.Systems
   /// </summary>
   internal class HurtPlayerSystem : IEcsRunSystem
   {
-    private readonly EcsFilter<EnemyComponent, HealthComponent, PathPositionComponent> enemies = null;
+    private readonly EcsFilter<EnemyComponent, ImpactComponent, PathPositionComponent> enemies = null;
     private readonly EcsFilter<GameComponent> game = null;
     private readonly EcsFilter<PlayerComponent> playerFilter = null;
 
@@ -32,18 +32,18 @@ namespace BackEnd.Game.Systems
         }
 
         // Hurt player
-        ref HealthComponent enemyHealth = ref this.enemies.Get2(enemyIndex);
+        ref EnemyComponent enemyComponent = ref this.enemies.Get1(enemyIndex);
         ref PlayerComponent player = ref this.playerFilter.Get1(0);
-        player.Health = Math.Max(0, player.Health - enemyHealth.HealthPoints);
+        player.Health = Math.Max(0, player.Health - enemyComponent.PlayerDamage);
         game.Broadcaster.HealthAnimation((short)player.Health, (float)game.Time);
 
         // Send animation
-        ref EnemyComponent enemyComponent = ref this.enemies.Get1(enemyIndex);
+        ref ImpactComponent impactComponent = ref this.enemies.Get2(enemyIndex);
         game.Broadcaster.PathToPathAnimation(
             (byte)enemyComponent.SpriteNumber,
-            (float)enemyComponent.PreviousImpactPosition,
+            (float)impactComponent.PreviousImpactPosition,
             (float)pathPositionComponent.LengthTraveled,
-            (float)enemyComponent.PreviousImpactTime,
+            (float)impactComponent.PreviousImpactTime,
             (float)game.Time,
             0x00
         );
