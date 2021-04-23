@@ -367,7 +367,7 @@ namespace BackEnd.Game
         }
         else
         {
-          placement = 0;
+          placement = -1;
         }
 
         this.Broadcaster.EndGame(didWin, placement, this.EcsContainer.Score);
