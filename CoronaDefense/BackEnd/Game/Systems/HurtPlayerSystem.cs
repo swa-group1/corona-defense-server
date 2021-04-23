@@ -4,6 +4,7 @@
 
 using BackEnd.Game.Components;
 using Leopotam.Ecs;
+using System;
 
 namespace BackEnd.Game.Systems
 {
@@ -33,7 +34,7 @@ namespace BackEnd.Game.Systems
         // Hurt player
         ref HealthComponent enemyHealth = ref this.enemies.Get2(enemyIndex);
         ref PlayerComponent player = ref this.playerFilter.Get1(0);
-        player.Health -= enemyHealth.HealthPoints;
+        player.Health = Math.Max(0, player.Health - enemyHealth.HealthPoints);
         game.Broadcaster.HealthAnimation((short)player.Health, (float)game.Time);
 
         // Send animation
