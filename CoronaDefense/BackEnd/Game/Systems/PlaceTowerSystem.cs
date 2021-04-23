@@ -17,7 +17,7 @@ namespace BackEnd.Game.Systems
     private readonly EcsFilter<GameComponent> gameFilter = null;
     private readonly EcsFilter<PlayerComponent> playerFilter = null;
     private readonly EcsFilter<BoardPositionComponent> towerFilter = null;
-    private readonly Dictionary<int, TowerDefinitions.Tower> towers;
+    private readonly Dictionary<int, TowerDefinitions.TowerType> towers;
     private readonly EcsWorld world = null;
 
     /// <summary>
@@ -26,8 +26,8 @@ namespace BackEnd.Game.Systems
     /// <param name="towerDefinitions">List of available tower definitions.</param>
     public PlaceTowerSystem(TowerDefinitions towerDefinitions)
     {
-      this.towers = new Dictionary<int, TowerDefinitions.Tower>();
-      foreach (TowerDefinitions.Tower tower in towerDefinitions.Towers)
+      this.towers = new Dictionary<int, TowerDefinitions.TowerType>();
+      foreach (TowerDefinitions.TowerType tower in towerDefinitions.Towers)
       {
         this.towers.Add(tower.TypeNumber, tower);
       }
@@ -39,7 +39,7 @@ namespace BackEnd.Game.Systems
     /// <param name="request">Request to process.</param>
     public void PlaceTower(PlaceTowerRequest request)
     {
-      if (!this.towers.TryGetValue(request.TowerTypeNumber, out TowerDefinitions.Tower towerDefinition))
+      if (!this.towers.TryGetValue(request.TowerTypeNumber, out TowerDefinitions.TowerType towerDefinition))
       {
         return;
       }

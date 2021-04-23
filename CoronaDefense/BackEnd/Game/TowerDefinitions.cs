@@ -16,9 +16,9 @@ namespace BackEnd.Game
   internal class TowerDefinitions
   {
     /// <summary>
-    /// List of tower definitions.
+    /// Gets list of tower definitions.
     /// </summary>
-    public IList<Tower> Towers;
+    public IList<TowerType> Towers { get; init; }
 
     /// <summary>
     /// Create a new <see cref="TowerDefinitions"/> object.
@@ -33,23 +33,47 @@ namespace BackEnd.Game
     /// <summary>
     /// Definition for one type of tower.
     /// </summary>
-    public class Tower
+    public class TowerType
     {
-      public string Description;
+      /// <summary>
+      /// Gets description of tower.
+      /// </summary>
+      public string Description { get; init; }
 
-      public int MediumCost;
+      /// <summary>
+      /// Gets the cost of this <see cref="TowerType"/> at medium difficulty.
+      /// </summary>
+      public int MediumCost { get; init; }
 
-      public double ProjectileSpeed;
+      /// <summary>
+      /// Gets the speed of the projectiles of this <see cref="TowerType"/>.
+      /// </summary>
+      public double ProjectileSpeed { get; init; }
 
-      public int ProjectileSpriteNumber;
+      /// <summary>
+      /// Gets the sprite number of projectiles of this <see cref="TowerType"/>.
+      /// </summary>
+      public int ProjectileSpriteNumber { get; init; }
 
-      public double Range;
+      /// <summary>
+      /// Gets the radius of the circle range this <see cref="TowerType"/> can see.
+      /// </summary>
+      public double Range { get; init; }
 
-      public double ReloadTime;
+      /// <summary>
+      /// Gets the time in seconds it takes for this <see cref="TowerType"/> to reload.
+      /// </summary>
+      public double ReloadTime { get; init; }
 
-      public int TowerSpriteNumber;
+      /// <summary>
+      /// Gets the sprite number of this <see cref="TowerType"/>.
+      /// </summary>
+      public int TowerSpriteNumber { get; init; }
 
-      public int TypeNumber;
+      /// <summary>
+      /// Gets the number associated with this <see cref="TowerType"/>.
+      /// </summary>
+      public int TypeNumber { get; init; }
     }
   }
 }
