@@ -35,6 +35,19 @@ namespace BackEnd.Game.Systems
 
       targetPositions.Sort((a, b) => { return b.Position.CompareTo(a.Position); }); // Sort descending
 
+      // Remove all targets that are past stage.
+      for (int i = 0; i < targetPositions.Count; i++)
+      {
+        if (!game.Stage.IsPastStage(targetPositions[i].Position))
+        {
+          targetPositions.RemoveRange(0, i);
+          break;
+        }
+
+        // Target was outside stage.
+        this.targetFilter.GetEntity(targetPositions[i].Index).Del<ProjectedHealthComponent>();
+      }
+
       HashSet<int> readyTowers = new HashSet<int>(Enumerable.Range(0, this.towers.GetEntitiesCount()));
       List<EcsEntity> towersNeedReloading = new List<EcsEntity>();
 
