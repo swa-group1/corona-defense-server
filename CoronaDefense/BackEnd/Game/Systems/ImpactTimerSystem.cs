@@ -67,7 +67,6 @@ namespace BackEnd.Game.Systems
           --timerIndex;
 
           // Update enemy type
-          Console.WriteLine(enemy.NextType);
           if (game.EnemyTypeMap.TryGetValue(enemy.NextType, out EnemyType enemyType))
           {
             // Convert to next type
