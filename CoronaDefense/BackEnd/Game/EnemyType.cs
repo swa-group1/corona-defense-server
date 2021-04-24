@@ -10,6 +10,11 @@ namespace BackEnd.Game
   public class EnemyType
   {
     /// <summary>
+    /// Gets a value indicating whether the enemy is camouflaged or not.
+    /// </summary>
+    public bool Camo { get; init; }
+
+    /// <summary>
     /// Gets number of health points for <see cref="EnemyType"/>.
     /// </summary>
     public int Health { get; init; }

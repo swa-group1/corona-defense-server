@@ -19,7 +19,7 @@ namespace BackEnd.Game.Systems
 
     private readonly EcsFilter<GameComponent> gameFilter = null;
     private readonly EcsFilter<BoardPositionComponent, TowerComponent, ReloadedTag> towers = null;
-    private readonly EcsFilter<PathPositionComponent, PathSpeedComponent, ProjectedHealthComponent> targetFilter = null;
+    private readonly EcsFilter<EnemyComponent, PathPositionComponent, PathSpeedComponent, ProjectedHealthComponent> targetFilter = null;
 
     /// <inheritdoc/>
     public void Run()
@@ -30,7 +30,7 @@ namespace BackEnd.Game.Systems
       List<(int Index, double Position)> targetPositions = new List<(int Index, double Position)>();
       foreach (int i in this.targetFilter)
       {
-        targetPositions.Add((i, this.targetFilter.Get1(i).LengthTraveled));
+        targetPositions.Add((i, this.targetFilter.Get2(i).LengthTraveled));
       }
 
       targetPositions.Sort((a, b) => { return b.Position.CompareTo(a.Position); }); // Sort descending
@@ -52,14 +52,14 @@ namespace BackEnd.Game.Systems
           }
         }
 
-        if (!this.TryFindShooter(targetPosition, readyTowers, out int towerIndex))
+        if (!this.TryFindShooter(this.targetFilter.Get1(index).Camo, targetPosition, readyTowers, out int towerIndex))
         {
           continue;
         }
 
         // Find impact time
         ref TowerComponent towerComponent = ref this.towers.Get2(towerIndex);
-        ref PathSpeedComponent targetSpeed = ref this.targetFilter.Get2(index);
+        ref PathSpeedComponent targetSpeed = ref this.targetFilter.Get3(index);
         ref BoardPositionComponent towerPosition = ref this.towers.Get1(towerIndex);
         this.FindImpactTime(
           position,
@@ -82,7 +82,7 @@ namespace BackEnd.Game.Systems
           targetEntity.Get<ImpactTimerComponent>().ImpactTimers = new List<double>() { timeUntilImpact };
         }
 
-        ref ProjectedHealthComponent projectedHealth = ref this.targetFilter.Get3(index);
+        ref ProjectedHealthComponent projectedHealth = ref this.targetFilter.Get4(index);
         projectedHealth.ProjectedHealthPoints -= 1;
         if (projectedHealth.ProjectedHealthPoints <= 0)
         {
@@ -161,13 +161,18 @@ namespace BackEnd.Game.Systems
       impactPosition = targetPosition + distance;
     }
 
-    private bool TryFindShooter(Stage.Point position, ICollection<int> towerCandidates, out int towerIndex)
+    private bool TryFindShooter(bool isTargetCamouflaged, Stage.Point targetPosition, ICollection<int> towerCandidates, out int towerIndex)
     {
       foreach (int i in towerCandidates)
       {
         BoardPositionComponent towerPosition = this.towers.Get1(i);
         TowerComponent tower = this.towers.Get2(i);
-        double squareDistance = Stage.Point.SquareDistance((Stage.Point)towerPosition.Position, position);
+        if (isTargetCamouflaged && !tower.CanSpotCamo)
+        {
+          continue;
+        }
+
+        double squareDistance = Stage.Point.SquareDistance((Stage.Point)towerPosition.Position, targetPosition);
         if (squareDistance <= tower.Range * tower.Range)
         {
           towerIndex = i;

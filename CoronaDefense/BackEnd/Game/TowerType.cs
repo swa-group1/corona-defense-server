@@ -4,12 +4,16 @@
 
 namespace BackEnd.Game
 {
-
   /// <summary>
   /// Definition for one type of tower.
   /// </summary>
   public class TowerType
   {
+    /// <summary>
+    /// Gets a value indicating whether this <see cref="TowerType"/> can spot camouflaged <see cref="EnemyType"/>.
+    /// </summary>
+    public bool CanSpotCamo { get; init; }
+
     /// <summary>
     /// Gets description of tower.
     /// </summary>

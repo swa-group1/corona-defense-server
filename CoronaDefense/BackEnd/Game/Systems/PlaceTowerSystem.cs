@@ -74,6 +74,7 @@ namespace BackEnd.Game.Systems
       // Create tower
       EcsEntity tower = this.world.NewEntity();
       ref TowerComponent towerComponent = ref tower.Get<TowerComponent>();
+      towerComponent.CanSpotCamo = towerDefinition.CanSpotCamo;
       towerComponent.MediumCost = towerDefinition.MediumCost;
       towerComponent.ProjectileSpeed = towerDefinition.ProjectileSpeed;
       towerComponent.ProjectileSpriteNumber = towerDefinition.ProjectileSpriteNumber;

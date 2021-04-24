@@ -56,6 +56,7 @@ namespace BackEnd.Game.Systems
 
           EcsEntity enemyEntity = this.world.NewEntity();
           ref EnemyComponent enemy = ref enemyEntity.Get<EnemyComponent>();
+          enemy.Camo = enemyType.Camo;
           enemy.NextType = enemyType.NextType;
           enemy.PlayerDamage = enemyType.Health;
           enemy.SpriteNumber = enemyType.SpriteNumber;

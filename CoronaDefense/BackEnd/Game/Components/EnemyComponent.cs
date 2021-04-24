@@ -10,6 +10,11 @@ namespace BackEnd.Game.Components
   internal struct EnemyComponent
   {
     /// <summary>
+    /// A value indicating whether this tower is camouflaged or not.
+    /// </summary>
+    public bool Camo;
+
+    /// <summary>
     /// When this enemy takes damage, which type does it transform into.
     /// </summary>
     public string NextType;
