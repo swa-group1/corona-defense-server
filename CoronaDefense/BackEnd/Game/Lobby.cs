@@ -76,10 +76,24 @@ namespace BackEnd.Game
     /// </summary>
     private string Password { get; }
 
+    private int playerCount = 0;
+
     /// <summary>
     /// Gets the number of players, or clients, currently connected to this <see cref="Lobby"/>.
     /// </summary>
-    public int PlayerCount { get; private set; } = 0;
+    public int PlayerCount
+    {
+      get
+      {
+        return this.playerCount;
+      }
+
+      private set
+      {
+        this.playerCount = value;
+        this.Broadcaster.PlayerCountUpdate((byte)this.playerCount);
+      }
+    }
 
     private short RoundNumber { get; set; } = 1;
 
