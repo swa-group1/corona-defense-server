@@ -46,8 +46,9 @@ namespace BackEnd.Communication
     private byte[] GameModeBuffer { get; } = new byte[]
     {
       0x21, // Byte code (UByte)
-      0x01, // Length (UByte)
+      0x02, // Length (UByte)
       0x00, // Stage number (UByte)
+      0x00, // Difficulty (UByte)
     };
 
     private byte[] InputRoundBuffer { get; } = new byte[]
@@ -362,9 +363,11 @@ namespace BackEnd.Communication
     /// Broadcast signaling that the game is playing.
     /// </summary>
     /// <param name="stageNumber">Number of the stage that is being played.</param>
-    internal void GameMode(byte stageNumber)
+    /// <param name="difficulty">The difficulty chosen for the lobby.</param>
+    internal void GameMode(byte stageNumber, byte difficulty)
     {
       this.GameModeBuffer[2] = stageNumber;
+      this.GameModeBuffer[3] = difficulty;
       this.Broadcast(this.GameModeBuffer);
     }
 

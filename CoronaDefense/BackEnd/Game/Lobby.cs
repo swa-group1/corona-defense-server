@@ -294,7 +294,7 @@ namespace BackEnd.Game
           this.LobbyMode = Mode.InputMode;
           this.RoundNumber = 1;
 
-          this.Broadcaster.GameMode(request.StageNumber);
+          this.Broadcaster.GameMode(request.StageNumber, (byte)request.Difficulty);
           this.Broadcaster.InputRound(this.RoundNumber);
 
           EnemyDefinitions enemies = EnemyDefinitions.Parse(StorageAPI.DownloadEnemies());
@@ -337,7 +337,10 @@ namespace BackEnd.Game
 
         // Place enemies and process the fight round
         this.EcsContainer.PlaceEnemySystem.PlaceEnemies();
+
+        DateTime startTime = DateTime.Now;
         this.EcsContainer.ProcessFightRound();
+        Console.WriteLine(DateTime.Now - startTime);
 
         // Process aftermath
         bool didWin;
