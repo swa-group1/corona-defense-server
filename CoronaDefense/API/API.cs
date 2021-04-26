@@ -12,7 +12,9 @@ namespace BackEnd.Communication.API
   /// Receives requests from clients through a REST-api and exposes such events to attached <see cref="IRequestHandler{TRequest,TResult}"/>s.
   /// </summary>
   /// <remarks>
-  /// This object is part of the Communication Layer – Layer 1.
+  /// <para>This object is part of the Communication Layer – Layer 1.</para>
+  /// <para>The API is an example of Deferred binding, as the methods to be called when a message in one of the 11 categories is not determined compile-time.</para>
+  /// <para>The API is the only server-side singleton.</para>
   /// </remarks>
   public class API
   {
