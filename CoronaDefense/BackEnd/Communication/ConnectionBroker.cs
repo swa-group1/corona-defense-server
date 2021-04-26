@@ -68,7 +68,7 @@ namespace BackEnd.Communication
     private void AddConnectionToPool(long connectionNumber, Socket socket)
     {
       this.ConnectionPool.Add(connectionNumber, socket);
-      Console.WriteLine($"Connection number {connectionNumber} added to connection pool.");
+      // Console.WriteLine($"Connection number {connectionNumber} added to connection pool.");
     }
 
     /// <summary>
@@ -79,13 +79,13 @@ namespace BackEnd.Communication
     {
       if (!this.ConnectionPool.TryGetValue(connectionNumber, out Socket socket))
       {
-        Console.WriteLine($"Connection with number {connectionNumber} is in use and does not need to be timed out.");
+        // Console.WriteLine($"Connection with number {connectionNumber} is in use and does not need to be timed out.");
         return;
       }
 
       socket.Close();
       _ = this.ConnectionPool.Remove(connectionNumber);
-      Console.WriteLine($"Connection with number {connectionNumber} was inactive and has been timed out.");
+      // Console.WriteLine($"Connection with number {connectionNumber} was inactive and has been timed out.");
     }
 
     /// <summary>
@@ -97,9 +97,9 @@ namespace BackEnd.Communication
       {
         try
         {
-          Console.WriteLine("Waiting for connection...");
+          // Console.WriteLine("Waiting for connection...");
           Socket clientSocket = this.PublicSocket.Accept();
-          Console.WriteLine("Connection accepted.");
+          // Console.WriteLine("Connection accepted.");
           long connectionNumber;
           do
           {
@@ -150,7 +150,7 @@ namespace BackEnd.Communication
     /// <returns>Task handle.</returns>
     private static async Task WriteConnectionNumber(Socket socket, long connectionNumber)
     {
-      Console.WriteLine($"Writing connection number {connectionNumber} to socket...");
+      // Console.WriteLine($"Writing connection number {connectionNumber} to socket...");
       NetworkStream stream = new NetworkStream(socket, false);
 
       byte[] bytes = BitConverter.GetBytes(connectionNumber);
@@ -163,7 +163,7 @@ namespace BackEnd.Communication
       await stream.WriteAsync(bytes.AsMemory(0, 8));
 
       await stream.DisposeAsync();
-      Console.WriteLine($"Connection number {connectionNumber} written to socket.");
+      // Console.WriteLine($"Connection number {connectionNumber} written to socket.");
     }
   }
 }
