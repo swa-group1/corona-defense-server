@@ -364,7 +364,7 @@ namespace BackEnd.Game
       /// <param name="tile"><see cref="Tile"/> to convert to <see cref="Point"/>.</param>
       public static explicit operator Point(Tile tile)
       {
-        return new Point() { X = tile.X, Y = tile.Y };
+        return new Point() { X = tile.X + 0.5d, Y = tile.Y + 0.5d };
       }
 
       /// <inheritdoc/>

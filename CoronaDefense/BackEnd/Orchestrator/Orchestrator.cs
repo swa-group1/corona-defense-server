@@ -92,22 +92,17 @@ namespace BackEnd.Orchestrator
     /// <returns>The <see cref="HighScoreListResult"/>.</returns>
     HighScoreListResult IRequestHandler<HighScoreListResult>.ProcessRequest()
     {
-      return new HighScoreListResult()
+      HighScoreListResult result = new HighScoreListResult()
       {
-        Scores = new List<HighScoreListResult.Score>()
-        {
-          new HighScoreListResult.Score()
-          {
-            Name = "Laonard",
-            Value = 100,
-          },
-          new HighScoreListResult.Score()
-          {
-            Name = "Maka",
-            Value = 99,
-          },
-        },
+        Scores = new List<HighScoreListResult.Score>(),
       };
+
+      foreach (HighscoreList.Entry entry in HighscoreListManager.Instance.HighscoreList.Entries)
+      {
+        result.Scores.Add(new HighScoreListResult.Score() { Name = entry.Name, Value = entry.Score, });
+      }
+
+      return result;
     }
 
     /// <summary>

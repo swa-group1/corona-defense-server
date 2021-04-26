@@ -22,6 +22,31 @@ namespace BackEnd.Orchestrator
         });
 
     /// <summary>
+    /// Gets the current highscore list.
+    /// </summary>
+    public HighscoreList HighscoreList
+    {
+      get
+      {
+        lock (this)
+        {
+          HighscoreList highscoreList;
+          if (File.Exists(Filename))
+          {
+            string fileContent = File.ReadAllText(Filename);
+            highscoreList = HighscoreList.Parse(fileContent);
+          }
+          else
+          {
+            highscoreList = new HighscoreList() { Entries = new List<HighscoreList.Entry>(), };
+          }
+
+          return highscoreList;
+        }
+      }
+    }
+
+    /// <summary>
     /// Gets singleton instance of <see cref="HighscoreListManager"/>.
     /// </summary>
     public static HighscoreListManager Instance
@@ -44,16 +69,7 @@ namespace BackEnd.Orchestrator
       lock (this)
       {
         // Parse current highscore list
-        HighscoreList highscoreList;
-        if (File.Exists(Filename))
-        {
-          string fileContent = File.ReadAllText(Filename);
-          highscoreList = HighscoreList.Parse(fileContent);
-        }
-        else
-        {
-          highscoreList = new HighscoreList() { Entries = new List<HighscoreList.Entry>(), };
-        }
+        HighscoreList highscoreList = this.HighscoreList;
 
         // Find placement in highscore list and save
         int placement = highscoreList.RegisterScore(name, score);

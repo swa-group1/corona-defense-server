@@ -10,14 +10,19 @@ namespace BackEnd.Game.Components
   internal struct EnemyComponent
   {
     /// <summary>
-    /// Length along path were enemy was last hit.
+    /// A value indicating whether this tower is camouflaged or not.
     /// </summary>
-    public double PreviousImpactPosition;
+    public bool Camo;
 
     /// <summary>
-    /// Time from start of round when enemy was last hit.
+    /// When this enemy takes damage, which type does it transform into.
     /// </summary>
-    public double PreviousImpactTime;
+    public string NextType;
+
+    /// <summary>
+    /// When this enemy reaches the player, how much damage should the player sustain.
+    /// </summary>
+    public int PlayerDamage;
 
     /// <summary>
     /// Number of sprite of this enemy currently.

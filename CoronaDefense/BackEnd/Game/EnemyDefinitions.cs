@@ -30,46 +30,10 @@ namespace BackEnd.Game
       return JsonConvert.DeserializeObject<EnemyDefinitions>(jsonContent);
     }
 
-    /// <summary>
-    /// Definition of one type of enemy.
-    /// </summary>
-    public class EnemyType
+    /// <inheritdoc/>
+    public override string ToString()
     {
-      /// <summary>
-      /// Gets name of type of <see cref="EnemyType"/>.
-      /// </summary>
-      public string Name { get; init; }
-
-      /// <summary>
-      /// Gets number of health points for <see cref="EnemyType"/>.
-      /// </summary>
-      public int Health { get; init; }
-
-      /// <summary>
-      /// Gets length along path this <see cref="EnemyType"/> travels per second.
-      /// </summary>
-      public double Speed { get; init; }
-
-      /// <summary>
-      /// Gets <see cref="SpriteSet"/> of this <see cref="EnemyType"/>.
-      /// </summary>
-      public SpriteSet SpriteSet { get; init; }
-    }
-
-    /// <summary>
-    /// A collection of consecutive sprites in the sprite catalog belonging to the same <see cref="EnemyType"/>.
-    /// </summary>
-    public class SpriteSet
-    {
-      /// <summary>
-      /// Gets sprite number of first sprite in <see cref="SpriteSet"/>.
-      /// </summary>
-      public int FirstSprite { get; init; }
-
-      /// <summary>
-      /// Gets number of sprites in <see cref="SpriteSet"/>.
-      /// </summary>
-      public int Sprites { get; init; }
+      return JsonConvert.SerializeObject(this);
     }
   }
 }

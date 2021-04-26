@@ -10,6 +10,11 @@ namespace BackEnd.Game.Components
   internal struct TowerComponent
   {
     /// <summary>
+    /// A value indicating whether this tower can spot camouflaged enemies.
+    /// </summary>
+    public bool CanSpotCamo;
+
+    /// <summary>
     /// Normalized cost for this tower.
     /// </summary>
     public int MediumCost;

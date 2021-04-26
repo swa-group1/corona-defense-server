@@ -16,9 +16,9 @@ namespace BackEnd.Game
   internal class TowerDefinitions
   {
     /// <summary>
-    /// List of tower definitions.
+    /// Gets list of tower definitions.
     /// </summary>
-    public IList<Tower> Towers;
+    public IList<TowerType> Towers { get; init; }
 
     /// <summary>
     /// Create a new <see cref="TowerDefinitions"/> object.
@@ -28,28 +28,6 @@ namespace BackEnd.Game
     public static TowerDefinitions Parse(string jsonContent)
     {
       return JsonConvert.DeserializeObject<TowerDefinitions>(jsonContent);
-    }
-
-    /// <summary>
-    /// Definition for one type of tower.
-    /// </summary>
-    public class Tower
-    {
-      public string Description;
-
-      public int MediumCost;
-
-      public double ProjectileSpeed;
-
-      public int ProjectileSpriteNumber;
-
-      public double Range;
-
-      public double ReloadTime;
-
-      public int TowerSpriteNumber;
-
-      public int TypeNumber;
     }
   }
 }

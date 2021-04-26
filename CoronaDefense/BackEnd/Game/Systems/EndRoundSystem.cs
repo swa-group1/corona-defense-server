@@ -15,7 +15,7 @@ namespace BackEnd.Game.Systems
     private const int MoneyPerRound = 150;
 
     private readonly EcsContainer container;
-    private readonly EcsFilter<EnemyComponent, PathPositionComponent> enemyFilter = null;
+    private readonly EcsFilter<EnemyComponent, ImpactComponent, PathPositionComponent> enemyFilter = null;
     private readonly EcsFilter<GameComponent> gameFilter = null;
     private readonly EcsFilter<PlayerComponent> playerFilter = null;
     private readonly EcsFilter<TowerComponent> towerFilter = null;
@@ -44,12 +44,13 @@ namespace BackEnd.Game.Systems
         foreach (int i in this.enemyFilter)
         {
           ref EnemyComponent enemy = ref this.enemyFilter.Get1(i);
-          ref PathPositionComponent enemyPosition = ref this.enemyFilter.Get2(i);
+          ref ImpactComponent impactComponent = ref this.enemyFilter.Get2(i);
+          ref PathPositionComponent enemyPosition = ref this.enemyFilter.Get3(i);
           game.Broadcaster.PathToPathAnimation(
             (byte)enemy.SpriteNumber,
-            (float)enemy.PreviousImpactPosition,
+            (float)impactComponent.PreviousImpactPosition,
             (float)enemyPosition.LengthTraveled,
-            (float)enemy.PreviousImpactTime,
+            (float)impactComponent.PreviousImpactTime,
             (float)game.Time,
             0x01
           );

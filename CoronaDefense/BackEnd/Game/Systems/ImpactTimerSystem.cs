@@ -4,6 +4,7 @@
 
 using BackEnd.Game.Components;
 using Leopotam.Ecs;
+using System;
 
 namespace BackEnd.Game.Systems
 {
@@ -13,7 +14,7 @@ namespace BackEnd.Game.Systems
   internal class ImpactTimerSystem : IEcsRunSystem
   {
     private readonly EcsFilter<GameComponent> gameFilter = null;
-    private readonly EcsFilter<EnemyComponent, HealthComponent, ImpactTimerComponent, PathPositionComponent> doomedFilter = null;
+    private readonly EcsFilter<EnemyComponent, ImpactComponent, ImpactTimerComponent, PathPositionComponent, PathSpeedComponent> doomedFilter = null;
     private readonly EcsFilter<PlayerComponent> playerFilter = null;
 
     /// <inheritdoc/>
@@ -35,26 +36,22 @@ namespace BackEnd.Game.Systems
             continue;
           }
 
-          // Reduce health
-          ref HealthComponent health = ref this.doomedFilter.Get2(doomedIndex);
-          health.HealthPoints -= 1;
-
           // Send enemy animaion
           ref EnemyComponent enemy = ref this.doomedFilter.Get1(doomedIndex);
+          ref ImpactComponent impactComponent = ref this.doomedFilter.Get2(doomedIndex);
           ref PathPositionComponent doomedPosition = ref this.doomedFilter.Get4(doomedIndex);
           game.Broadcaster.PathToPathAnimation(
             (byte)enemy.SpriteNumber,
-            (float)enemy.PreviousImpactPosition,
+            (float)impactComponent.PreviousImpactPosition,
             (float)doomedPosition.LengthTraveled,
-            (float)enemy.PreviousImpactTime,
+            (float)impactComponent.PreviousImpactTime,
             (float)game.Time,
             0x00
           );
 
-          // Update enemy
-          enemy.PreviousImpactPosition = doomedPosition.LengthTraveled;
-          enemy.PreviousImpactTime = game.Time;
-          enemy.SpriteNumber += 1;
+          // Update impact information
+          impactComponent.PreviousImpactPosition = doomedPosition.LengthTraveled;
+          impactComponent.PreviousImpactTime = game.Time;
 
           // Money
           ref PlayerComponent player = ref this.playerFilter.Get1(0);
@@ -69,9 +66,18 @@ namespace BackEnd.Game.Systems
           timers.ImpactTimers.RemoveAt(timerIndex);
           --timerIndex;
 
-          // Remove doomed when no health points left
-          if (health.HealthPoints <= 0)
+          // Update enemy type
+          if (game.EnemyTypeMap.TryGetValue(enemy.NextType, out EnemyType enemyType))
           {
+            // Convert to next type
+            enemy.NextType = enemyType.NextType;
+            enemy.PlayerDamage = enemyType.Health;
+            enemy.SpriteNumber = enemyType.SpriteNumber;
+            this.doomedFilter.Get5(doomedIndex).Speed = enemyType.Speed;
+          }
+          else
+          {
+            // Enemy has no health left
             destroyed = true;
             this.doomedFilter.GetEntity(doomedIndex).Destroy();
             break;

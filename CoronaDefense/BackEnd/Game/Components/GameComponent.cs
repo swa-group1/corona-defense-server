@@ -3,7 +3,7 @@
 // </copyright>
 
 using BackEnd.Communication;
-using BackEnd.Communication.API.Requests;
+using System.Collections.Generic;
 
 namespace BackEnd.Game.Components
 {
@@ -16,6 +16,11 @@ namespace BackEnd.Game.Components
     /// Broadcaster to send messages over.
     /// </summary>
     public Broadcaster Broadcaster;
+
+    /// <summary>
+    /// Map from name to enemy types.
+    /// </summary>
+    public Dictionary<string, EnemyType> EnemyTypeMap;
 
     /// <summary>
     /// Stage of this game.

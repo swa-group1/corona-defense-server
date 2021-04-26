@@ -13,7 +13,7 @@ namespace BackEnd.Game.Systems
   /// </summary>
   internal class HurtPlayerSystem : IEcsRunSystem
   {
-    private readonly EcsFilter<EnemyComponent, HealthComponent, PathPositionComponent> enemies = null;
+    private readonly EcsFilter<EnemyComponent, ImpactComponent, PathPositionComponent> enemyFilter = null;
     private readonly EcsFilter<GameComponent> game = null;
     private readonly EcsFilter<PlayerComponent> playerFilter = null;
 
@@ -22,34 +22,37 @@ namespace BackEnd.Game.Systems
     {
       ref GameComponent game = ref this.game.Get1(0);
 
-      foreach (int enemyIndex in this.enemies)
+      foreach (int enemyIndex in this.enemyFilter)
       {
-        ref PathPositionComponent pathPositionComponent = ref this.enemies.Get3(enemyIndex);
+        ref PathPositionComponent pathPositionComponent = ref this.enemyFilter.Get3(enemyIndex);
 
-        if (!game.Stage.IsPastStage(pathPositionComponent.LengthTraveled))
+        if (pathPositionComponent.LengthTraveled < game.Stage.PathLength)
         {
+          // Enemy has not travelled past stage end
           continue;
         }
 
+
+
         // Hurt player
-        ref HealthComponent enemyHealth = ref this.enemies.Get2(enemyIndex);
+        ref EnemyComponent enemyComponent = ref this.enemyFilter.Get1(enemyIndex);
         ref PlayerComponent player = ref this.playerFilter.Get1(0);
-        player.Health = Math.Max(0, player.Health - enemyHealth.HealthPoints);
+        player.Health = Math.Max(0, player.Health - enemyComponent.PlayerDamage);
         game.Broadcaster.HealthAnimation((short)player.Health, (float)game.Time);
 
         // Send animation
-        ref EnemyComponent enemyComponent = ref this.enemies.Get1(enemyIndex);
+        ref ImpactComponent impactComponent = ref this.enemyFilter.Get2(enemyIndex);
         game.Broadcaster.PathToPathAnimation(
             (byte)enemyComponent.SpriteNumber,
-            (float)enemyComponent.PreviousImpactPosition,
+            (float)impactComponent.PreviousImpactPosition,
             (float)pathPositionComponent.LengthTraveled,
-            (float)enemyComponent.PreviousImpactTime,
+            (float)impactComponent.PreviousImpactTime,
             (float)game.Time,
             0x00
         );
 
         // Remove enemy
-        this.enemies.GetEntity(enemyIndex).Destroy();
+        this.enemyFilter.GetEntity(enemyIndex).Destroy();
       }
     }
   }
