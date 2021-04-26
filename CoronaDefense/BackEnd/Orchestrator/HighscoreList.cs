@@ -38,24 +38,24 @@ namespace BackEnd.Orchestrator
     public int RegisterScore(string name, int score)
     {
       int oldCount = this.Entries.Count;
-      int insertIndex = oldCount;
-      for (int i = 0; i < oldCount; i++)
+      int insertPlace = oldCount + 1;
+      for (int place = 1; place <= oldCount; place++)
       {
-        if (this.Entries[i].Score < score)
+        if (this.Entries[place - 1].Score < score)
         {
-          // Score should be inserted at current index.
-          insertIndex = i;
+          // Score should be inserted at current place.
+          insertPlace = place;
           break;
         }
       }
 
-      this.Entries.Insert(insertIndex, new Entry() { Name = name, Score = score, });
+      this.Entries.Insert(insertPlace - 1, new Entry() { Name = name, Score = score, });
       while (HighscoreListSize < this.Entries.Count)
       {
         this.Entries.RemoveAt(this.Entries.Count - 1);
       }
 
-      return (insertIndex % HighscoreListSize) + 1;
+      return insertPlace % (HighscoreListSize + 1);
     }
 
     /// <inheritdoc/>
