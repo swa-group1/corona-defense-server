@@ -1,5 +1,5 @@
 # Welcome to Corona Defense back-end
-.NET
+Written in C# for ASP.NET runtime
 
 
 ## How to run a instance
