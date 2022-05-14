@@ -11,7 +11,7 @@ Server for the Corona Defense game, written in C# for the ASP.NET runtime. Clien
   - `Game` contains all game logic.
   - `Communication` accepts socket connections and broadcasts game changes to all attached clients.
 
-## How to run the server
+## How To Run
 
 The server runs continously on the Google Cloud Platform, and in most instances does not need to be started locally to run the application as a whole. If one still wishes to run the server locally, one must clone the repository, open the the solution file at path `CoronaDefense/CoronaDefense.sln` with a recent version of Visual Studio 2019, and start the `BackEnd` project through the user interface.
 
