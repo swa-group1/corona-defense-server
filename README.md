@@ -4,6 +4,8 @@ Server for the Corona Defense game, written in C# for the ASP.NET runtime. Clien
 
 ## Project Structure
 
+In `CoronaDefense`:
+
 - `API` receives requests from the clients.
 - `BackEnd`
   - `Orchestrator` processes requests not intended for one specific lobby, such as highscore list functionality.
