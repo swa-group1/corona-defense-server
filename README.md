@@ -1,6 +1,6 @@
 # Corona Defense Game Server
 
-Server for the Corona Defense game, written in C# for the ASP.NET runtime. Client implemented in [`swa-group1/corona-defense-client`](https://github.com/swa-group1/corona-defense-client).
+Server for the Corona Defense game, an online multiplayer variation of the classic tower defense genre. Written in C# for the ASP.NET runtime. Client implemented at [`swa-group1/corona-defense-client`](https://github.com/swa-group1/corona-defense-client).
 
 ## Project Structure
 
